@@ -50,17 +50,23 @@ const translations = {
     "skills.kicker": "Skills",
     "skills.title": "A practical stack for AI application work.",
     "skills.pythonTitle": "Python & Data",
-    "skills.pythonBody": "Python, Pandas, NumPy, CSV / Parquet, data preprocessing",
+    "skills.pythonStatus": "Implemented",
+    "skills.pythonBody": "Python, Pandas, NumPy, CSV / Parquet, data cleaning, and data preprocessing",
     "skills.aiTitle": "AI / ML",
-    "skills.aiBody": "Machine Learning, Deep Learning, PyTorch, Knowledge Tracing",
+    "skills.aiStatus": "Implemented",
+    "skills.aiBody": "Machine learning, LightGBM, Logistic Regression, model comparison, and evaluation metrics",
     "skills.llmTitle": "LLM & Agent",
-    "skills.llmBody": "AI agent development, prompt design, LLM workflows, GraphCodeBERT",
+    "skills.llmStatus": "Implemented",
+    "skills.llmBody": "AI Agent development, prompt design, LLM workflows, response flow, and GraphCodeBERT",
     "skills.toolsTitle": "Tools",
-    "skills.toolsBody": "Gradio, Streamlit, Docker, Qdrant, NetworkX",
+    "skills.toolsStatus": "Used in projects",
+    "skills.toolsBody": "Gradio, Streamlit, Docker, Qdrant, NetworkX, and dashboard prototyping",
     "skills.automationTitle": "Automation & Integration",
-    "skills.automationBody": "Currently studying n8n, AI Agent workflows, API connections, and practical automation patterns",
+    "skills.automationStatus": "Currently studying",
+    "skills.automationBody": "n8n, AI Agent workflows, API connections, and practical automation patterns",
     "skills.fullstackTitle": "Frontend & Backend",
-    "skills.fullstackBody": "Currently studying frontend and backend development, API integration, and database-connected applications",
+    "skills.fullstackStatus": "Currently studying",
+    "skills.fullstackBody": "HTML, CSS, JavaScript, Node.js, API integration, and database-connected applications",
     "experience.kicker": "Experience",
     "experience.title": "Reliable execution across work, teams, and real settings.",
     "experience.admin.role": "Administrative Support Assistant",
@@ -76,8 +82,8 @@ const translations = {
     "agent.placeholder": "Ask about Mark's projects, skills, or current learning path...",
     "agent.send": "Send",
     "contact.kicker": "Contact",
-    "contact.title": "Let's talk about AI applications, automation, or full-stack workflows.",
-    "contact.description": "If my projects fit what your team is building, I would be glad to share more context and discuss internship opportunities.",
+    "contact.title": "Let's talk about AI applications, automation, and web development.",
+    "contact.description": "Interested in my work? Let's connect.",
     "contact.resume": "Download PDF Resume",
     "footer.note": "AI application engineering internship portfolio"
   },
@@ -132,17 +138,23 @@ const translations = {
     "skills.kicker": "技能",
     "skills.title": "面向 AI 應用工程的實作型技能組合。",
     "skills.pythonTitle": "Python 與資料",
-    "skills.pythonBody": "Python、Pandas、NumPy、CSV / Parquet、資料前處理",
+    "skills.pythonStatus": "已實作",
+    "skills.pythonBody": "Python、Pandas、NumPy、CSV / Parquet、資料清理與資料前處理",
     "skills.aiTitle": "AI 與機器學習",
-    "skills.aiBody": "機器學習、深度學習、PyTorch、Knowledge Tracing",
+    "skills.aiStatus": "已實作",
+    "skills.aiBody": "機器學習、LightGBM、Logistic Regression、模型比較與評估指標",
     "skills.llmTitle": "LLM 與 Agent",
-    "skills.llmBody": "AI Agent 開發、Prompt 設計、LLM workflow、GraphCodeBERT",
+    "skills.llmStatus": "已實作",
+    "skills.llmBody": "AI Agent 開發、Prompt 設計、LLM workflow、回答流程與 GraphCodeBERT",
     "skills.toolsTitle": "工具",
-    "skills.toolsBody": "Gradio、Streamlit、Docker、Qdrant、NetworkX",
+    "skills.toolsStatus": "專案中使用",
+    "skills.toolsBody": "Gradio、Streamlit、Docker、Qdrant、NetworkX 與 dashboard 原型製作",
     "skills.automationTitle": "自動化與整合",
-    "skills.automationBody": "目前修習 n8n、AI Agent workflow、API 串接與實務自動化流程",
+    "skills.automationStatus": "目前修習中",
+    "skills.automationBody": "n8n、AI Agent workflow、API 串接與實務自動化流程",
     "skills.fullstackTitle": "前端與後端",
-    "skills.fullstackBody": "目前修習前後端開發、API 整合與資料庫串接應用",
+    "skills.fullstackStatus": "目前修習中",
+    "skills.fullstackBody": "HTML、CSS、JavaScript、Node.js、API 整合與資料庫串接應用",
     "experience.kicker": "經歷",
     "experience.title": "在工作、團隊與現場環境中穩定執行。",
     "experience.admin.role": "行政活動支援工讀生",
@@ -158,8 +170,8 @@ const translations = {
     "agent.placeholder": "詢問 Mark 的專案、技能或目前學習方向...",
     "agent.send": "送出",
     "contact.kicker": "聯絡",
-    "contact.title": "歡迎與我討論 AI 應用、自動化或前後端開發。",
-    "contact.description": "如果我的作品符合團隊正在解決的問題，我很樂意分享更多背景並討論實習機會。",
+    "contact.title": "歡迎一起聊聊 AI 應用、自動化與網站開發。",
+    "contact.description": "對我的作品有興趣，歡迎與我聯絡。",
     "contact.resume": "下載 PDF 履歷",
     "footer.note": "AI 應用工程實習作品集"
   }
@@ -198,6 +210,11 @@ const chatLog = document.getElementById("chatLog");
 const promptChips = document.getElementById("promptChips");
 const chatForm = document.getElementById("chatForm");
 const chatInput = document.getElementById("chatInput");
+const pageViews = [...document.querySelectorAll(".page-view")];
+const pageIds = new Set(pageViews.map((page) => page.dataset.page));
+
+setActivePage(window.location.hash);
+window.addEventListener("hashchange", () => setActivePage(window.location.hash));
 
 applyLanguage(currentLang);
 resetChat();
@@ -232,6 +249,28 @@ function applyLanguage(lang) {
   });
 
   renderPromptChips();
+}
+
+function setActivePage(hash) {
+  const requestedPage = hash.replace(/^#/, "");
+  const activePage = requestedPage === "top" || !pageIds.has(requestedPage)
+    ? "home"
+    : requestedPage;
+
+  pageViews.forEach((page) => {
+    page.classList.toggle("is-active", page.dataset.page === activePage);
+  });
+
+  document.querySelectorAll('.nav-links a[href^="#"]').forEach((link) => {
+    const isCurrent = link.getAttribute("href") === `#${activePage}`;
+    if (isCurrent) {
+      link.setAttribute("aria-current", "page");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
+
+  window.scrollTo({ top: 0, behavior: "auto" });
 }
 
 function resetChat() {

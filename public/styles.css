@@ -102,6 +102,11 @@ input {
   color: var(--accent);
 }
 
+.nav-links a[aria-current="page"] {
+  color: var(--accent-strong);
+  font-weight: 800;
+}
+
 .actions {
   gap: 8px;
 }
@@ -463,6 +468,16 @@ h3 {
   font-size: 16px;
 }
 
+.skill-status {
+  display: inline-block;
+  margin: -4px 0 8px;
+  color: var(--accent-strong);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .skill-block p {
   margin-bottom: 0;
   font-size: 14px;
@@ -608,6 +623,20 @@ h3 {
   max-width: 540px;
   margin-top: 22px;
   font-size: 17px;
+  white-space: nowrap;
+}
+
+.page-view {
+  display: none;
+}
+
+.page-view.is-active {
+  display: block;
+  min-height: calc(100vh - 74px);
+}
+
+.hero.page-view.is-active {
+  display: grid;
 }
 
 .contact-links {
@@ -666,6 +695,10 @@ h3 {
   .contact-section,
   .footer {
     flex-direction: column;
+  }
+
+  .contact-description {
+    white-space: normal;
   }
 }
 
