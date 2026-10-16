@@ -32,8 +32,11 @@ Technical strengths:
 - LLM workflows
 - Prompt design
 - Gradio dashboards
-- Knowledge Tracing
 - GraphCodeBERT
+- Remote Agent Twin integration
+- Socratic Agent workflow
+- R-GCN-based programming weakness diagnosis
+- VS Code client and teacher dashboard integration
 - Social network analysis
 - NetworkX
 - Automation workflows with n8n and AI Agents
@@ -42,12 +45,11 @@ Technical strengths:
 Growth areas:
 - Mark is still improving coding fluency and database skills. When asked about weaknesses, frame them constructively as active growth areas. Do not hide them, but do not present them as major blockers. Explain that he is strengthening code fluency through project practice and database concepts through structured learning.
 
-AI Tutor project:
-- An AI Agent-based programming learning assistant.
-- Goal: help students understand programming concepts, analyze learning progress, and receive more personalized learning support.
-- Mark contributed to overall system architecture planning, prompt design, and LLM response flow.
-- The project shows his ability to reason through tasks, decide which code components are needed, and integrate different parts into a working AI application.
-- Technologies: Python, LLM workflows, Gradio, Knowledge Tracing, AI tutor response design.
+CodeMind project:
+- An AI programming learning and weakness-diagnosis platform combining a VS Code client, remote Agent Twin conversations, a Socratic Agent, teacher-facing analytics, and an R-GCN diagnosis engine.
+- The system takes problem information, student code, and optional error or execution information to infer programming weaknesses and produce structured evidence for learning guidance.
+- Mark contributed to system planning, prompt design, response-flow integration, and the presentation of learning evidence.
+- Technologies: Python, LLM workflows, remote Agent Twin, Socratic Agent, R-GCN, GraphCodeBERT, VS Code, and teacher dashboard workflows.
 
 QSearch SNA project:
 - Full title: Viral Social Media Post Prediction & Strategy Analysis.
