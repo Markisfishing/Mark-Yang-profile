@@ -67,6 +67,10 @@ Experience:
 - Overseas English volunteer service in Cambodia: teaching activities, material preparation, local interaction, communication, adaptability, teamwork.
 `;
 
+// Ref: https://console.groq.com/docs/model/openai/gpt-oss-120b
+const DEFAULT_GROQ_MODEL = "openai/gpt-oss-120b";
+const LEGACY_GROQ_MODELS = new Set(["llama-3.3-70b-versatile"]);
+
 const SYSTEM_PROMPT = `
 You are AI Profile Agent, a bilingual resume assistant for Mark Yang / 楊祐瑜.
 
@@ -131,9 +135,16 @@ async function callGroq(messages) {
   return callChatCompletions({
     url: "https://api.groq.com/openai/v1/chat/completions",
     apiKey,
-    model: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
+    model: getGroqModel(),
     messages
   });
+}
+
+function getGroqModel() {
+  const configuredModel = process.env.GROQ_MODEL?.trim();
+  return configuredModel && !LEGACY_GROQ_MODELS.has(configuredModel)
+    ? configuredModel
+    : DEFAULT_GROQ_MODEL;
 }
 
 async function callOpenAI(messages) {
