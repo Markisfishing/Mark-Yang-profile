@@ -4,7 +4,7 @@
 
 ## 線上作品集
 
-- Website：[mark-yang-ai-profile.vercel.app](https://mark-yang-ai-profile.vercel.app/)
+- Website：[mark-yang-profile.vercel.app](https://mark-yang-profile.vercel.app/)
 - GitHub：[Markisfishing/mark-yang-ai-profile](https://github.com/Markisfishing/mark-yang-ai-profile)
 
 ## 作品集特色
