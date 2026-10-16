@@ -210,11 +210,6 @@ const chatLog = document.getElementById("chatLog");
 const promptChips = document.getElementById("promptChips");
 const chatForm = document.getElementById("chatForm");
 const chatInput = document.getElementById("chatInput");
-const pageViews = [...document.querySelectorAll(".page-view")];
-const pageIds = new Set(pageViews.map((page) => page.dataset.page));
-
-setActivePage(window.location.hash);
-window.addEventListener("hashchange", () => setActivePage(window.location.hash));
 
 applyLanguage(currentLang);
 resetChat();
@@ -249,28 +244,6 @@ function applyLanguage(lang) {
   });
 
   renderPromptChips();
-}
-
-function setActivePage(hash) {
-  const requestedPage = hash.replace(/^#/, "");
-  const activePage = requestedPage === "top" || !pageIds.has(requestedPage)
-    ? "home"
-    : requestedPage;
-
-  pageViews.forEach((page) => {
-    page.classList.toggle("is-active", page.dataset.page === activePage);
-  });
-
-  document.querySelectorAll('.nav-links a[href^="#"]').forEach((link) => {
-    const isCurrent = link.getAttribute("href") === `#${activePage}`;
-    if (isCurrent) {
-      link.setAttribute("aria-current", "page");
-    } else {
-      link.removeAttribute("aria-current");
-    }
-  });
-
-  window.scrollTo({ top: 0, behavior: "auto" });
 }
 
 function resetChat() {

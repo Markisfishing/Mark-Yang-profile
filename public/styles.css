@@ -102,11 +102,6 @@ input {
   color: var(--accent);
 }
 
-.nav-links a[aria-current="page"] {
-  color: var(--accent-strong);
-  font-weight: 800;
-}
-
 .actions {
   gap: 8px;
 }
@@ -624,19 +619,6 @@ h3 {
   margin-top: 22px;
   font-size: 17px;
   white-space: nowrap;
-}
-
-.page-view {
-  display: none;
-}
-
-.page-view.is-active {
-  display: block;
-  min-height: calc(100vh - 74px);
-}
-
-.hero.page-view.is-active {
-  display: grid;
 }
 
 .contact-links {
