@@ -72,6 +72,7 @@ npm start
 ## 我的貢獻
 
 - 負責作品集網站的內容規劃、介面實作與雙語文案整理
+- CodeMind 中除學生端 VS Code 工作流程設計與 Agent Twin 最初構想外，負責其餘專案內容與實作，並使用 Agent Twin 產生程式題目與其他學習內容
 - 完成 AI Profile Agent 的 Prompt、API 串接與純文字回答流程
 - 整理 CodeMind 與 QSearch SNA 的專案成果、技術內容與可展示證據
 - 持續學習 n8n、AI Agent workflow、前端與後端開發
