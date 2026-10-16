@@ -48,7 +48,7 @@ Growth areas:
 CodeMind project:
 - An AI programming learning and weakness-diagnosis platform combining a VS Code client, remote Agent Twin conversations, a Socratic Agent, teacher-facing analytics, and an R-GCN diagnosis engine.
 - The system takes problem information, student code, and optional error or execution information to infer programming weaknesses and produce structured evidence for learning guidance.
-- Mark contributed to system planning, prompt design, response-flow integration, and the presentation of learning evidence.
+- Mark handled the project from architecture design through complete implementation, including prompts, response flows, learning feedback, diagnosis signals, teacher-facing insights, and project presentation.
 - Technologies: Python, LLM workflows, remote Agent Twin, Socratic Agent, R-GCN, GraphCodeBERT, VS Code, and teacher dashboard workflows.
 
 QSearch SNA project:
