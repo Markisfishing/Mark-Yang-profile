@@ -18,6 +18,7 @@
           <span>Mark Yang</span>
         </a>
         <nav class="nav-links" aria-label="Primary navigation">
+          <a href="#about" data-i18n="nav.about">About</a>
           <a href="#projects" data-i18n="nav.projects">Projects</a>
           <a href="#skills" data-i18n="nav.skills">Skills</a>
           <a href="#agent" data-i18n="nav.agent">AI Agent</a>
@@ -36,18 +37,32 @@
       <main id="top">
         <section class="hero">
           <div class="hero-copy">
-            <p class="eyebrow" data-i18n="hero.eyebrow">AI Application Engineering Intern</p>
+            <p class="eyebrow" data-i18n="hero.eyebrow">AI Application Engineering Internship Portfolio</p>
             <h1>
               <span data-i18n="hero.name">Mark Yang / 楊祐瑜</span>
             </h1>
+            <p class="hero-position" data-i18n="hero.position">I turn data and LLM workflows into practical AI applications.</p>
             <p class="hero-text" data-i18n="hero.text">
-              I build practical AI tools with Python, LLM workflows, AI agents, data preprocessing, and lightweight dashboards. I am seeking an AI application engineering internship where AI can be applied to real systems and FinTech workflows.
+              I am building toward an AI application engineering internship, with hands-on experience across AI agents, data preprocessing, dashboards, and FinTech-oriented problem solving.
             </p>
             <div class="hero-actions">
-              <a class="button button-primary" href="#agent" data-i18n="hero.askAgent">Ask AI Profile Agent</a>
-              <a class="button button-secondary" href="/assets/mark-yang-resume.pdf" download data-i18n="hero.download">
-                Download Resume
-              </a>
+              <a class="button button-primary" href="#projects" data-i18n="hero.projects">View Project Evidence</a>
+              <a class="button button-secondary" href="#agent" data-i18n="hero.askAgent">Ask AI Profile Agent</a>
+              <a class="button button-ghost" href="/assets/mark-yang-resume.pdf" download data-i18n="hero.download">Resume</a>
+            </div>
+            <div class="hero-proof" aria-label="Portfolio highlights">
+              <div>
+                <strong>AI Agent</strong>
+                <span data-i18n="hero.proof.agent">LLM workflows</span>
+              </div>
+              <div>
+                <strong>0.7227</strong>
+                <span data-i18n="hero.proof.auc">QSearch test AUC</span>
+              </div>
+              <div>
+                <strong>FinTech</strong>
+                <span data-i18n="hero.proof.finance">application direction</span>
+              </div>
             </div>
           </div>
           <figure class="portrait-wrap">
@@ -58,7 +73,7 @@
         <section class="section two-column" id="about">
           <div>
             <p class="section-kicker" data-i18n="about.kicker">About</p>
-            <h2 data-i18n="about.title">AI builder with a practical FinTech direction.</h2>
+            <h2 data-i18n="about.title">An AI builder who turns learning into working demos.</h2>
           </div>
           <div class="prose">
             <p data-i18n="about.p1">
@@ -74,6 +89,7 @@
           <div class="section-heading">
             <p class="section-kicker" data-i18n="projects.kicker">Selected Projects</p>
             <h2 data-i18n="projects.title">Built around AI systems, data, and interpretable output.</h2>
+            <p class="section-intro" data-i18n="projects.intro">A closer look at the problems I explored, the parts I owned, and the evidence behind the results.</p>
           </div>
           <div class="project-grid">
             <article class="project-card">
@@ -86,11 +102,16 @@
               <p data-i18n="projects.aiTutor.body">
                 An AI Agent-based programming learning assistant designed to help students understand programming concepts and receive personalized learning support. I contributed to overall system architecture planning, prompt design, and LLM response flow.
               </p>
+              <div class="project-detail">
+                <span data-i18n="projects.contributionLabel">My contribution</span>
+                <strong data-i18n="projects.aiTutor.contribution">System planning, prompt design, and response-flow integration</strong>
+              </div>
               <ul class="project-points">
                 <li data-i18n="projects.aiTutor.point1">Planned task logic and component integration.</li>
                 <li data-i18n="projects.aiTutor.point2">Designed prompt and response flow for AI tutor feedback.</li>
                 <li data-i18n="projects.aiTutor.point3">Connected learning data with dashboard-oriented insights.</li>
               </ul>
+              <a class="text-link" href="https://github.com/Markisfishing" target="_blank" rel="noreferrer" data-i18n="projects.github">View more work on GitHub →</a>
             </article>
 
             <article class="project-card">
@@ -103,6 +124,10 @@
               <p data-i18n="projects.qsearch.body">
                 A model-driven project that predicts which social media posts may gain high future traffic. As team leader, I worked on data cleaning, model comparison, project direction, and weekly progress planning.
               </p>
+              <div class="project-detail">
+                <span data-i18n="projects.contributionLabel">My contribution</span>
+                <strong data-i18n="projects.qsearch.contribution">Team leadership, data cleaning, model comparison, and project direction</strong>
+              </div>
               <div class="metric-row" aria-label="QSearch model metrics">
                 <div>
                   <strong>0.7227</strong>
@@ -117,6 +142,31 @@
                   <span>Weighted Index</span>
                 </div>
               </div>
+              <a class="text-link" href="https://github.com/Markisfishing" target="_blank" rel="noreferrer" data-i18n="projects.github">View more work on GitHub →</a>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="contribution">
+          <div class="section-heading">
+            <p class="section-kicker" data-i18n="contribution.kicker">What I Can Contribute</p>
+            <h2 data-i18n="contribution.title">A practical teammate for AI application work.</h2>
+          </div>
+          <div class="contribution-grid">
+            <article class="contribution-card">
+              <span class="contribution-number">01</span>
+              <h3 data-i18n="contribution.build.title">Build useful AI flows</h3>
+              <p data-i18n="contribution.build.body">Turn a repeated task into a clear workflow using Python, prompts, LLMs, and lightweight interfaces.</p>
+            </article>
+            <article class="contribution-card">
+              <span class="contribution-number">02</span>
+              <h3 data-i18n="contribution.data.title">Make data easier to act on</h3>
+              <p data-i18n="contribution.data.body">Clean data, compare models, and present the result through metrics, dashboards, and interpretable observations.</p>
+            </article>
+            <article class="contribution-card">
+              <span class="contribution-number">03</span>
+              <h3 data-i18n="contribution.team.title">Keep projects moving</h3>
+              <p data-i18n="contribution.team.body">Plan tasks, communicate progress, and learn quickly when a project needs a new direction.</p>
             </article>
           </div>
         </section>
@@ -128,20 +178,20 @@
           </div>
           <div class="skill-grid">
             <div class="skill-block">
-              <h3>Python & Data</h3>
-              <p>Python, Pandas, NumPy, CSV / Parquet, data preprocessing</p>
+              <h3 data-i18n="skills.pythonTitle">Python & Data</h3>
+              <p data-i18n="skills.pythonBody">Python, Pandas, NumPy, CSV / Parquet, data preprocessing</p>
             </div>
             <div class="skill-block">
-              <h3>AI / ML</h3>
-              <p>Machine Learning, Deep Learning, PyTorch, Knowledge Tracing</p>
+              <h3 data-i18n="skills.aiTitle">AI / ML</h3>
+              <p data-i18n="skills.aiBody">Machine Learning, Deep Learning, PyTorch, Knowledge Tracing</p>
             </div>
             <div class="skill-block">
-              <h3>LLM & Agent</h3>
-              <p>AI agent development, prompt design, LLM workflows, GraphCodeBERT</p>
+              <h3 data-i18n="skills.llmTitle">LLM & Agent</h3>
+              <p data-i18n="skills.llmBody">AI agent development, prompt design, LLM workflows, GraphCodeBERT</p>
             </div>
             <div class="skill-block">
-              <h3>Tools</h3>
-              <p>Gradio, Streamlit, Docker, Qdrant, NetworkX</p>
+              <h3 data-i18n="skills.toolsTitle">Tools</h3>
+              <p data-i18n="skills.toolsBody">Gradio, Streamlit, Docker, Qdrant, NetworkX</p>
             </div>
             <div class="skill-block">
               <h3 data-i18n="skills.financeTitle">Finance Foundation</h3>
@@ -178,10 +228,11 @@
         <section class="section agent-section" id="agent">
           <div class="agent-intro">
             <p class="section-kicker" data-i18n="agent.kicker">Interactive Resume</p>
-            <h2>AI Profile Agent</h2>
+            <h2 data-i18n="agent.title">Ask about my work</h2>
             <p data-i18n="agent.description">
               Ask about Mark's AI projects, technical skills, FinTech motivation, certification, experience, or contact information.
             </p>
+            <p class="agent-note" data-i18n="agent.note">Start with a suggested question to see how the portfolio explains project evidence.</p>
           </div>
 
           <div class="agent-panel" aria-label="AI Profile Agent chat">
@@ -203,7 +254,8 @@
         <section class="section contact-section" id="contact">
           <div>
             <p class="section-kicker" data-i18n="contact.kicker">Contact</p>
-            <h2 data-i18n="contact.title">Open to AI application engineering internships.</h2>
+            <h2 data-i18n="contact.title">Let's talk about AI applications, data products, or FinTech workflows.</h2>
+            <p class="contact-description" data-i18n="contact.description">If my projects fit what your team is building, I would be glad to share more context and discuss internship opportunities.</p>
           </div>
           <div class="contact-links">
             <a href="mailto:y7632457@gmail.com">y7632457@gmail.com</a>
@@ -216,7 +268,7 @@
 
       <footer class="footer">
         <span>Mark Yang / 楊祐瑜</span>
-        <span data-i18n="footer.note">AI Application Engineering Intern</span>
+        <span data-i18n="footer.note">AI application engineering internship portfolio</span>
       </footer>
     </div>
 
