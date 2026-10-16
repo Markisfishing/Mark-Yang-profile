@@ -294,7 +294,7 @@ async function sendMessage(content) {
     });
     const data = await response.json();
     const reply = response.ok
-      ? data.reply
+      ? cleanAgentReply(data.reply)
       : data.error || fallbackError();
     messages[messages.length - 1] = {
       role: "assistant",
@@ -317,4 +317,15 @@ function fallbackError() {
   return currentLang === "zh"
     ? "AI Profile Agent 暫時無法回應。若要了解更多，建議直接透過 Email 或電話聯絡 Mark。"
     : "AI Profile Agent is temporarily unavailable. Please contact Mark by email or phone for more details.";
+}
+
+function cleanAgentReply(content) {
+  return String(content || "")
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/__(.*?)__/g, "$1")
+    .replace(/^\s*[-*]\s+/gm, "")
+    .replace(/^\s*#{1,6}\s+/gm, "")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 }
