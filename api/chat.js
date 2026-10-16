@@ -46,11 +46,15 @@ Growth areas:
 - Mark is still improving coding fluency and database skills. When asked about weaknesses, frame them constructively as active growth areas. Do not hide them, but do not present them as major blockers. Explain that he is strengthening code fluency through project practice and database concepts through structured learning.
 
 CodeMind project:
-- An AI programming learning and weakness-diagnosis platform combining a VS Code client, remote Agent Twin conversations, a Socratic Agent, teacher-facing analytics, and an R-GCN diagnosis engine.
-- The system takes problem information, student code, and optional error or execution information to infer programming weaknesses and produce structured evidence for learning guidance.
-- The student-facing VS Code workflow design and the initial Agent Twin concept were handled by another contributor.
-- Mark used Agent Twin to generate programming questions and other learning content, and handled the rest of the project's content and implementation, including prompts, response flows, learning feedback, diagnosis signals, teacher-facing insights, and project presentation.
-- Technologies: Python, LLM workflows, remote Agent Twin, Socratic Agent, R-GCN, GraphCodeBERT, VS Code, and teacher dashboard workflows.
+- An AI programming learning system combining a VS Code student client, teacher management platform, AI tutoring Agent, and programming weakness diagnosis.
+- Role: lead developer for Teacher Web, backend teaching workflows, and weakness-diagnosis integration.
+- Built courses, classes, materials, question banks, assignments, live classrooms, student learning history, and backend authorization isolation across teachers, classes, and students.
+- Integrated Socratic prompts, Agent assistance levels, material citations, teacher hints, answer-leakage safeguards, and responses that adapt to course policy and student state.
+- Established a diagnosis pipeline using a knowledge graph, R-GCN, GraphCodeBERT features, FastAPI inference, data splits, ablation experiments, and reproducible tests.
+- Integrated four subsystems: Teacher Web, Backend API, VS Code Extension, and the diagnosis service. The teaching workflow connects assignment, submission, execution records, weakness diagnosis, and teacher intervention.
+- Quality validation includes pytest, Vitest, Playwright E2E, authorization isolation, and real-Agent acceptance testing.
+- Team contribution boundary: the initial Agent Twin concept and early student workflow were proposed by team members. Mark handled subsequent platform development, teaching features, diagnosis models, frontend-backend integration, and acceptance testing.
+- Mark also used Agent Twin to generate programming questions and other learning content within the teaching workflow.
 
 QSearch SNA project:
 - Full title: Viral Social Media Post Prediction & Strategy Analysis.

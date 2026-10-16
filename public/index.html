@@ -53,7 +53,7 @@
             <div class="hero-proof" aria-label="Portfolio highlights">
               <div>
                 <strong data-i18n="hero.proof.agentTitle">CodeMind</strong>
-                <span data-i18n="hero.proof.agent">Agent Twin · Socratic Agent</span>
+                <span data-i18n="hero.proof.agent">Teaching Platform · Weakness Diagnosis</span>
               </div>
               <div>
                 <strong>0.7227</strong>
@@ -101,17 +101,32 @@
               </div>
               <h3 data-i18n="projects.codemind.title">CodeMind / AI Programming Learning &amp; Weakness Diagnosis Platform</h3>
               <p data-i18n="projects.codemind.body">
-                A CodeMind AI programming learning platform that combines a VS Code client, remote Agent Twin conversations, a Socratic Agent, and R-GCN-based weakness diagnosis. The student-facing VS Code workflow design and the initial Agent Twin concept were handled by another contributor; I used Agent Twin to generate programming questions and other learning content, and handled the rest of the project's content and implementation.
+                CodeMind integrates a VS Code student client, teacher management platform, AI tutoring agent, and programming weakness diagnosis. Building on the team's existing Agent Twin and student workflow concepts, I primarily developed the teacher interface, backend teaching APIs, AI teaching policies, diagnosis models, and cross-system integration.
               </p>
               <div class="project-detail">
-                <span data-i18n="projects.contributionLabel">My contribution</span>
-                <strong data-i18n="projects.codemind.contribution">All other project content and implementation except the student-facing VS Code workflow design and initial Agent Twin concept</strong>
+                <span data-i18n="projects.codemind.roleLabel">My role</span>
+                <strong data-i18n="projects.codemind.contribution">Lead developer | Teacher Web, backend teaching workflows, and weakness-diagnosis integration</strong>
               </div>
               <ul class="project-points">
-                <li data-i18n="projects.codemind.point1">The student-facing VS Code workflow design and initial Agent Twin concept were handled by another contributor; I used Agent Twin to generate programming questions and other learning content.</li>
-                <li data-i18n="projects.codemind.point2">Built the prompts, Socratic responses, and programming-learning feedback flows.</li>
-                <li data-i18n="projects.codemind.point3">Implemented diagnosis signals, teacher-facing learning insights, and project presentation.</li>
+                <li data-i18n="projects.codemind.point1">Built Teacher Web and backend teaching workflows for courses, classes, materials, question banks, assignments, live classrooms, learning history, and teacher-class-student authorization.</li>
+                <li data-i18n="projects.codemind.point2">Integrated AI tutoring and teacher intervention through Socratic prompts, assistance levels, material citations, teacher hints, and answer-leakage safeguards.</li>
+                <li data-i18n="projects.codemind.point3">Established a weakness-diagnosis pipeline with a knowledge graph, R-GCN, GraphCodeBERT features, FastAPI inference, ablation experiments, and reproducible tests.</li>
               </ul>
+              <dl class="evidence-row">
+                <div>
+                  <dt data-i18n="projects.codemind.evidence.systemsTitle">4 integrated subsystems</dt>
+                  <dd data-i18n="projects.codemind.evidence.systemsBody">Teacher Web, Backend API, VS Code Extension, Diagnosis Service</dd>
+                </div>
+                <div>
+                  <dt data-i18n="projects.codemind.evidence.flowTitle">Teaching workflow</dt>
+                  <dd data-i18n="projects.codemind.evidence.flowBody">Assignment → submission → execution record → diagnosis → intervention</dd>
+                </div>
+                <div>
+                  <dt data-i18n="projects.codemind.evidence.qualityTitle">Quality validation</dt>
+                  <dd data-i18n="projects.codemind.evidence.qualityBody">pytest, Vitest, Playwright E2E, authorization isolation, and Agent acceptance</dd>
+                </div>
+              </dl>
+              <p class="project-collaboration" data-i18n="projects.codemind.collaboration">Team contribution: the initial Agent Twin concept and early student workflow were proposed by team members; I handled subsequent platform development, teaching features, diagnosis models, frontend-backend integration, and acceptance testing.</p>
               <a class="text-link" href="https://github.com/Markisfishing" target="_blank" rel="noreferrer" data-i18n="projects.github">View more work on GitHub →</a>
             </article>
 
@@ -123,7 +138,7 @@
               </div>
               <h3 data-i18n="projects.qsearch.title">SNA / Viral Post Prediction & Content Strategy</h3>
               <p data-i18n="projects.qsearch.body">
-                A data-processing and prediction project that ranks Facebook posts likely to enter the top 5% of engagement within the same month and category, then turns model signals into interpretable content recommendations.
+                Labels identify the top 5% of engagement within each month and category. LightGBM ranks candidates and achieved Test AUC 0.7227, Test AP 0.1731, and a 54.9% Top-1,000 hit rate.
               </p>
               <div class="project-detail">
                 <span data-i18n="projects.contributionLabel">My contribution</span>
@@ -282,6 +297,6 @@
       </footer>
     </div>
 
-    <script src="/app.js?cache-bust=20261017-codemind-contribution"></script>
+    <script src="/app.js?cache-bust=20261017-codemind-engineering"></script>
   </body>
 </html>

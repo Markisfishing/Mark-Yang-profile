@@ -353,6 +353,43 @@ h3 {
   color: var(--muted);
 }
 
+.evidence-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 24px 0 0;
+}
+
+.evidence-row div {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+}
+
+.evidence-row dt {
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.evidence-row dd {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.project-collaboration {
+  margin: 18px 0 0;
+  padding: 12px 14px;
+  border-left: 2px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
 .project-detail {
   display: grid;
   gap: 4px;
@@ -707,7 +744,8 @@ h3 {
     padding: 20px;
   }
 
-  .metric-row {
+  .metric-row,
+  .evidence-row {
     grid-template-columns: 1fr;
   }
 
