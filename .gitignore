@@ -4,3 +4,7 @@
 node_modules/
 .vercel/
 dist/
+
+# Website assets are already tracked because the deployed site needs them.
+# New local assets will not be added automatically.
+public/assets/
