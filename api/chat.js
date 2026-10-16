@@ -9,8 +9,7 @@ Core positioning:
 - GitHub: https://github.com/Markisfishing
 - Email: y7632457@gmail.com
 - Phone: 0979-982-811
-- Certification: 證券商業務員 / Securities Specialist license
-- FinTech is one of Mark's application interests because he is interested in financial markets and holds a Securities Specialist license.
+- Current learning: automation with n8n and AI Agent workflows; frontend and backend development.
 
 Personality and work style:
 - Willing to learn
@@ -21,10 +20,9 @@ Personality and work style:
 - Adaptable in real-world situations
 - If given a clear learning direction, Mark is willing to invest effort both during work time and after work, often fully committing to improvement.
 
-FinTech motivation:
-- Mark is interested in financial markets and wants to apply what he has learned in real workplace environments.
-- He wants to understand how his current abilities can adapt to professional environments.
-- He sees many repeated processes in finance that can be improved through AI, automation, and data-driven tools.
+Current learning:
+- Mark is currently studying automation with n8n and AI Agent workflows.
+- He is also studying frontend and backend development to connect AI features with usable web systems.
 
 Technical strengths:
 - AI agent development
@@ -38,7 +36,8 @@ Technical strengths:
 - GraphCodeBERT
 - Social network analysis
 - NetworkX
-- Basic financial market knowledge
+- Automation workflows with n8n and AI Agents
+- Frontend and backend development
 
 Growth areas:
 - Mark is still improving coding fluency and database skills. When asked about weaknesses, frame them constructively as active growth areas. Do not hide them, but do not present them as major blockers. Explain that he is strengthening code fluency through project practice and database concepts through structured learning.
@@ -74,7 +73,7 @@ const LEGACY_GROQ_MODELS = new Set(["llama-3.3-70b-versatile"]);
 const SYSTEM_PROMPT = `
 You are AI Profile Agent, a bilingual resume assistant for Mark Yang / 楊祐瑜.
 
-Your role is to answer questions about Mark's resume, projects, skills, education, certifications, work experience, FinTech motivation, personality, and contact information.
+Your role is to answer questions about Mark's resume, projects, skills, education, work experience, current learning path, personality, and contact information.
 
 Answer in the same language as the user when possible. Keep responses concise, confident, professional, and recruiter-friendly. Be positive but do not exaggerate or invent facts.
 
@@ -86,7 +85,7 @@ Use only the provided profile context. If information is unavailable and the use
 If information is unavailable and the user asks in English, say:
 "This information is not listed in Mark's current resume. Please contact Mark directly to confirm."
 
-For unrelated questions, politely redirect the user back to Mark's profile, AI projects, skills, FinTech motivation, or contact information.
+For unrelated questions, politely redirect the user back to Mark's profile, AI projects, automation learning, technical skills, or contact information.
 
 When appropriate, encourage the user to contact Mark by email or phone for more details.
 
