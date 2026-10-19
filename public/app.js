@@ -5,8 +5,9 @@ const translations = {
     "nav.skills": "Skills",
     "nav.agent": "AI Agent",
     "nav.contact": "Contact",
-    "nav.resume": "Resume",
-    "nav.github": "GitHub Portfolio",
+    "hero.github": "GitHub Portfolio",
+    "theme.dark": "Dark",
+    "theme.light": "Light",
     "hero.eyebrow": "AI Application Engineering Internship Portfolio",
     "hero.name": "Mark Yang / 楊祐瑜",
     "hero.position": "I turn data and LLM workflows into practical AI applications.",
@@ -103,8 +104,9 @@ const translations = {
     "nav.skills": "技能",
     "nav.agent": "AI 助理",
     "nav.contact": "聯絡",
-    "nav.resume": "履歷",
-    "nav.github": "GitHub 作品集",
+    "hero.github": "GitHub 作品集",
+    "theme.dark": "深色",
+    "theme.light": "淺色",
     "hero.eyebrow": "AI 應用工程實習作品集",
     "hero.name": "楊祐瑜 / Mark Yang",
     "hero.position": "我把資料與 LLM workflow 轉化成可以實際使用的 AI 應用。",
@@ -226,6 +228,7 @@ let messages = [];
 let isSending = false;
 
 const langToggle = document.getElementById("langToggle");
+const themeToggle = document.getElementById("themeToggle");
 const chatLog = document.getElementById("chatLog");
 const promptChips = document.getElementById("promptChips");
 const chatForm = document.getElementById("chatForm");
@@ -241,6 +244,13 @@ langToggle.addEventListener("click", () => {
   resetChat();
 });
 
+themeToggle.addEventListener("click", () => {
+  const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem("theme", next); } catch (e) {}
+  updateThemeToggle();
+});
+
 chatForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const content = chatInput.value.trim();
@@ -249,9 +259,15 @@ chatForm.addEventListener("submit", async (event) => {
   await sendMessage(content);
 });
 
+function updateThemeToggle() {
+  const isDark = document.documentElement.dataset.theme === "dark";
+  themeToggle.textContent = translations[currentLang][isDark ? "theme.light" : "theme.dark"];
+}
+
 function applyLanguage(lang) {
   document.documentElement.lang = lang === "zh" ? "zh-Hant" : "en";
   langToggle.textContent = lang === "zh" ? "EN" : "中文";
+  updateThemeToggle();
 
   document.querySelectorAll("[data-i18n]").forEach((node) => {
     const key = node.getAttribute("data-i18n");
