@@ -9,6 +9,8 @@
   --accent-strong: #075e53;
   --accent-soft: #e5f3ef;
   --ink-soft: #202522;
+  --strong: #202522;
+  --hero-card: rgba(255, 255, 255, 0.62);
   --shadow: 0 18px 50px rgba(20, 30, 24, 0.08);
 }
 
@@ -59,6 +61,8 @@ input {
   --accent-strong: #5fd3c0;
   --accent-soft: #19332e;
   --ink-soft: #25302b;
+  --strong: #eef2ee;
+  --hero-card: rgba(27, 33, 30, 0.8);
   --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
 }
 
@@ -224,7 +228,7 @@ h3 {
 .hero-position {
   max-width: 680px;
   margin-bottom: 12px;
-  color: var(--ink-soft);
+  color: var(--strong);
   font-size: clamp(19px, 2.2vw, 24px);
   font-weight: 750;
   line-height: 1.25;
@@ -248,7 +252,7 @@ h3 {
   padding: 14px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.62);
+  background: var(--hero-card);
 }
 
 .hero-proof strong,
@@ -391,7 +395,7 @@ h3 {
 }
 
 .evidence-row dt {
-  color: var(--ink-soft);
+  color: var(--strong);
   font-size: 13px;
   font-weight: 800;
   line-height: 1.4;
@@ -468,7 +472,7 @@ h3 {
 }
 
 .project-method strong {
-  color: var(--ink-soft);
+  color: var(--strong);
   font-size: 14px;
   line-height: 1.45;
 }
@@ -783,4 +787,14 @@ h3 {
   .message {
     width: 94%;
   }
+}
+
+[data-theme="dark"] .portrait {
+  filter: brightness(0.82) contrast(1.05) drop-shadow(0 18px 28px rgba(0, 0, 0, 0.5));
+}
+
+[data-theme="dark"] .message.error {
+  border-color: #a85a4e;
+  background: #3a1f1b;
+  color: #ffb4a8;
 }
