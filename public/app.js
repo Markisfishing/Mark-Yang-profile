@@ -51,6 +51,7 @@ const translations = {
     "projects.qsearch.hitRate": "Top-1,000 Hit Rate",
     "projects.qsearch.methodLabel": "From model to recommendation",
     "projects.qsearch.method": "Weighted interaction index → LightGBM ranking → Support, Viral Rate, Lift, composition, and original-post evidence.",
+    "gallery.prev": "Previous image",
     "gallery.next": "Next image",
     "gallery.zoom": "Enlarge image",
     "gallery.close": "Close",
@@ -165,6 +166,7 @@ const translations = {
     "projects.qsearch.hitRate": "前 1,000 篇命中率",
     "projects.qsearch.methodLabel": "從模型到內容建議",
     "projects.qsearch.method": "加權互動指標 → LightGBM 排名 → Support、Viral Rate、Lift、互動組成與原文證據。",
+    "gallery.prev": "上一張圖片",
     "gallery.next": "下一張圖片",
     "gallery.zoom": "放大圖片",
     "gallery.close": "關閉",
@@ -406,10 +408,11 @@ function cleanAgentReply(content) {
     .trim();
 }
 
-// 作品截圖：向右箭頭切換下一張，點圖放大
+// 作品截圖：左右箭頭（或鍵盤左右鍵、手指滑動）切換，點圖放大
 const lightbox = document.getElementById("lightbox");
 const lightboxImage = document.getElementById("lightboxImage");
 const lightboxCaption = document.getElementById("lightboxCaption");
+const swipeThreshold = 40;
 let lightboxGallery = null;
 
 document.querySelectorAll("[data-gallery]").forEach((gallery) => {
@@ -421,14 +424,17 @@ document.querySelectorAll("[data-gallery]").forEach((gallery) => {
     slides.forEach((slide, i) => { slide.hidden = i !== index; });
     if (lightboxGallery === gallery) syncLightbox(slides[index]);
   };
+  gallery.step = (delta) => gallery.showSlide(index + delta);
 
   slides.forEach((slide) => {
-    slide.querySelector(".gallery-next").addEventListener("click", () => gallery.showSlide(index + 1));
+    slide.querySelector(".gallery-prev").addEventListener("click", () => gallery.step(-1));
+    slide.querySelector(".gallery-next").addEventListener("click", () => gallery.step(1));
     slide.querySelector(".gallery-zoom").addEventListener("click", () => {
       lightboxGallery = gallery;
       syncLightbox(slide);
       lightbox.showModal();
     });
+    onSwipe(slide.querySelector(".gallery-frame"), (delta) => gallery.step(delta));
   });
 });
 
@@ -439,13 +445,27 @@ function syncLightbox(slide) {
   lightboxCaption.textContent = slide.querySelector("figcaption span").textContent;
 }
 
-document.getElementById("lightboxNext").addEventListener("click", () => {
-  const slides = [...lightboxGallery.querySelectorAll(".gallery-slide")];
-  const current = slides.findIndex((slide) => !slide.hidden);
-  lightboxGallery.showSlide(current + 1);
-});
+// 手指在圖上左滑看下一張、右滑看上一張；點擊不受影響
+function onSwipe(element, callback) {
+  let startX = null;
+  element.addEventListener("touchstart", (event) => { startX = event.touches[0].clientX; }, { passive: true });
+  element.addEventListener("touchend", (event) => {
+    if (startX === null) return;
+    const distance = event.changedTouches[0].clientX - startX;
+    startX = null;
+    if (Math.abs(distance) >= swipeThreshold) callback(distance < 0 ? 1 : -1);
+  });
+}
+
+document.getElementById("lightboxPrev").addEventListener("click", () => lightboxGallery.step(-1));
+document.getElementById("lightboxNext").addEventListener("click", () => lightboxGallery.step(1));
 document.getElementById("lightboxClose").addEventListener("click", () => lightbox.close());
+onSwipe(lightbox, (delta) => lightboxGallery && lightboxGallery.step(delta));
 lightbox.addEventListener("click", (event) => {
   if (event.target === lightbox) lightbox.close();
+});
+lightbox.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowLeft") lightboxGallery.step(-1);
+  if (event.key === "ArrowRight") lightboxGallery.step(1);
 });
 lightbox.addEventListener("close", () => { lightboxGallery = null; });

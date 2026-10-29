@@ -733,6 +733,7 @@ h3 {
   margin: 0;
 }
 
+.gallery-prev,
 .gallery-next,
 .lightbox-close {
   display: grid;
@@ -747,19 +748,29 @@ h3 {
   cursor: pointer;
 }
 
+.gallery-prev,
 .gallery-next {
   position: absolute;
   top: 50%;
-  right: var(--space-2);
   transform: translateY(-50%);
 }
 
+.gallery-prev {
+  left: var(--space-2);
+}
+
+.gallery-next {
+  right: var(--space-2);
+}
+
+.gallery-prev:hover,
 .gallery-next:hover,
 .lightbox-close:hover {
   background: var(--color-surface);
   border-color: var(--color-accent-border-hover);
 }
 
+.gallery-prev svg,
 .gallery-next svg,
 .lightbox-close svg {
   width: var(--space-4);
@@ -824,6 +835,10 @@ h3 {
   position: absolute;
   top: var(--space-2);
   right: var(--space-2);
+}
+
+.lightbox-prev {
+  left: var(--space-2);
 }
 
 .lightbox-next {
