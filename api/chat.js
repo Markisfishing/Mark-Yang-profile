@@ -71,7 +71,7 @@ Lesson 1 / Personal Introduction Page:
 - The first version of this portfolio site, built in June 2026 with plain HTML, CSS, and JavaScript and deployed on Vercel.
 - Mark handled content planning, interface implementation, bilingual copy, and the AI Profile Agent prompt and API integration.
 - Features: Chinese / English switching, light / dark theme toggle, responsive layout, and the AI Profile Agent chat connected to Groq / OpenAI APIs.
-- Live site: https://mark-yang-profile.vercel.app/ and source: https://github.com/Markisfishing/mark-yang-ai-profile
+- Live site: https://mark-yang-profile.vercel.app/
 
 Experience:
 - Administrative support assistant: document organization, administrative tasks, campus event coordination, internal communication.
