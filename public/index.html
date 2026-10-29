@@ -37,7 +37,7 @@
       </header>
 
       <main id="top">
-        <!-- 分頁：首頁 · 用途：開頭、關於我與作品速覽，導覽列每個分頁各自一頁 -->
+        <!-- 分頁：首頁 · 用途：開頭、關於我、作品速覽與聯絡方式，導覽列每個分頁各自一頁 -->
         <div class="page" id="home" data-page>
         <!-- 區塊：開頭 · 用途：姓名、一句話介紹、人像與重點數字 · 不需要可整段刪掉 -->
         <section class="hero">
@@ -114,6 +114,21 @@
               <p data-i18n="projects.qsearch.contribution">Team leadership, weighted-index design, data cleaning, model comparison, and project direction</p>
               <span class="preview-cta" data-i18n="home.projects.cta">See screenshots and details →</span>
             </a>
+          </div>
+        </section>
+
+        <!-- 區塊：聯絡方式 · 用途：Email 與 GitHub 連結，只放在首頁最下方 · 不需要可整段刪掉 -->
+        <section class="section contact-section" id="contact">
+          <div>
+            <p class="section-kicker" data-i18n="contact.kicker">Contact</p>
+            <h2 data-i18n="contact.title">Let's talk about AI applications, automation, and web development.</h2>
+            <p class="contact-description" data-i18n="contact.description">Interested in my work? Let's connect.</p>
+          </div>
+          <div class="contact-links">
+            <a href="mailto:y7632457@gmail.com">y7632457@gmail.com</a>
+            <a href="tel:+886979982811">0979-982-811</a>
+            <a href="https://github.com/Markisfishing" target="_blank" rel="noreferrer">GitHub / Markisfishing</a>
+            <a href="/assets/mark-yang-resume.pdf" download data-i18n="contact.resume">Download PDF Resume</a>
           </div>
         </section>
         </div>
@@ -461,20 +476,6 @@
         </section>
         </div>
 
-        <!-- 區塊：聯絡方式 · 用途：Email 與 GitHub 連結，不屬於任何分頁，每一頁底部都看得到 · 不需要可整段刪掉 -->
-        <section class="section contact-section" id="contact">
-          <div>
-            <p class="section-kicker" data-i18n="contact.kicker">Contact</p>
-            <h2 data-i18n="contact.title">Let's talk about AI applications, automation, and web development.</h2>
-            <p class="contact-description" data-i18n="contact.description">Interested in my work? Let's connect.</p>
-          </div>
-          <div class="contact-links">
-            <a href="mailto:y7632457@gmail.com">y7632457@gmail.com</a>
-            <a href="tel:+886979982811">0979-982-811</a>
-            <a href="https://github.com/Markisfishing" target="_blank" rel="noreferrer">GitHub / Markisfishing</a>
-            <a href="/assets/mark-yang-resume.pdf" download data-i18n="contact.resume">Download PDF Resume</a>
-          </div>
-        </section>
       </main>
 
       <!-- 區塊：頁尾 · 用途：版權與頁底資訊 · 不需要可整段刪掉 -->
@@ -501,6 +502,6 @@
       <p class="lightbox-caption" id="lightboxCaption"></p>
     </dialog>
 
-    <script src="/app.js?cache-bust=20261029-nav"></script>
+    <script src="/app.js?cache-bust=20261029-contact"></script>
   </body>
 </html>

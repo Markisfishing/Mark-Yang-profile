@@ -467,8 +467,7 @@ lightbox.addEventListener("keydown", (event) => {
 lightbox.addEventListener("close", () => { lightboxGallery = null; });
 
 // 分頁：導覽列每個標籤各自一頁，依網址的 # 決定顯示哪一頁；
-// 指向頁內區塊的連結（例如 #about、#codemind）會切到該區塊所在的分頁再捲過去，
-// 聯絡區塊不屬於任何分頁，所以 #contact 只捲動、不換頁
+// 指向頁內區塊的連結（例如 #about、#contact、#codemind）會切到該區塊所在的分頁再捲過去
 const pages = [...document.querySelectorAll("[data-page]")];
 const navTabs = [...document.querySelectorAll(".nav-links a")];
 const topbar = document.querySelector(".topbar");
