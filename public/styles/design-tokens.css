@@ -1,0 +1,89 @@
+/*
+  設計規範：整個網站只有這個檔案可以出現具體的色碼與尺寸數值。
+  其他 CSS 一律用 var(--...)。要改主色，只改 --color-accent 那一行。
+*/
+
+:root {
+  color-scheme: light;
+
+  /* 顏色：沿用目前網站的綠色系淺色主題；命名講用途不講長相，之後換色相不會變成謊話 */
+  --color-bg: #f7f8f5;            /* 整頁背景 */
+  --color-surface: #ffffff;       /* 卡片、輸入框、導覽列的底 */
+  --color-border: #dfe3dc;        /* 分隔線與卡片外框 */
+  --color-text: #111111;          /* 主要文字 */
+  --color-text-muted: #626862;    /* 次要說明文字 */
+  --color-accent: #0f7b6c;        /* 主色：按鈕、連結強調 */
+  --color-accent-hover: #075e53;  /* 主色的滑過／按下狀態，比主色深 */
+  --color-accent-soft: #e5f3ef;   /* 主色的淡底，用於標籤與重點區塊 */
+  --color-shadow: rgba(20, 30, 24, 0.08); /* 卡片陰影色，低透明度才不會髒 */
+  --color-heading: #202522;       /* 標題文字，比內文略深（深色主題反過來要最亮） */
+  --color-on-accent: #ffffff;     /* 放在主色底上的文字（主色按鈕、使用者訊息） */
+  --color-focus-ring: rgba(15, 123, 108, 0.38);        /* 鍵盤聚焦外框，取主色的半透明 */
+  --color-accent-border-hover: rgba(15, 123, 108, 0.45); /* 按鈕滑過時的框線 */
+  --color-bg-translucent: rgba(247, 248, 245, 0.92);     /* 黏在上方的導覽列，半透明才能透出下方內容 */
+  --color-border-translucent: rgba(223, 227, 220, 0.76); /* 導覽列下緣線 */
+  --color-surface-translucent: rgba(255, 255, 255, 0.62); /* 首頁卡片的霧面底 */
+  --color-surface-inverse: #202522;        /* 反白區塊（次要按鈕、貢獻卡）的深底 */
+  --color-on-inverse: #ffffff;             /* 反白區塊上的文字 */
+  --color-on-inverse-muted: rgba(255, 255, 255, 0.72); /* 反白區塊上的說明文字 */
+  --color-on-inverse-accent: #8ed6c8;      /* 反白區塊上的編號強調色 */
+  --color-error-border: #d89d93;  /* 錯誤訊息的框線、底、字三件組 */
+  --color-error-bg: #fff0ed;
+  --color-error-text: #8a2e20;
+  --shadow-card: 0 18px 50px var(--color-shadow);  /* 卡片陰影：偏移 18px、模糊 50px */
+  --filter-portrait: drop-shadow(0 18px 28px rgba(20, 30, 24, 0.12)); /* 去背人像的陰影 */
+
+  /* 字級：四級就夠用，用 rem 讓使用者調整瀏覽器字級時跟著變；base 不小於 16px */
+  --text-xs: 0.75rem;   /* 12px，編號、徽章等最小字（四級不夠，補這一級） */
+  --text-sm: 0.875rem;  /* 14px，備註與標籤 */
+  --text-base: 1rem;    /* 16px，內文 */
+  --text-lg: 1.25rem;   /* 20px，小標題 */
+  --text-xl: 2rem;      /* 32px，區塊大標題 */
+  --text-subtitle: clamp(1.1875rem, 2.2vw, 1.5rem);  /* 19~24px，隨螢幕寬度縮放的卡片標題 */
+  --text-title: clamp(1.75rem, 3.2vw, 2.5rem);       /* 28~40px，隨螢幕縮放的區塊標題 */
+  --text-display: clamp(2.125rem, 5vw, 3.375rem);    /* 34~54px，隨螢幕縮放的首頁主標 */
+
+  /* 間距：全部是 4px 的倍數，眼睛看得出 16 跟 24 的差別，看不出 17 跟 18 的 */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 1rem;      /* 16px */
+  --space-4: 1.5rem;    /* 24px */
+  --space-5: 2.5rem;    /* 40px */
+  --space-6: 4rem;      /* 64px，區塊與區塊之間 */
+
+  /* 其他：圓角與內容寬度沿用現有版面；字體堆疊只用系統字體，不載入外部字體檔（載入慢、離線會變樣） */
+  --radius: 8px;
+  --max-width: 1180px;
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* 深色主題：由 index.html 的 data-theme="dark" 觸發，只覆寫顏色，字級與間距不變 */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-bg: #121614;
+  --color-surface: #1b211e;
+  --color-border: #2e3631;
+  --color-text: #eef2ee;
+  --color-text-muted: #a3aca5;
+  --color-accent: #2fb9a3;        /* 深色底上要提亮才夠對比 */
+  --color-accent-hover: #5fd3c0;  /* 深色底上的滑過狀態改為更亮，不是更深 */
+  --color-accent-soft: #19332e;
+  --color-shadow: rgba(0, 0, 0, 0.35);
+  --color-heading: #eef2ee;
+  --color-on-accent: #08130f;     /* 深色底的主色偏亮，上面的字要用深色才讀得到 */
+  --color-bg-translucent: rgba(18, 22, 20, 0.92);
+  --color-border-translucent: rgba(46, 54, 49, 0.76);
+  --color-surface-translucent: rgba(27, 33, 30, 0.8);
+  --color-surface-inverse: #25302b;
+  --color-error-border: #a85a4e;
+  --color-error-bg: #3a1f1b;
+  --color-error-text: #ffb4a8;
+  --filter-portrait: brightness(0.82) contrast(1.05) drop-shadow(0 18px 28px rgba(0, 0, 0, 0.5)); /* 深色底下壓低人像亮度 */
+}
+
+/*
+  斷點備忘：CSS 變數不能用在 @media 裡，所以斷點只能寫成註解，用的時候自己打數字。
+  768px  平板直放：@media (min-width: 768px)
+  1024px 平板橫放、小筆電：@media (min-width: 1024px)
+*/
