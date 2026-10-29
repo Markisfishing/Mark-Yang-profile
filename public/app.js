@@ -1,10 +1,9 @@
 const translations = {
   en: {
-    "nav.about": "About",
-    "nav.projects": "Projects",
+    "nav.home": "Home",
+    "nav.projects": "Portfolio",
     "nav.skills": "Skills",
     "nav.agent": "AI Agent",
-    "nav.contact": "Contact",
     "hero.github": "GitHub",
     "theme.dark": "Dark",
     "theme.light": "Light",
@@ -26,6 +25,7 @@ const translations = {
     "about.p2": "I am expanding from AI and data projects into automation and full-stack development, with a focus on building useful tools and connecting the pieces into working systems.",
     "about.p3": "I am looking for an AI application engineering internship where I can keep building and learning through real projects.",
     "projects.title": "Portfolio",
+    "home.projects.cta": "See screenshots and details →",
     "projects.contributionLabel": "My contribution",
     "projects.codemind.roleLabel": "My role",
     "projects.codemind.contribution": "Lead developer | Teacher Web, backend teaching workflows, and weakness-diagnosis integration",
@@ -113,11 +113,10 @@ const translations = {
     "footer.note": "AI application engineering internship portfolio"
   },
   zh: {
-    "nav.about": "關於我",
-    "nav.projects": "專案",
-    "nav.skills": "技能",
+    "nav.home": "首頁",
+    "nav.projects": "作品集",
+    "nav.skills": "能力與經歷",
     "nav.agent": "AI 助理",
-    "nav.contact": "聯絡",
     "hero.github": "GitHub",
     "theme.dark": "深色",
     "theme.light": "淺色",
@@ -139,6 +138,7 @@ const translations = {
     "about.p2": "目前正從 AI 與資料專案延伸到自動化與前後端開發，持續練習把不同技術整合成可以實際運作的工具。",
     "about.p3": "我正在尋找 AI 應用工程實習機會，希望在真實專案中持續實作與學習。",
     "projects.title": "作品集",
+    "home.projects.cta": "查看截圖與完整介紹 →",
     "projects.contributionLabel": "我的貢獻",
     "projects.codemind.roleLabel": "我的角色",
     "projects.codemind.contribution": "主要開發者｜Teacher Web、Backend 教學流程與弱點診斷整合",
@@ -465,3 +465,31 @@ lightbox.addEventListener("keydown", (event) => {
   if (event.key === "ArrowRight") lightboxGallery.step(1);
 });
 lightbox.addEventListener("close", () => { lightboxGallery = null; });
+
+// 分頁：導覽列每個標籤各自一頁，依網址的 # 決定顯示哪一頁；
+// 指向頁內區塊的連結（例如 #about、#codemind）會切到該區塊所在的分頁再捲過去，
+// 聯絡區塊不屬於任何分頁，所以 #contact 只捲動、不換頁
+const pages = [...document.querySelectorAll("[data-page]")];
+const navTabs = [...document.querySelectorAll(".nav-links a")];
+const topbar = document.querySelector(".topbar");
+let currentPage = pages[0];
+
+function showPageFromHash() {
+  const id = decodeURIComponent(location.hash.slice(1));
+  const target = id ? document.getElementById(id) : null;
+  const page = target ? target.closest("[data-page]") : pages[0];
+  if (page) currentPage = page;
+
+  pages.forEach((p) => { p.hidden = p !== currentPage; });
+  navTabs.forEach((tab) => {
+    if (tab.getAttribute("href") === `#${currentPage.id}`) tab.setAttribute("aria-current", "page");
+    else tab.removeAttribute("aria-current");
+  });
+
+  if (!target || target === currentPage) window.scrollTo({ top: 0, behavior: "instant" });
+  // 導覽列是黏在上方的，手機版會換行變高，所以用實際高度扣掉，目標才不會被蓋住
+  else window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - topbar.offsetHeight, behavior: "instant" });
+}
+
+window.addEventListener("hashchange", showPageFromHash);
+showPageFromHash();

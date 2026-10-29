@@ -18,16 +18,15 @@
     <div class="site-shell">
       <!-- 區塊：導覽列 · 用途：品牌、主選單、語言與深淺色切換 · 不需要可整段刪掉 -->
       <header class="topbar">
-        <a class="brand" href="#top" aria-label="Mark Yang resume home">
+        <a class="brand" href="#home" aria-label="Mark Yang resume home">
           <span class="brand-mark">MY</span>
           <span>Mark Yang</span>
         </a>
         <nav class="nav-links" aria-label="Primary navigation">
-          <a href="#about" data-i18n="nav.about">About</a>
-          <a href="#projects" data-i18n="nav.projects">Projects</a>
+          <a href="#home" data-i18n="nav.home">Home</a>
+          <a href="#projects" data-i18n="nav.projects">Portfolio</a>
           <a href="#skills" data-i18n="nav.skills">Skills</a>
           <a href="#agent" data-i18n="nav.agent">AI Agent</a>
-          <a href="#contact" data-i18n="nav.contact">Contact</a>
         </nav>
         <div class="actions">
           <button class="lang-toggle" type="button" id="langToggle" aria-label="Toggle language">
@@ -38,6 +37,8 @@
       </header>
 
       <main id="top">
+        <!-- 分頁：首頁 · 用途：開頭、關於我與作品速覽，導覽列每個分頁各自一頁 -->
+        <div class="page" id="home" data-page>
         <!-- 區塊：開頭 · 用途：姓名、一句話介紹、人像與重點數字 · 不需要可整段刪掉 -->
         <section class="hero">
           <div class="hero-copy">
@@ -95,13 +96,37 @@
           </div>
         </section>
 
+        <!-- 區塊：作品速覽 · 用途：首頁上的兩項作品摘要，點選前往作品分頁 · 不需要可整段刪掉 -->
+        <section class="section" id="project-preview">
+          <div class="section-heading">
+            <h2 data-i18n="projects.title">Portfolio</h2>
+          </div>
+          <div class="preview-grid">
+            <a class="preview-card" href="#codemind">
+              <img src="/assets/projects/codemind-classes.png" alt="" data-i18n-alt="projects.codemind.gallery.classes" loading="lazy" />
+              <h3 data-i18n="projects.codemind.title">CodeMind / AI Programming Learning &amp; Weakness Diagnosis Platform</h3>
+              <p data-i18n="projects.codemind.contribution">Lead developer | Teacher Web, backend teaching workflows, and weakness-diagnosis integration</p>
+              <span class="preview-cta" data-i18n="home.projects.cta">See screenshots and details →</span>
+            </a>
+            <a class="preview-card" href="#qsearch">
+              <img src="/assets/projects/qsearch-model-comparison.png" alt="" data-i18n-alt="projects.qsearch.gallery.comparison" loading="lazy" />
+              <h3 data-i18n="projects.qsearch.title">SNA / Viral Post Prediction &amp; Content Strategy</h3>
+              <p data-i18n="projects.qsearch.contribution">Team leadership, weighted-index design, data cleaning, model comparison, and project direction</p>
+              <span class="preview-cta" data-i18n="home.projects.cta">See screenshots and details →</span>
+            </a>
+          </div>
+        </section>
+        </div>
+
+        <!-- 分頁：作品 · 用途：CodeMind 與 QSearch 完整介紹 -->
+        <div class="page" id="projects" data-page>
         <!-- 區塊：作品列表 · 用途：CodeMind 與 QSearch 專案成果 · 不需要可整段刪掉 -->
-        <section class="section" id="projects">
+        <section class="section">
           <div class="section-heading">
             <h2 data-i18n="projects.title">Portfolio</h2>
           </div>
           <div class="project-grid">
-            <article class="project-card">
+            <article class="project-card" id="codemind">
               <div class="project-meta">
                 <span>CodeMind</span>
                 <span>Agent Twin</span>
@@ -208,7 +233,7 @@
               <p class="project-collaboration" data-i18n="projects.codemind.collaboration">Team contribution: the initial Agent Twin concept and early student workflow were proposed by team members; I handled subsequent platform development, teaching features, diagnosis models, frontend-backend integration, and acceptance testing.</p>
             </article>
 
-            <article class="project-card">
+            <article class="project-card" id="qsearch">
               <div class="project-meta">
                 <span>LightGBM</span>
                 <span>SNA</span>
@@ -314,7 +339,10 @@
 
           </div>
         </section>
+        </div>
 
+        <!-- 分頁：能力與經歷 · 用途：貢獻方向、技能與經歷合併成一頁 -->
+        <div class="page" id="skills" data-page>
         <!-- 區塊：我能貢獻什麼 · 用途：三項貢獻方向 · 不需要可整段刪掉 -->
         <section class="section" id="contribution">
           <div class="section-heading">
@@ -341,7 +369,7 @@
         </section>
 
         <!-- 區塊：技能 · 用途：技術與工具清單 · 不需要可整段刪掉 -->
-        <section class="section" id="skills">
+        <section class="section" id="skill-list">
           <div class="section-heading">
             <p class="section-kicker" data-i18n="skills.kicker">Skills</p>
             <h2 data-i18n="skills.title">A practical stack for AI application work.</h2>
@@ -401,9 +429,12 @@
             </article>
           </div>
         </section>
+        </div>
 
+        <!-- 分頁：AI 助理 · 用途：履歷問答聊天 -->
+        <div class="page" id="agent" data-page>
         <!-- 區塊：AI 助理 · 用途：履歷問答聊天 · 不需要可整段刪掉 -->
-        <section class="section agent-section" id="agent">
+        <section class="section agent-section">
           <div class="agent-intro">
             <p class="section-kicker" data-i18n="agent.kicker">Interactive Resume</p>
             <h2 data-i18n="agent.title">Ask about my work</h2>
@@ -428,8 +459,9 @@
             </form>
           </div>
         </section>
+        </div>
 
-        <!-- 區塊：聯絡方式 · 用途：Email 與 GitHub 連結 · 不需要可整段刪掉 -->
+        <!-- 區塊：聯絡方式 · 用途：Email 與 GitHub 連結，不屬於任何分頁，每一頁底部都看得到 · 不需要可整段刪掉 -->
         <section class="section contact-section" id="contact">
           <div>
             <p class="section-kicker" data-i18n="contact.kicker">Contact</p>
@@ -469,6 +501,6 @@
       <p class="lightbox-caption" id="lightboxCaption"></p>
     </dialog>
 
-    <script src="/app.js?cache-bust=20261029-portfolio-title"></script>
+    <script src="/app.js?cache-bust=20261029-nav"></script>
   </body>
 </html>
