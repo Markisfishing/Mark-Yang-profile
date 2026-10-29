@@ -51,14 +51,20 @@ const translations = {
     "projects.qsearch.hitRate": "Top-1,000 Hit Rate",
     "projects.qsearch.methodLabel": "From model to recommendation",
     "projects.qsearch.method": "Weighted interaction index → LightGBM ranking → Support, Viral Rate, Lift, composition, and original-post evidence.",
-    "projects.github": "View more work on GitHub →",
-    "projects.intro1.title": "Lesson 1 / Personal Introduction Page",
-    "projects.intro1.body": "The first version of this site, built in June 2026 as a personal introduction page with plain HTML, CSS, and JavaScript, then deployed on Vercel.",
-    "projects.intro1.contribution": "Content planning, interface implementation, bilingual copy, and the AI Profile Agent prompt and API integration",
-    "projects.intro1.point1": "Chinese / English switching and a light / dark theme toggle.",
-    "projects.intro1.point2": "AI Profile Agent chat that answers questions about my projects, skills, and contact information, connected to Groq / OpenAI APIs.",
-    "projects.intro1.point3": "Responsive layout for phone, tablet, and desktop.",
-    "projects.intro1.live": "View the live site →",
+    "gallery.next": "Next image",
+    "gallery.zoom": "Enlarge image",
+    "gallery.close": "Close",
+    "gallery.viewer": "Image viewer",
+    "projects.codemind.galleryLabel": "CodeMind screenshots",
+    "projects.codemind.gallery.classes": "My classes: class list, join code, and class entry (demo data)",
+    "projects.codemind.gallery.overview": "Class overview: weakness analysis ranked by affected students (demo data)",
+    "projects.codemind.gallery.assignment": "Assignment editor: question types, question editing, and publishing to classes (demo data)",
+    "projects.codemind.gallery.aiQuestion": "AI-generated question preview with Markdown and LaTeX rendering (demo data)",
+    "projects.qsearch.galleryLabel": "QSearch presentation slides",
+    "projects.qsearch.gallery.comparison": "Model comparison: AUC and AP for Logistic Regression and LightGBM",
+    "projects.qsearch.gallery.topk": "Top-K evaluation: LightGBM reaches a 54.9% hit rate at Top-1,000",
+    "projects.qsearch.gallery.quadrants": "Page category quadrants: post volume versus interaction efficiency",
+    "projects.qsearch.gallery.flow": "Implementation flow: weighting, model ranking, cross evidence, original posts, and UI simulation",
     "contribution.kicker": "What I Can Contribute",
     "contribution.title": "A practical teammate for AI application work.",
     "contribution.build.title": "Build useful AI flows",
@@ -159,14 +165,20 @@ const translations = {
     "projects.qsearch.hitRate": "前 1,000 篇命中率",
     "projects.qsearch.methodLabel": "從模型到內容建議",
     "projects.qsearch.method": "加權互動指標 → LightGBM 排名 → Support、Viral Rate、Lift、互動組成與原文證據。",
-    "projects.github": "在 GitHub 查看更多作品 →",
-    "projects.intro1.title": "第 1 堂 / 個人自我介紹頁",
-    "projects.intro1.body": "這個網站的第一版，2026 年 6 月以 HTML、CSS 與 JavaScript 製作個人自我介紹頁，並部署到 Vercel。",
-    "projects.intro1.contribution": "內容規劃、介面實作、雙語文案，以及 AI Profile Agent 的 Prompt 與 API 串接",
-    "projects.intro1.point1": "中英文切換與深淺色主題切換。",
-    "projects.intro1.point2": "AI Profile Agent 聊天，可詢問專案、技能與聯絡方式，串接 Groq / OpenAI API。",
-    "projects.intro1.point3": "支援手機、平板與桌面的響應式版面。",
-    "projects.intro1.live": "查看線上網站 →",
+    "gallery.next": "下一張圖片",
+    "gallery.zoom": "放大圖片",
+    "gallery.close": "關閉",
+    "gallery.viewer": "圖片檢視",
+    "projects.codemind.galleryLabel": "CodeMind 系統截圖",
+    "projects.codemind.gallery.classes": "我的班級：班級列表、班級代碼與進入班級（示範資料）",
+    "projects.codemind.gallery.overview": "班級總覽：依受影響學生比例排序的班級弱點分析（示範資料）",
+    "projects.codemind.gallery.assignment": "作業編輯：題型選擇、題目編輯與發布到班級（示範資料）",
+    "projects.codemind.gallery.aiQuestion": "AI 產題預覽：支援 Markdown 與 LaTeX 公式排版（示範資料）",
+    "projects.qsearch.galleryLabel": "QSearch 簡報頁面",
+    "projects.qsearch.gallery.comparison": "模型表現比較：Logistic Regression 與 LightGBM 的 AUC、AP",
+    "projects.qsearch.gallery.topk": "Top-K 評估：LightGBM 在 Top-1,000 的命中率達 54.9%",
+    "projects.qsearch.gallery.quadrants": "頁面類別象限圖：貼文量與互動效率",
+    "projects.qsearch.gallery.flow": "實作流程：加權、模型排名、交叉佐證、原文檢索與 UI 模擬輸出",
     "contribution.kicker": "我能貢獻什麼",
     "contribution.title": "適合 AI 應用工程團隊的實作型夥伴。",
     "contribution.build.title": "建立有用的 AI 流程",
@@ -297,6 +309,16 @@ function applyLanguage(lang) {
     node.placeholder = translations[lang][key] || translations.en[key] || "";
   });
 
+  document.querySelectorAll("[data-i18n-alt]").forEach((node) => {
+    const key = node.getAttribute("data-i18n-alt");
+    node.alt = translations[lang][key] || translations.en[key] || "";
+  });
+
+  document.querySelectorAll("[data-i18n-label]").forEach((node) => {
+    const key = node.getAttribute("data-i18n-label");
+    node.setAttribute("aria-label", translations[lang][key] || translations.en[key] || "");
+  });
+
   renderPromptChips();
 }
 
@@ -383,3 +405,47 @@ function cleanAgentReply(content) {
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 }
+
+// 作品截圖：向右箭頭切換下一張，點圖放大
+const lightbox = document.getElementById("lightbox");
+const lightboxImage = document.getElementById("lightboxImage");
+const lightboxCaption = document.getElementById("lightboxCaption");
+let lightboxGallery = null;
+
+document.querySelectorAll("[data-gallery]").forEach((gallery) => {
+  const slides = [...gallery.querySelectorAll(".gallery-slide")];
+  let index = 0;
+
+  gallery.showSlide = (next) => {
+    index = (next + slides.length) % slides.length;
+    slides.forEach((slide, i) => { slide.hidden = i !== index; });
+    if (lightboxGallery === gallery) syncLightbox(slides[index]);
+  };
+
+  slides.forEach((slide) => {
+    slide.querySelector(".gallery-next").addEventListener("click", () => gallery.showSlide(index + 1));
+    slide.querySelector(".gallery-zoom").addEventListener("click", () => {
+      lightboxGallery = gallery;
+      syncLightbox(slide);
+      lightbox.showModal();
+    });
+  });
+});
+
+function syncLightbox(slide) {
+  const image = slide.querySelector("img");
+  lightboxImage.src = image.currentSrc || image.src;
+  lightboxImage.alt = image.alt;
+  lightboxCaption.textContent = slide.querySelector("figcaption span").textContent;
+}
+
+document.getElementById("lightboxNext").addEventListener("click", () => {
+  const slides = [...lightboxGallery.querySelectorAll(".gallery-slide")];
+  const current = slides.findIndex((slide) => !slide.hidden);
+  lightboxGallery.showSlide(current + 1);
+});
+document.getElementById("lightboxClose").addEventListener("click", () => lightbox.close());
+lightbox.addEventListener("click", (event) => {
+  if (event.target === lightbox) lightbox.close();
+});
+lightbox.addEventListener("close", () => { lightboxGallery = null; });

@@ -699,6 +699,143 @@ h3 {
   flex: 1;
 }
 
+/* 區塊：作品截圖圖庫 · 用途：作品卡內的截圖輪播，向右箭頭換下一張、點圖放大 · 不需要可整段刪掉 */
+.gallery {
+  margin: var(--space-3) 0;
+}
+
+.gallery-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.gallery-zoom {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+.gallery-zoom img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-slide {
+  margin: 0;
+}
+
+.gallery-next,
+.lightbox-close {
+  display: grid;
+  place-items: center;
+  width: var(--size-icon-button);
+  height: var(--size-icon-button);
+  padding: 0;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg-translucent);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.gallery-next {
+  position: absolute;
+  top: 50%;
+  right: var(--space-2);
+  transform: translateY(-50%);
+}
+
+.gallery-next:hover,
+.lightbox-close:hover {
+  background: var(--color-surface);
+  border-color: var(--color-accent-border-hover);
+}
+
+.gallery-next svg,
+.lightbox-close svg {
+  width: var(--space-4);
+  height: var(--space-4);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--icon-stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.gallery-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.gallery-count {
+  white-space: nowrap;
+}
+
+/* 區塊：圖片放大檢視 · 用途：點選作品截圖後放大顯示 · 不需要可整段刪掉 */
+.lightbox {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  padding: 0;
+  border: 0;
+  background: var(--color-overlay);
+  color: var(--color-on-inverse);
+}
+
+.lightbox[open] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox::backdrop {
+  background: transparent;
+}
+
+.lightbox-frame {
+  position: relative;
+}
+
+.lightbox-image {
+  display: block;
+  width: auto;
+  max-width: 92vw;
+  max-height: 80vh;
+  margin: 0 auto;
+  border-radius: var(--radius);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+}
+
+.lightbox-next {
+  right: var(--space-2);
+}
+
+.lightbox-caption {
+  margin: var(--space-2) 0 0;
+  text-align: center;
+  font-size: var(--text-sm);
+}
+
 /* 手機優先：以上的基礎規則就是 375px 手機版面，往寬螢幕再用 min-width 加規則。
    變數不能用在 @media，所以斷點直接寫數字。
    斷點：768px 以上（平板直放、桌面）還原寬螢幕的版面 */
