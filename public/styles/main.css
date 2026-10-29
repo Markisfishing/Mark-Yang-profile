@@ -21,7 +21,7 @@ a {
 
 :focus-visible {
   outline: var(--border-width-accent) solid var(--color-focus-ring);
-  outline-offset: 3px;
+  outline-offset: var(--focus-offset);
 }
 
 button,
@@ -31,7 +31,7 @@ input {
 
 /* 區塊：全域 · 用途：頁面外框寬度 · 不需要可整段刪掉 */
 .site-shell {
-  width: min(var(--max-width), calc(100% - 32px));
+  width: min(var(--max-width), calc(100% - var(--page-margin)));
   margin: 0 auto;
 }
 
@@ -44,10 +44,10 @@ input {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  min-height: 74px;
+  min-height: var(--topbar-height);
   padding: var(--space-3) 0;
   background: var(--color-bg-translucent);
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(var(--blur-glass));
   border-bottom: var(--border-width) solid var(--color-border-translucent);
 }
 
@@ -69,8 +69,8 @@ input {
 
 .brand-mark {
   display: grid;
-  width: 36px;
-  height: 36px;
+  width: var(--size-brand-mark);
+  height: var(--size-brand-mark);
   place-items: center;
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius);
@@ -109,7 +109,7 @@ input {
 
 .button:hover,
 .lang-toggle:hover {
-  transform: translateY(-1px);
+  transform: translateY(var(--lift-hover));
   border-color: var(--color-accent-border-hover);
 }
 
@@ -137,10 +137,10 @@ input {
 /* 區塊：開頭 · 用途：姓名、一句話介紹、人像與三個重點數字 · 不需要可整段刪掉 */
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
+  grid-template-columns: minmax(0, 1fr) var(--portrait-width);
   gap: var(--space-6);
   align-items: center;
-  min-height: calc(100vh - 74px);
+  min-height: calc(100vh - var(--topbar-height));
   padding: var(--space-6) 0;
 }
 
@@ -162,7 +162,7 @@ p {
 }
 
 h1 {
-  max-width: 760px;
+  max-width: var(--measure-lg);
   margin-bottom: var(--space-4);
   font-size: var(--text-display);
   line-height: 1;
@@ -237,9 +237,9 @@ h3 {
 .portrait-wrap {
   position: relative;
   width: 100%;
-  max-width: 300px;
+  max-width: var(--portrait-width);
   margin: 0;
-  transform: translateY(-16px);
+  transform: translateY(var(--portrait-offset));
 }
 
 .portrait-wrap::before {
@@ -263,7 +263,7 @@ h3 {
 
 .two-column {
   display: grid;
-  grid-template-columns: minmax(240px, 0.85fr) minmax(0, 1.15fr);
+  grid-template-columns: minmax(var(--column-min-sm), 0.85fr) minmax(0, 1.15fr);
   gap: var(--space-6);
 }
 
@@ -279,7 +279,7 @@ h3 {
 }
 
 .section-heading {
-  max-width: 880px;
+  max-width: var(--measure-xl);
   margin-bottom: var(--space-5);
 }
 
@@ -329,7 +329,7 @@ h3 {
 .project-meta span,
 .prompt-chips button {
   border: var(--border-width) solid var(--color-border);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: var(--space-2) var(--space-2);
   background: var(--color-accent-soft);
   color: var(--color-accent-hover);
@@ -415,7 +415,7 @@ h3 {
 .text-link:hover {
   color: var(--color-accent);
   text-decoration: underline;
-  text-underline-offset: 4px;
+  text-underline-offset: var(--underline-offset);
 }
 
 .project-method {
@@ -516,7 +516,7 @@ h3 {
 }
 
 .contribution-card {
-  min-height: 220px;
+  min-height: var(--card-min-height);
   padding: var(--space-4);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius);
@@ -560,7 +560,7 @@ h3 {
 /* 區塊：AI 助理 · 用途：履歷問答聊天介面 · 不需要可整段刪掉 */
 .agent-section {
   display: grid;
-  grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1.28fr);
+  grid-template-columns: minmax(var(--column-min-md), 0.72fr) minmax(0, 1.28fr);
   gap: var(--space-5);
   align-items: start;
 }
@@ -571,7 +571,7 @@ h3 {
 }
 
 .agent-note {
-  max-width: 360px;
+  max-width: var(--measure-xs);
   margin-top: var(--space-4);
   padding-left: var(--space-3);
   border-left: var(--border-width-strong) solid var(--color-accent);
@@ -582,14 +582,14 @@ h3 {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  min-height: 320px;
-  max-height: 480px;
+  min-height: var(--chat-min-height);
+  max-height: var(--chat-max-height);
   overflow-y: auto;
   padding: var(--space-1);
 }
 
 .message {
-  width: min(82%, 620px);
+  width: min(82%, var(--bubble-max-width));
   padding: var(--space-3) var(--space-3);
   border-radius: var(--radius);
   white-space: pre-line;
@@ -649,7 +649,7 @@ h3 {
 }
 
 .contact-description {
-  max-width: 540px;
+  max-width: var(--measure-sm);
   margin-top: var(--space-4);
   font-size: var(--text-base);
   white-space: nowrap;
@@ -659,7 +659,7 @@ h3 {
   flex-direction: column;
   align-items: flex-start;
   gap: var(--space-3);
-  min-width: 280px;
+  min-width: var(--field-min-width);
   font-weight: 750;
 }
 
@@ -701,7 +701,7 @@ h3 {
   }
 
   .portrait-wrap {
-    max-width: 280px;
+    max-width: var(--portrait-width-narrow);
   }
 
   .project-grid,
@@ -723,7 +723,7 @@ h3 {
 /* 斷點：768px 以下（手機）再收緊版面 */
 @media (max-width: 767px) {
   .site-shell {
-    width: min(100% - 22px, var(--max-width));
+    width: min(100% - var(--page-margin-narrow), var(--max-width));
   }
 
   .actions {
