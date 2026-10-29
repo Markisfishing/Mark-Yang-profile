@@ -12,7 +12,6 @@
 - AI Profile Agent：可詢問個人專案、技能、學習方向與聯絡方式
 - CodeMind：整合 VS Code 學生端、Teacher Web、Backend API、AI 輔導與弱點診斷的程式學習平台
 - QSearch SNA：社群貼文爆紅預測與內容策略分析專案
-- 第 1 堂個人自我介紹頁：本站第一版，以 HTML、CSS、JavaScript 製作並部署在 Vercel
 - 中英文切換與響應式手機版介面
 - 整合 AI Agent、資料處理、模型成果與個人履歷資訊
 
