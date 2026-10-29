@@ -30,18 +30,20 @@ input {
 }
 
 /* 區塊：全域 · 用途：頁面外框寬度 · 不需要可整段刪掉 */
+
 .site-shell {
-  width: min(var(--max-width), calc(100% - var(--page-margin)));
+  width: min(100% - var(--page-margin-narrow), var(--max-width));
   margin: 0 auto;
 }
 
 /* 區塊：導覽列 · 用途：品牌、主選單、語言與深淺色切換 · 不需要可整段刪掉 */
+
 .topbar {
   position: sticky;
   top: 0;
   z-index: 10;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-4);
   min-height: var(--topbar-height);
@@ -49,6 +51,7 @@ input {
   background: var(--color-bg-translucent);
   backdrop-filter: blur(var(--blur-glass));
   border-bottom: var(--border-width) solid var(--color-border-translucent);
+  flex-wrap: wrap;
 }
 
 .brand,
@@ -83,6 +86,10 @@ input {
   gap: var(--space-4);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
+  order: 3;
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: var(--space-1);
 }
 
 .nav-links a:hover,
@@ -92,6 +99,7 @@ input {
 
 .actions {
   gap: var(--space-2);
+  width: 100%;
 }
 
 .button,
@@ -114,6 +122,7 @@ input {
 }
 
 /* 區塊：按鈕 · 用途：主要、次要、幽靈三種按鈕樣式 · 不需要可整段刪掉 */
+
 .button-primary {
   background: var(--color-accent);
   border-color: var(--color-accent);
@@ -135,12 +144,13 @@ input {
 }
 
 /* 區塊：開頭 · 用途：姓名、一句話介紹、人像與三個重點數字 · 不需要可整段刪掉 */
+
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--portrait-width);
-  gap: var(--space-6);
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
   align-items: center;
-  min-height: calc(100vh - var(--topbar-height));
+  min-height: auto;
   padding: var(--space-6) 0;
 }
 
@@ -205,7 +215,7 @@ h3 {
 
 .hero-proof {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: var(--space-2);
   max-width: var(--measure);
   margin-top: var(--space-5);
@@ -237,7 +247,7 @@ h3 {
 .portrait-wrap {
   position: relative;
   width: 100%;
-  max-width: var(--portrait-width);
+  max-width: var(--portrait-width-narrow);
   margin: 0;
   transform: translateY(var(--portrait-offset));
 }
@@ -256,6 +266,7 @@ h3 {
 }
 
 /* 區塊：區塊共用 · 用途：各區塊的間距與雙欄版面 · 不需要可整段刪掉 */
+
 .section {
   padding: var(--space-6) 0;
   border-top: var(--border-width) solid var(--color-border);
@@ -263,8 +274,8 @@ h3 {
 
 .two-column {
   display: grid;
-  grid-template-columns: minmax(var(--column-min-sm), 0.85fr) minmax(0, 1.15fr);
-  gap: var(--space-6);
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
 }
 
 .prose {
@@ -291,9 +302,10 @@ h3 {
 }
 
 /* 區塊：作品列表 · 用途：CodeMind 與 QSearch 專案卡片 · 不需要可整段刪掉 */
+
 .project-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: var(--space-3);
 }
 
@@ -347,7 +359,7 @@ h3 {
 
 .evidence-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: var(--space-2);
   margin: var(--space-4) 0 0;
 }
@@ -450,7 +462,7 @@ h3 {
 
 .metric-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr;
   gap: var(--space-2);
   margin-top: var(--space-4);
 }
@@ -479,9 +491,10 @@ h3 {
 }
 
 /* 區塊：技能 · 用途：技能分類卡片 · 不需要可整段刪掉 */
+
 .skill-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: var(--space-3);
 }
 
@@ -509,9 +522,10 @@ h3 {
 }
 
 /* 區塊：我能貢獻什麼 · 用途：三張深色卡片 · 不需要可整段刪掉 */
+
 .contribution-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: var(--space-3);
 }
 
@@ -542,6 +556,7 @@ h3 {
 }
 
 /* 區塊：經歷 · 用途：工作與志工經歷時間軸 · 不需要可整段刪掉 */
+
 .timeline {
   display: grid;
   gap: var(--space-3);
@@ -558,9 +573,10 @@ h3 {
 }
 
 /* 區塊：AI 助理 · 用途：履歷問答聊天介面 · 不需要可整段刪掉 */
+
 .agent-section {
   display: grid;
-  grid-template-columns: minmax(var(--column-min-md), 0.72fr) minmax(0, 1.28fr);
+  grid-template-columns: 1fr;
   gap: var(--space-5);
   align-items: start;
 }
@@ -589,7 +605,7 @@ h3 {
 }
 
 .message {
-  width: min(82%, var(--bubble-max-width));
+  width: 94%;
   padding: var(--space-3) var(--space-3);
   border-radius: var(--radius);
   white-space: pre-line;
@@ -625,7 +641,7 @@ h3 {
 
 .chat-form {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr;
   gap: var(--space-2);
 }
 
@@ -642,17 +658,19 @@ h3 {
 }
 
 /* 區塊：聯絡方式 · 用途：Email 與 GitHub 連結 · 不需要可整段刪掉 */
+
 .contact-section {
   display: flex;
   justify-content: space-between;
   gap: var(--space-5);
+  flex-direction: column;
 }
 
 .contact-description {
   max-width: var(--measure-sm);
   margin-top: var(--space-4);
   font-size: var(--text-base);
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .contact-links {
@@ -664,6 +682,7 @@ h3 {
 }
 
 /* 區塊：頁尾 · 用途：版權與頁底連結 · 不需要可整段刪掉 */
+
 .footer {
   display: flex;
   justify-content: space-between;
@@ -672,93 +691,108 @@ h3 {
   border-top: var(--border-width) solid var(--color-border);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
+  flex-direction: column;
 }
 
-/* 斷點：1024px 以下（平板直放、手機）改單欄；變數不能用在 @media，所以直接寫數字 */
-@media (max-width: 1023px) {
-  .topbar {
-    align-items: flex-start;
-    flex-wrap: wrap;
-  }
 
-  .nav-links {
-    order: 3;
-    width: 100%;
-    overflow-x: auto;
-    padding-bottom: var(--space-1);
-  }
-
-  .hero,
-  .two-column,
-  .agent-section {
-    grid-template-columns: 1fr;
-    gap: var(--space-5);
-  }
-
-  .hero {
-    min-height: auto;
-    padding-top: var(--space-6);
-  }
-
-  .portrait-wrap {
-    max-width: var(--portrait-width-narrow);
-  }
-
-  .project-grid,
-  .skill-grid,
-  .contribution-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .contact-section,
-  .footer {
-    flex-direction: column;
-  }
-
-  .contact-description {
-    white-space: normal;
-  }
+.actions .button, .actions .lang-toggle {
+  flex: 1;
 }
 
-/* 斷點：768px 以下（手機）再收緊版面 */
-@media (max-width: 767px) {
+/* 手機優先：以上的基礎規則就是 375px 手機版面，往寬螢幕再用 min-width 加規則。
+   變數不能用在 @media，所以斷點直接寫數字。
+   斷點：768px 以上（平板直放、桌面）還原寬螢幕的版面 */
+@media (min-width: 768px) {
   .site-shell {
-    width: min(100% - var(--page-margin-narrow), var(--max-width));
+    width: min(var(--max-width), calc(100% - var(--page-margin)));
   }
 
   .actions {
-    width: 100%;
+    width: auto;
   }
 
-  .actions .button,
-  .actions .lang-toggle {
-    flex: 1;
-    text-align: center;
+  .actions .button, .actions .lang-toggle {
+    flex: 0 1 auto;
   }
 
-  .section {
-    padding: var(--space-6) 0;
+  .metric-row {
+    grid-template-columns: repeat(3, 1fr);
   }
 
-  .project-card {
-    padding: var(--space-4);
-  }
-
-  .metric-row,
   .evidence-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .hero-proof {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .chat-form {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr auto;
   }
 
   .message {
-    width: 94%;
+    width: min(82%, var(--bubble-max-width));
   }
 }
 
+/* 斷點：1024px 以上（平板橫放、小筆電、桌面）改回多欄 */
+@media (min-width: 1024px) {
+  .topbar {
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+
+  .nav-links {
+    order: 0;
+    width: auto;
+    overflow-x: visible;
+    padding-bottom: 0;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr) var(--portrait-width);
+    gap: var(--space-6);
+  }
+
+  .two-column {
+    grid-template-columns: minmax(var(--column-min-sm), 0.85fr) minmax(0, 1.15fr);
+    gap: var(--space-6);
+  }
+
+  .agent-section {
+    grid-template-columns: minmax(var(--column-min-md), 0.72fr) minmax(0, 1.28fr);
+  }
+
+  .hero {
+    min-height: calc(100vh - var(--topbar-height));
+  }
+
+  .portrait-wrap {
+    max-width: var(--portrait-width);
+  }
+
+  .project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .skill-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .contribution-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .contact-section {
+    flex-direction: row;
+  }
+
+  .footer {
+    flex-direction: row;
+  }
+
+  .contact-description {
+    white-space: nowrap;
+  }
+}
