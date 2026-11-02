@@ -1011,3 +1011,207 @@ h3 {
     white-space: nowrap;
   }
 }
+
+/* 區塊：互動工具頁 · 用途：tools/ 底下各個小工具共用的版面（手機優先，768 以上欄位排兩欄） · 刪掉的話 tools/ 的頁面會沒有樣式 */
+
+.tool-page {
+  max-width: var(--measure);
+  padding: var(--space-5) 0 var(--space-6);
+}
+
+.tool-back {
+  display: inline-block;
+  margin-bottom: var(--space-4);
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.tool-back:hover {
+  color: var(--color-accent-hover);
+}
+
+.tool-title {
+  margin: 0 0 var(--space-2);
+  color: var(--color-heading);
+  font-size: var(--text-title);
+  line-height: 1.2;
+}
+
+.tool-lead {
+  margin: 0 0 var(--space-4);
+  color: var(--color-text-muted);
+}
+
+.tool-card {
+  margin-bottom: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+}
+
+.tool-fields {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+
+.tool-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.tool-field label {
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.tool-field input {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.tool-field input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 var(--border-width-accent) var(--color-focus-ring);
+}
+
+.tool-field input[aria-invalid] {
+  border-color: var(--color-error-border);
+  background: var(--color-error-bg);
+}
+
+.tool-field-error {
+  min-height: 0;
+  margin: 0;
+  color: var(--color-error-text);
+  font-size: var(--text-sm);
+}
+
+.tool-field-error:empty {
+  display: none;
+}
+
+.tool-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.tool-result-message {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.tool-result[data-state="error"] {
+  background: var(--color-error-bg);
+  border-color: var(--color-error-border);
+}
+
+.tool-result[data-state="error"] .tool-result-message,
+.tool-error-list {
+  color: var(--color-error-text);
+}
+
+.tool-error-list {
+  margin: var(--space-2) 0 0;
+  padding-left: var(--space-4);
+}
+
+.tool-result-label {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.tool-result-value {
+  margin: 0 0 var(--space-3);
+  color: var(--color-accent);
+  font-size: var(--text-display);
+  font-weight: 800;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.tool-breakdown {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.tool-breakdown div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: var(--border-width) solid var(--color-border);
+}
+
+.tool-breakdown dt {
+  color: var(--color-text-muted);
+}
+
+.tool-breakdown dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+/* 結果出現時淡入並往上移，讓人看得出「剛剛換了」 */
+.tool-result.is-entering {
+  animation: tool-rise var(--motion-duration) ease-out;
+}
+
+@keyframes tool-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--motion-rise));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tool-note h2 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-lg);
+}
+
+.tool-note p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+@media (min-width: 768px) {
+  .tool-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tool-breakdown {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .tool-breakdown div {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+/* 打開系統「減少動態效果」的人：動畫全部關掉，功能不受影響 */
+@media (prefers-reduced-motion: reduce) {
+  .tool-result.is-entering {
+    animation: none;
+  }
+}

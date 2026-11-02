@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="LLM API 成本估算器：輸入 token 用量、呼叫次數與單價，算出每月大約要花多少錢。" />
+    <title>LLM API 成本估算器 | Mark Yang</title>
+    <!-- 區塊：深淺色主題 · 用途：沿用首頁記住的深淺色設定 · 不需要可整段刪掉（會固定淺色） -->
+    <script>
+      try { document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch (e) {}
+    </script>
+    <link rel="stylesheet" href="/styles/design-tokens.css" />
+    <link rel="stylesheet" href="/styles/main.css" />
+  </head>
+  <body>
+    <main class="site-shell tool-page">
+      <!-- 區塊：返回列 · 用途：回作品集首頁 · 不需要可整段刪掉 -->
+      <a class="tool-back" href="/">← 回作品集</a>
+
+      <!-- 區塊：標題 · 用途：說明這個工具在算什麼 · 不可刪（使用者會不知道這頁是什麼） -->
+      <header class="tool-header">
+        <p class="eyebrow">Interactive Tool · Week 3</p>
+        <h1 class="tool-title">LLM API 成本估算器</h1>
+        <p class="tool-lead">
+          上線一個 AI 功能之前，先算一下每個月要付多少。單價請填你要用的模型在官方價目表上的價格（美元／每百萬 token）。
+        </p>
+      </header>
+
+      <!-- 區塊：輸入表單 · 用途：五個欄位與「算一下」按鈕 · 不可刪（工具的核心） -->
+      <form class="tool-card tool-form" id="costForm" novalidate>
+        <div class="tool-fields">
+          <div class="tool-field">
+            <label for="inputTokens">每次呼叫的輸入 token 數</label>
+            <input id="inputTokens" name="inputTokens" inputmode="numeric" autocomplete="off" placeholder="例如 1500" aria-describedby="inputTokens-error" />
+            <p class="tool-field-error" id="inputTokens-error" aria-live="polite"></p>
+          </div>
+          <div class="tool-field">
+            <label for="outputTokens">每次呼叫的輸出 token 數</label>
+            <input id="outputTokens" name="outputTokens" inputmode="numeric" autocomplete="off" placeholder="例如 500" aria-describedby="outputTokens-error" />
+            <p class="tool-field-error" id="outputTokens-error" aria-live="polite"></p>
+          </div>
+          <div class="tool-field">
+            <label for="callsPerDay">每天呼叫次數</label>
+            <input id="callsPerDay" name="callsPerDay" inputmode="numeric" autocomplete="off" placeholder="例如 1000" aria-describedby="callsPerDay-error" />
+            <p class="tool-field-error" id="callsPerDay-error" aria-live="polite"></p>
+          </div>
+          <div class="tool-field">
+            <label for="inputPrice">輸入單價（US$／百萬 token）</label>
+            <input id="inputPrice" name="inputPrice" inputmode="decimal" autocomplete="off" placeholder="例如 3" aria-describedby="inputPrice-error" />
+            <p class="tool-field-error" id="inputPrice-error" aria-live="polite"></p>
+          </div>
+          <div class="tool-field">
+            <label for="outputPrice">輸出單價（US$／百萬 token）</label>
+            <input id="outputPrice" name="outputPrice" inputmode="decimal" autocomplete="off" placeholder="例如 15" aria-describedby="outputPrice-error" />
+            <p class="tool-field-error" id="outputPrice-error" aria-live="polite"></p>
+          </div>
+        </div>
+        <div class="tool-actions">
+          <button class="button button-primary" type="submit">算一下</button>
+          <button class="button button-ghost" type="reset">清空</button>
+        </div>
+      </form>
+
+      <!-- 區塊：結果區 · 用途：顯示空值、錯誤、成功三種狀態 · 不可刪（使用者看不到答案） -->
+      <section class="tool-card tool-result" id="result" data-state="empty" aria-live="polite">
+        <p class="tool-result-message">填好上面五欄，按「算一下」，這裡會顯示每個月大約要花多少。</p>
+      </section>
+
+      <!-- 區塊：計算說明 · 用途：交代公式與假設，讓人知道數字怎麼來 · 不需要可整段刪掉 -->
+      <section class="tool-note">
+        <h2>怎麼算的</h2>
+        <p>
+          每月費用 ＝（輸入 token × 輸入單價 ＋ 輸出 token × 輸出單價）÷ 1,000,000 × 每天呼叫次數 × 30 天。結果無條件進位到美分。沒有算進快取折扣、批次折扣與稅金。
+        </p>
+      </section>
+    </main>
+
+    <!-- 區塊：計算邏輯 · 用途：事件 → 判斷 → 更新畫面 · 不可刪（按鈕會沒反應） -->
+    <script>
+      const DAYS_PER_MONTH = 30;
+
+      // 每一欄的名稱與規則：integer 代表只能填整數，min 代表最小值
+      const FIELDS = {
+        inputTokens: { label: "每次呼叫的輸入 token 數", integer: true, min: 1 },
+        outputTokens: { label: "每次呼叫的輸出 token 數", integer: true, min: 0 },
+        callsPerDay: { label: "每天呼叫次數", integer: true, min: 1 },
+        inputPrice: { label: "輸入單價", integer: false, min: 0 },
+        outputPrice: { label: "輸出單價", integer: false, min: 0 }
+      };
+
+      const form = document.getElementById("costForm");
+      const result = document.getElementById("result");
+
+      // 檢查一欄：回傳 { value } 或 { error }
+      function check(name, raw) {
+        const rule = FIELDS[name];
+        const text = raw.trim().replace(/,/g, "");
+        if (text === "") {
+          return { error: `請填「${rule.label}」` };
+        }
+        if (!/^-?\d*\.?\d+$/.test(text)) {
+          return { error: `「${rule.label}」要填數字，你填的是「${raw.trim()}」` };
+        }
+        const value = Number(text);
+        if (value < 0) {
+          return { error: `「${rule.label}」不能是負數，你填的是 ${text}` };
+        }
+        if (rule.integer && !Number.isInteger(value)) {
+          return { error: `「${rule.label}」要填整數，不能有小數（你填的是 ${text}）` };
+        }
+        if (value < rule.min) {
+          return { error: `「${rule.label}」至少要是 ${rule.min}` };
+        }
+        return { value };
+      }
+
+      function setFieldError(name, message) {
+        const input = document.getElementById(name);
+        document.getElementById(`${name}-error`).textContent = message || "";
+        input.toggleAttribute("aria-invalid", Boolean(message));
+      }
+
+      // 更新結果區：狀態換掉、內容換掉，並重播淡入動畫
+      function show(state, html) {
+        result.dataset.state = state;
+        result.innerHTML = html;
+        result.classList.remove("is-entering");
+        void result.offsetWidth;
+        result.classList.add("is-entering");
+      }
+
+      function usd(amount) {
+        return amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      // 無條件進位到美分；減掉極小值避免 0.1 + 0.2 這類浮點誤差多進一分
+      function ceilCents(amount) {
+        return Math.ceil(amount * 100 - 1e-9) / 100;
+      }
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const values = {};
+        const errors = [];
+
+        for (const name of Object.keys(FIELDS)) {
+          const outcome = check(name, form.elements[name].value);
+          setFieldError(name, outcome.error);
+          if (outcome.error) errors.push({ name, message: outcome.error });
+          else values[name] = outcome.value;
+        }
+
+        if (errors.length > 0) {
+          const items = errors.map((e) => `<li>${escapeHtml(e.message)}</li>`).join("");
+          show("error", `<p class="tool-result-message">有 ${errors.length} 欄還沒填對：</p><ul class="tool-error-list">${items}</ul>`);
+          document.getElementById(errors[0].name).focus();
+          return;
+        }
+
+        const perCall =
+          (values.inputTokens * values.inputPrice + values.outputTokens * values.outputPrice) / 1_000_000;
+        const perDay = perCall * values.callsPerDay;
+        const perMonth = ceilCents(perDay * DAYS_PER_MONTH);
+        const outputShare = perCall === 0 ? 0 : Math.round(((values.outputTokens * values.outputPrice) / 1_000_000 / perCall) * 100);
+
+        show(
+          "success",
+          `<p class="tool-result-label">每個月大約</p>
+           <p class="tool-result-value">US$ ${usd(perMonth)}</p>
+           <dl class="tool-breakdown">
+             <div><dt>每次呼叫</dt><dd>US$ ${perCall.toFixed(6)}</dd></div>
+             <div><dt>每天</dt><dd>US$ ${usd(ceilCents(perDay))}</dd></div>
+             <div><dt>輸出佔費用</dt><dd>${outputShare}%</dd></div>
+           </dl>`
+        );
+      });
+
+      // 使用者改了某一欄，那一欄的紅字就先拿掉，不要一直掛著
+      form.addEventListener("input", (event) => {
+        if (event.target.name in FIELDS) setFieldError(event.target.name, "");
+      });
+
+      form.addEventListener("reset", () => {
+        Object.keys(FIELDS).forEach((name) => setFieldError(name, ""));
+        show("empty", `<p class="tool-result-message">填好上面五欄，按「算一下」，這裡會顯示每個月大約要花多少。</p>`);
+      });
+
+      // 錯誤訊息會回述使用者打的字，先轉義避免被當成 HTML
+      function escapeHtml(text) {
+        return text.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+      }
+    </script>
+  </body>
+</html>
