@@ -784,6 +784,51 @@ h3 {
   margin-bottom: var(--space-4);
 }
 
+/* 關於我開頭：標題在上，三段介紹排成「小標籤＋內文」的清單。
+   原本左右兩欄、內文全灰，視線要左右跳而且沒有切入點；改成上下排、標籤用主色，
+   第一眼先掃到「背景／延伸方向／目標」，想細看再讀內文 */
+.about-intro h2 {
+  max-width: var(--measure-lg);
+  margin-bottom: var(--space-4);
+}
+
+.about-facts {
+  display: grid;
+  max-width: var(--measure-xl);
+  margin: 0;
+}
+
+.about-facts div {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3) 0;
+  border-top: var(--border-width) solid var(--color-border);
+}
+
+.about-facts dt {
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+  font-weight: 800;
+}
+
+.about-facts dd {
+  margin: 0;
+  color: var(--color-text);
+}
+
+/* 平板以上：標籤固定在左欄、內文在右欄，三列的標籤寬度一致（subgrid 對齊最寬的標籤） */
+@media (min-width: 768px) {
+  .about-facts {
+    grid-template-columns: max-content minmax(0, 1fr);
+    column-gap: var(--space-5);
+  }
+
+  .about-facts div {
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+  }
+}
+
 /* 區塊：經歷 · 用途：工作與志工經歷時間軸 · 不需要可整段刪掉 */
 
 .timeline {

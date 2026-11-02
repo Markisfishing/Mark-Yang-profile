@@ -11,8 +11,8 @@
     <script>
       try { document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch (e) {}
     </script>
-    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261102-typewriter-3" />
-    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261102-typewriter-3" />
+    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261102-about-intro" />
+    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261102-about-intro" />
   </head>
   <body>
     <div class="site-shell">
@@ -362,23 +362,23 @@
 
         <!-- 分頁：關於我 · 用途：個人簡介、貢獻方向、技能與經歷合併成一頁（網址沿用 #skills，舊連結不會失效） -->
         <div class="page page-about" id="skills" data-page>
-        <!-- 區塊：關於我 · 用途：個人簡介 · 不需要可整段刪掉 -->
-        <section class="section two-column" id="about">
-          <div>
-            <p class="section-kicker" data-i18n="about.kicker">About</p>
-            <h2 data-i18n="about.title">An AI builder who turns learning into working demos.</h2>
-          </div>
-          <div class="prose">
-            <p data-i18n="about.p1">
-              I am currently studying Intelligent Computing and Big Data at Chung Yuan Christian University. My work focuses on Python, machine learning, LLM workflows, AI Agent development, programming-learning diagnosis, and dashboard-based applications.
-            </p>
-            <p data-i18n="about.p2">
-              I am expanding from AI and data projects into automation and full-stack development, with a focus on building useful tools and connecting the pieces into working systems.
-            </p>
-            <p data-i18n="about.p3">
-              I am looking for an AI application engineering internship where I can keep building and learning through real projects.
-            </p>
-          </div>
+        <!-- 區塊：關於我 · 用途：個人簡介。標題在上、三段介紹在下，每段前面加小標籤，第一眼就能掃到重點 · 不需要可整段刪掉 -->
+        <section class="section about-intro" id="about">
+          <h2 data-i18n="about.title">An AI builder who turns learning into working demos.</h2>
+          <dl class="about-facts">
+            <div>
+              <dt data-i18n="about.label1">Background</dt>
+              <dd data-i18n="about.p1">I am currently studying Intelligent Computing and Big Data at Chung Yuan Christian University. My work focuses on Python, machine learning, LLM workflows, AI Agent development, programming-learning diagnosis, and dashboard-based applications.</dd>
+            </div>
+            <div>
+              <dt data-i18n="about.label2">Expanding into</dt>
+              <dd data-i18n="about.p2">I am expanding from AI and data projects into automation and full-stack development, with a focus on building useful tools and connecting the pieces into working systems.</dd>
+            </div>
+            <div>
+              <dt data-i18n="about.label3">Looking for</dt>
+              <dd data-i18n="about.p3">I am looking for an AI application engineering internship where I can keep building and learning through real projects.</dd>
+            </div>
+          </dl>
         </section>
 
         <!-- 區塊：我能貢獻什麼 · 用途：三項貢獻方向 · 不需要可整段刪掉 -->
@@ -525,6 +525,6 @@
       <p class="lightbox-caption" id="lightboxCaption"></p>
     </dialog>
 
-    <script src="/app.js?cache-bust=20261102-typewriter-3"></script>
+    <script src="/app.js?cache-bust=20261102-about-intro"></script>
   </body>
 </html>
