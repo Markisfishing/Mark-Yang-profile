@@ -849,6 +849,7 @@ h3 {
   background: var(--color-bg-translucent);
   color: var(--color-text);
   cursor: pointer;
+  transition: transform var(--motion-fast) var(--motion-ease), background var(--motion-fast) ease, border-color var(--motion-fast) ease;
 }
 
 .gallery-prev,
@@ -856,6 +857,48 @@ h3 {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
+}
+
+/* 箭頭與關閉鈕按下回饋：左右箭頭本身靠 translateY 置中，縮放要疊在後面 */
+.gallery-prev:active,
+.gallery-next:active {
+  transform: translateY(-50%) scale(var(--press-scale));
+}
+
+.lightbox-close:active {
+  transform: scale(var(--press-scale));
+}
+
+/* 換圖：只動圖片與說明，箭頭留在原位，眼睛才有固定的參考點 */
+.slide-from-next .gallery-zoom img,
+.slide-from-next .lightbox-image {
+  animation: slide-from-next var(--motion-duration) var(--motion-ease);
+}
+
+.slide-from-prev .gallery-zoom img,
+.slide-from-prev .lightbox-image {
+  animation: slide-from-prev var(--motion-duration) var(--motion-ease);
+}
+
+.slide-from-next .gallery-caption,
+.slide-from-prev .gallery-caption,
+.slide-from-next .lightbox-caption,
+.slide-from-prev .lightbox-caption {
+  animation: fade-in var(--motion-duration) var(--motion-ease);
+}
+
+@keyframes slide-from-next {
+  from {
+    opacity: 0;
+    transform: translateX(var(--slide-distance));
+  }
+}
+
+@keyframes slide-from-prev {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--slide-distance)));
+  }
 }
 
 .gallery-prev {
@@ -919,6 +962,41 @@ h3 {
 
 .lightbox::backdrop {
   background: transparent;
+}
+
+/* 開啟：黑幕淡入、圖片從 0.96 放大；關閉（app.js 加上 is-closing）反向退場後才真的關掉 */
+.lightbox[open] {
+  animation: fade-in var(--motion-base) var(--motion-ease);
+}
+
+.lightbox[open] .lightbox-frame {
+  animation: zoom-in var(--motion-base) var(--motion-ease);
+}
+
+.lightbox.is-closing {
+  animation: fade-out var(--motion-base) var(--motion-ease) forwards;
+}
+
+.lightbox.is-closing .lightbox-frame {
+  animation: zoom-out var(--motion-base) var(--motion-ease) forwards;
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes zoom-in {
+  from {
+    transform: scale(var(--zoom-start-scale));
+  }
+}
+
+@keyframes zoom-out {
+  to {
+    transform: scale(var(--zoom-start-scale));
+  }
 }
 
 .lightbox-frame {

@@ -424,12 +424,18 @@ document.querySelectorAll("[data-gallery]").forEach((gallery) => {
   const slides = [...gallery.querySelectorAll(".gallery-slide")];
   let index = 0;
 
-  gallery.showSlide = (next) => {
+  gallery.showSlide = (next, direction = 0) => {
+    const previous = slides[index];
     index = (next + slides.length) % slides.length;
+    const current = slides[index];
+    // 每張圖都有自己的箭頭，舊的那張藏起來焦點會掉；用鍵盤操作時把焦點移到新圖的同一顆按鈕
+    const focused = previous !== current && previous.contains(document.activeElement) ? document.activeElement : null;
     slides.forEach((slide, i) => { slide.hidden = i !== index; });
-    if (lightboxGallery === gallery) syncLightbox(slides[index]);
+    if (focused) current.querySelector(`.${focused.classList[0]}`).focus();
+    if (direction) replay(current, slideClass(direction));
+    if (lightboxGallery === gallery) syncLightbox(current, direction);
   };
-  gallery.step = (delta) => gallery.showSlide(index + delta);
+  gallery.step = (delta) => gallery.showSlide(index + delta, delta);
 
   slides.forEach((slide) => {
     slide.querySelector(".gallery-prev").addEventListener("click", () => gallery.step(-1));
@@ -443,11 +449,31 @@ document.querySelectorAll("[data-gallery]").forEach((gallery) => {
   });
 });
 
-function syncLightbox(slide) {
+function syncLightbox(slide, direction = 0) {
   const image = slide.querySelector("img");
   lightboxImage.src = image.currentSrc || image.src;
   lightboxImage.alt = image.alt;
   lightboxCaption.textContent = slide.querySelector("figcaption span").textContent;
+  if (direction) replay(lightbox, slideClass(direction));
+}
+
+// 看下一張時新圖從右邊滑進來，看上一張時從左邊
+function slideClass(direction) {
+  return direction > 0 ? "slide-from-next" : "slide-from-prev";
+}
+
+// 放大檢視關閉時先播退場動畫再真的關掉；按 Esc 也走同一條路
+function closeLightbox() {
+  if (!lightbox.open || lightbox.classList.contains("is-closing")) return;
+  lightbox.classList.add("is-closing");
+  const finish = () => {
+    if (!lightbox.classList.contains("is-closing")) return;
+    lightbox.classList.remove("is-closing");
+    lightbox.close();
+  };
+  lightbox.addEventListener("animationend", finish, { once: true });
+  // 分頁在背景時動畫不會跑完，時間到了也要關掉
+  setTimeout(finish, parseFloat(getComputedStyle(lightbox).animationDuration) * 1000 + 50);
 }
 
 // 手指在圖上左滑看下一張、右滑看上一張；點擊不受影響
@@ -464,10 +490,14 @@ function onSwipe(element, callback) {
 
 document.getElementById("lightboxPrev").addEventListener("click", () => lightboxGallery.step(-1));
 document.getElementById("lightboxNext").addEventListener("click", () => lightboxGallery.step(1));
-document.getElementById("lightboxClose").addEventListener("click", () => lightbox.close());
+document.getElementById("lightboxClose").addEventListener("click", closeLightbox);
 onSwipe(lightbox, (delta) => lightboxGallery && lightboxGallery.step(delta));
 lightbox.addEventListener("click", (event) => {
-  if (event.target === lightbox) lightbox.close();
+  if (event.target === lightbox) closeLightbox();
+});
+lightbox.addEventListener("cancel", (event) => {
+  event.preventDefault();
+  closeLightbox();
 });
 lightbox.addEventListener("keydown", (event) => {
   if (event.key === "ArrowLeft") lightboxGallery.step(-1);

@@ -11,8 +11,8 @@
     <script>
       try { document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch (e) {}
     </script>
-    <link rel="stylesheet" href="/styles/design-tokens.css" />
-    <link rel="stylesheet" href="/styles/main.css" />
+    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261102-motion" />
+    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261102-motion" />
   </head>
   <body>
     <div class="site-shell">
@@ -521,6 +521,6 @@
       <p class="lightbox-caption" id="lightboxCaption"></p>
     </dialog>
 
-    <script src="/app.js?cache-bust=20261029-contact"></script>
+    <script src="/app.js?cache-bust=20261102-motion"></script>
   </body>
 </html>
