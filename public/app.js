@@ -2,7 +2,7 @@ const translations = {
   en: {
     "nav.home": "Home",
     "nav.projects": "Portfolio",
-    "nav.skills": "Skills",
+    "nav.skills": "About",
     "nav.agent": "AI Agent",
     "hero.github": "GitHub",
     "theme.dark": "Dark",
@@ -119,7 +119,7 @@ const translations = {
   zh: {
     "nav.home": "首頁",
     "nav.projects": "作品集",
-    "nav.skills": "能力與經歷",
+    "nav.skills": "關於我",
     "nav.agent": "AI 助理",
     "hero.github": "GitHub",
     "theme.dark": "深色",
