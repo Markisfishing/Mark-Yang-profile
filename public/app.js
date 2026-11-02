@@ -2,15 +2,15 @@ const translations = {
   en: {
     "nav.home": "Home",
     "nav.projects": "Portfolio",
-    "nav.skills": "Skills",
+    "nav.skills": "About",
     "nav.agent": "AI Agent",
     "hero.github": "GitHub",
     "theme.dark": "Dark",
     "theme.light": "Light",
-    "hero.eyebrow": "AI Application Engineering Internship Portfolio",
+    "hero.eyebrow": "Internship Portfolio",
     "hero.name": "Mark Yang / 楊祐瑜",
     "hero.position": "I turn data and LLM workflows into practical AI applications.",
-    "hero.text": "I am building toward an AI application engineering internship, with hands-on experience across AI agents, data preprocessing, dashboards, and practical automation.",
+    "hero.text": "I am looking for internship opportunities, bringing hands-on experience across AI agents, data preprocessing, dashboards, and practical automation.",
     "hero.projects": "View Project Evidence",
     "hero.askAgent": "Ask AI Profile Agent",
     "hero.download": "Resume",
@@ -19,13 +19,15 @@ const translations = {
     "hero.proof.agent": "Teaching Platform · Weakness Diagnosis",
     "hero.proof.auc": "QSearch test AUC",
     "hero.proof.automation": "n8n + AI Agent learning",
-    "about.kicker": "About",
+    "about.label1": "Background",
+    "about.label2": "Currently learning",
+    "about.label3": "Looking for",
     "about.title": "An AI builder who turns learning into working demos.",
     "about.p1": "I am currently studying Intelligent Computing and Big Data at Chung Yuan Christian University. My work focuses on Python, machine learning, LLM workflows, AI Agent development, programming-learning diagnosis, and dashboard-based applications.",
     "about.p2": "I am expanding from AI and data projects into automation and full-stack development, with a focus on building useful tools and connecting the pieces into working systems.",
-    "about.p3": "I am looking for an AI application engineering internship where I can keep building and learning through real projects.",
+    "about.p3": "I am looking for internship opportunities where I can keep building and learning through real projects.",
     "projects.title": "Portfolio",
-    "home.projects.cta": "See screenshots and details →",
+    "home.projects.cta": "See screenshots and details",
     "projects.contributionLabel": "My contribution",
     "projects.codemind.roleLabel": "My role",
     "projects.codemind.contribution": "Lead developer | Teacher Web, backend teaching workflows, and weakness-diagnosis integration",
@@ -48,6 +50,10 @@ const translations = {
     "projects.qsearch.ap": "LightGBM Test AP",
     "projects.qsearch.hitRate": "Top-1,000 Hit Rate",
     "projects.qsearch.methodLabel": "From model to recommendation",
+    "projects.tools.title": "Interactive Tools",
+    "projects.tools.cta": "Open the tool",
+    "projects.tools.llmCost.title": "LLM API Cost Estimator",
+    "projects.tools.llmCost.body": "Enter tokens per call, calls per day, and per-million-token prices to estimate the monthly API bill before shipping an AI feature.",
     "projects.qsearch.method": "Weighted interaction index → LightGBM ranking → Support, Viral Rate, Lift, composition, and original-post evidence.",
     "gallery.prev": "Previous image",
     "gallery.next": "Next image",
@@ -110,20 +116,20 @@ const translations = {
     "contact.title": "Let's talk about AI applications, automation, and web development.",
     "contact.description": "Interested in my work? Let's connect.",
     "contact.resume": "Download PDF Resume",
-    "footer.note": "AI application engineering internship portfolio"
+    "footer.note": "Internship portfolio"
   },
   zh: {
     "nav.home": "首頁",
     "nav.projects": "作品集",
-    "nav.skills": "能力與經歷",
+    "nav.skills": "關於我",
     "nav.agent": "AI 助理",
     "hero.github": "GitHub",
     "theme.dark": "深色",
     "theme.light": "淺色",
-    "hero.eyebrow": "AI 應用工程實習作品集",
+    "hero.eyebrow": "實習作品集",
     "hero.name": "楊祐瑜 / Mark Yang",
     "hero.position": "我把資料與 LLM workflow 轉化成可以實際使用的 AI 應用。",
-    "hero.text": "我正在準備投入 AI 應用工程實習，累積 AI Agent、資料處理、dashboard 與實務自動化的實作經驗。",
+    "hero.text": "我正在尋找實習機會，已累積 AI Agent、資料處理、dashboard 與實務自動化的實作經驗。",
     "hero.projects": "查看專案成果",
     "hero.askAgent": "詢問 AI Profile Agent",
     "hero.download": "履歷",
@@ -132,13 +138,15 @@ const translations = {
     "hero.proof.agent": "教學平台・弱點診斷",
     "hero.proof.auc": "QSearch 測試 AUC",
     "hero.proof.automation": "n8n＋AI Agent 學習中",
-    "about.kicker": "關於我",
+    "about.label1": "背景",
+    "about.label2": "正在學習",
+    "about.label3": "目標",
     "about.title": "把學習轉化成實際作品的 AI 實作者。",
     "about.p1": "目前就讀中原大學智慧運算與大數據學系，專注於 Python、機器學習、LLM workflow、AI Agent、程式學習診斷與 dashboard 應用。",
     "about.p2": "目前正從 AI 與資料專案延伸到自動化與前後端開發，持續練習把不同技術整合成可以實際運作的工具。",
-    "about.p3": "我正在尋找 AI 應用工程實習機會，希望在真實專案中持續實作與學習。",
+    "about.p3": "我正在尋找實習機會，希望在真實專案中持續實作與學習。",
     "projects.title": "作品集",
-    "home.projects.cta": "查看截圖與完整介紹 →",
+    "home.projects.cta": "查看截圖與完整介紹",
     "projects.contributionLabel": "我的貢獻",
     "projects.codemind.roleLabel": "我的角色",
     "projects.codemind.contribution": "主要開發者｜Teacher Web、Backend 教學流程與弱點診斷整合",
@@ -161,6 +169,10 @@ const translations = {
     "projects.qsearch.ap": "LightGBM 測試 AP",
     "projects.qsearch.hitRate": "前 1,000 篇命中率",
     "projects.qsearch.methodLabel": "從模型到內容建議",
+    "projects.tools.title": "互動小工具",
+    "projects.tools.cta": "開啟工具",
+    "projects.tools.llmCost.title": "LLM API 成本估算器",
+    "projects.tools.llmCost.body": "輸入每次呼叫的 token 數、每天呼叫次數與每百萬 token 單價，在上線 AI 功能之前先估出每月的 API 花費。",
     "projects.qsearch.method": "加權互動指標 → LightGBM 排名 → Support、Viral Rate、Lift、互動組成與原文證據。",
     "gallery.prev": "上一張圖片",
     "gallery.next": "下一張圖片",
@@ -223,14 +235,14 @@ const translations = {
     "contact.title": "歡迎一起聊聊 AI 應用、自動化與網站開發。",
     "contact.description": "對我的作品有興趣，歡迎與我聯絡。",
     "contact.resume": "下載 PDF 履歷",
-    "footer.note": "AI 應用工程實習作品集"
+    "footer.note": "實習作品集"
   }
 };
 
 const prompts = {
   en: [
     "Tell me about Mark.",
-    "Why AI Application Engineering?",
+    "What kind of internship is Mark looking for?",
     "What AI projects has Mark built?",
     "What is Mark currently learning?",
     "What are Mark's technical skills?",
@@ -238,7 +250,7 @@ const prompts = {
   ],
   zh: [
     "介紹一下楊祐瑜",
-    "為什麼想做 AI 應用工程？",
+    "想找什麼樣的實習？",
     "有哪些 AI 專案經驗？",
     "目前正在學習什麼？",
     "具備哪些技術能力？",
@@ -261,6 +273,7 @@ const chatLog = document.getElementById("chatLog");
 const promptChips = document.getElementById("promptChips");
 const chatForm = document.getElementById("chatForm");
 const chatInput = document.getElementById("chatInput");
+const chatSend = chatForm.querySelector("button[type='submit']");
 
 applyLanguage(currentLang);
 resetChat();
@@ -270,11 +283,22 @@ langToggle.addEventListener("click", () => {
   localStorage.setItem("lang", currentLang);
   applyLanguage(currentLang);
   resetChat();
+  moveNavIndicator();
 });
 
 themeToggle.addEventListener("click", () => {
-  const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-  document.documentElement.dataset.theme = next;
+  const root = document.documentElement;
+  const next = root.dataset.theme === "dark" ? "light" : "dark";
+  // 只在切換的這一下開啟全頁顏色漸變，等 body 背景漸變完就拿掉，平常的轉場不受影響
+  root.classList.add("theme-changing");
+  const finish = (event) => {
+    if (event && event.target !== document.body) return;
+    root.classList.remove("theme-changing");
+    document.body.removeEventListener("transitionend", finish);
+  };
+  document.body.addEventListener("transitionend", finish);
+  setTimeout(finish, 500);
+  root.dataset.theme = next;
   try { localStorage.setItem("theme", next); } catch (e) {}
   updateThemeToggle();
 });
@@ -322,7 +346,7 @@ function applyLanguage(lang) {
 
 function resetChat() {
   messages = [{ role: "assistant", content: welcome[currentLang] }];
-  renderChat();
+  renderChat(0);
 }
 
 function renderPromptChips() {
@@ -331,59 +355,194 @@ function renderPromptChips() {
     const button = document.createElement("button");
     button.type = "button";
     button.textContent = prompt;
-    button.addEventListener("click", () => sendMessage(prompt));
+    button.disabled = isSending;
+    button.addEventListener("click", () => {
+      if (isSending) return;
+      replay(button, "is-picked");
+      sendMessage(prompt);
+    });
     promptChips.appendChild(button);
   });
 }
 
-function renderChat() {
+// animateFrom：從第幾則訊息開始播進場動畫，之前的訊息直接顯示，重畫時才不會整串一起動
+function renderChat(animateFrom = messages.length) {
   chatLog.innerHTML = "";
-  messages.forEach((message) => {
+  messages.forEach((message, i) => {
     const bubble = document.createElement("div");
-    bubble.className = `message ${message.role}${message.error ? " error" : ""}`;
-    bubble.textContent = message.content;
+    bubble.className = `message ${message.role}${message.error ? " error" : ""}${message.streaming ? " is-streaming" : ""}${i >= animateFrom ? " is-entering" : ""}`;
+    bubble.textContent = message.display ?? message.content;
+    if (message.pending) {
+      const dots = document.createElement("span");
+      dots.className = "typing-dots";
+      dots.setAttribute("aria-hidden", "true");
+      dots.append(document.createElement("span"), document.createElement("span"), document.createElement("span"));
+      bubble.prepend(dots);
+    }
     chatLog.appendChild(bubble);
   });
   chatLog.scrollTop = chatLog.scrollHeight;
 }
 
+// 等待回覆時送出鈕與推薦問題都停用，避免重複送出
+function setSending(sending) {
+  isSending = sending;
+  chatSend.disabled = sending;
+  chatSend.toggleAttribute("aria-busy", sending);
+  // 串流時文字一直在變，aria-busy 讓螢幕閱讀器等回答完整了再一次念出來
+  chatLog.toggleAttribute("aria-busy", sending);
+  promptChips.querySelectorAll("button").forEach((button) => { button.disabled = sending; });
+}
+
 async function sendMessage(content) {
-  isSending = true;
+  setSending(true);
   messages.push({ role: "user", content });
-  messages.push({
+  const reply = {
     role: "assistant",
-    content: currentLang === "zh" ? "正在整理 Mark 的履歷資料..." : "Reviewing Mark's profile..."
+    content: currentLang === "zh" ? "正在整理 Mark 的履歷資料" : "Reviewing Mark's profile",
+    pending: true
+  };
+  messages.push(reply);
+  renderChat(messages.length - 2);
+
+  const history = messages.filter((message) => !message.error && message !== reply);
+  let raw = "";
+  let bubble = null;
+
+  // 收到的文字交給打字機，畫面上一個字一個字打出來；第一次打字時把「正在整理」換成回答泡泡
+  const typer = createTypewriter((text) => {
+    reply.display = text;
+    // 等待途中切換語言會清空對話，這則回答已不在畫面上就不用再畫
+    if (!messages.includes(reply)) return;
+    if (!bubble) {
+      reply.pending = false;
+      reply.streaming = true;
+      renderChat(messages.length - 1);
+      bubble = chatLog.lastElementChild;
+    } else {
+      bubble.textContent = text;
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
   });
-  renderChat();
+  const receive = () => {
+    reply.content = cleanAgentReply(raw);
+    typer.update(reply.content);
+  };
 
   try {
     const response = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        messages: messages
-          .filter((message) => !message.error)
-          .slice(0, -1)
-      })
+      body: JSON.stringify({ stream: true, messages: history })
     });
-    const data = await response.json();
-    const reply = response.ok
-      ? cleanAgentReply(data.reply)
-      : data.error || fallbackError();
-    messages[messages.length - 1] = {
-      role: "assistant",
-      content: reply,
-      error: !response.ok
-    };
-  } catch {
-    messages[messages.length - 1] = {
-      role: "assistant",
-      content: fallbackError(),
-      error: true
-    };
+    if (!response.ok || !response.body) {
+      const data = await response.json().catch(() => ({}));
+      throw Object.assign(new Error("chat failed"), { publicMessage: data.error });
+    }
+
+    if ((response.headers.get("Content-Type") || "").includes("application/json")) {
+      // 後端還是舊版（沒重開的本機伺服器）會一次回整段 JSON，一樣用打字機打出來
+      const data = await response.json();
+      raw = String(data.reply || "");
+      receive();
+    } else {
+      // 串流：每收到一段就交給打字機，打字速度穩定，不會隨網路一塊一塊跳出來
+      await readReplyStream(response, (delta) => {
+        raw += delta;
+        receive();
+      });
+    }
+    await typer.finish();
+  } catch (error) {
+    // 回答到一半斷掉：停止打字，保留已收到的文字，後面接上錯誤說明
+    typer.stop();
+    reply.error = true;
+    reply.content = raw
+      ? `${cleanAgentReply(raw)}\n\n${fallbackError()}`
+      : error.publicMessage || fallbackError();
   } finally {
-    isSending = false;
-    renderChat();
+    // 串流結束卻一個字都沒收到：顯示錯誤說明，而不是把「正在整理」留在畫面上
+    if (!reply.error && !raw) {
+      reply.error = true;
+      reply.content = fallbackError();
+    }
+    delete reply.display;
+    reply.pending = false;
+    reply.streaming = false;
+    setSending(false);
+    // 有串流過的泡泡已經在畫面上，不再重播進場；錯誤或整段回覆才播
+    if (messages.includes(reply)) renderChat(bubble ? messages.length : messages.length - 1);
+  }
+}
+
+// 打字機：update 給它目前收到的完整文字，畫面依經過的時間多顯示幾個字追上去。
+// 平常每秒 60 字；落後的字數比 60 多時，改成「每秒補上落後的字數」，越落後打越快，
+// 長回答也不會讓人等太久。用時間而不是畫格計算，120Hz 螢幕或掉格時速度都一樣。
+// 計時用 setTimeout 而不是 requestAnimationFrame：視窗被擋住時畫格會停，回答就會卡住不出來。
+// 分頁在背景或開了「減少動態效果」就直接顯示全部
+const typeCharsPerSecond = 60;
+const typeTickMs = 16;
+
+function createTypewriter(onRender) {
+  let target = "";
+  let shown = 0;
+  let last = null;
+  let frame = null;
+  let resolveDone = null;
+
+  const settle = () => {
+    frame = null;
+    last = null;
+    if (resolveDone) resolveDone();
+    resolveDone = null;
+  };
+  const tick = () => {
+    const now = performance.now();
+    const elapsed = last === null ? 0 : (now - last) / 1000;
+    last = now;
+    const backlog = target.length - shown;
+    const step = reduceMotion.matches || document.hidden
+      ? backlog
+      : Math.max(typeCharsPerSecond, backlog) * elapsed;
+    shown = Math.min(target.length, shown + step);
+    onRender(target.slice(0, Math.floor(shown)));
+    if (shown < target.length) frame = setTimeout(tick, typeTickMs);
+    else settle();
+  };
+
+  return {
+    update(text) {
+      target = text;
+      shown = Math.min(shown, target.length);
+      if (!frame && shown < target.length) frame = setTimeout(tick);
+    },
+    finish() {
+      return frame ? new Promise((resolve) => { resolveDone = resolve; }) : Promise.resolve();
+    },
+    stop() {
+      clearTimeout(frame);
+      settle();
+    }
+  };
+}
+
+// 讀 /api/chat 的 NDJSON 串流：一行一個事件，{"delta"} 是文字片段、{"error"} 是中途出錯
+async function readReplyStream(response, onDelta) {
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  for (;;) {
+    const { value, done } = await reader.read();
+    buffer += decoder.decode(value, { stream: !done });
+    const lines = buffer.split("\n");
+    buffer = done ? "" : lines.pop();
+    for (const line of lines) {
+      if (!line.trim()) continue;
+      const event = JSON.parse(line);
+      if (event.error) throw new Error(event.error);
+      if (event.delta) onDelta(event.delta);
+    }
+    if (done) return;
   }
 }
 
@@ -409,18 +568,53 @@ const lightbox = document.getElementById("lightbox");
 const lightboxImage = document.getElementById("lightboxImage");
 const lightboxCaption = document.getElementById("lightboxCaption");
 const swipeThreshold = 40;
+const autoplayDelay = 4000;
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
 let lightboxGallery = null;
 
-document.querySelectorAll("[data-gallery]").forEach((gallery) => {
+document.querySelectorAll("[data-gallery]").forEach((gallery, galleryIndex) => {
   const slides = [...gallery.querySelectorAll(".gallery-slide")];
   let index = 0;
+  let autoplayTimer = null;
 
-  gallery.showSlide = (next) => {
-    index = (next + slides.length) % slides.length;
-    slides.forEach((slide, i) => { slide.hidden = i !== index; });
-    if (lightboxGallery === gallery) syncLightbox(slides[index]);
+  // 自動輪播：像電視牆一樣每 4 秒換下一張。滑鼠停在圖上、鍵盤焦點在圖庫裡、放大檢視開著、
+  // 分頁不在畫面上、或使用者開了「減少動態效果」時都先停下來，不搶正在看的人
+  const autoplayTick = () => {
+    const paused = gallery.matches(":hover, :focus-within") || lightbox.open || document.hidden
+      || !gallery.offsetParent || reduceMotion.matches;
+    if (!paused) gallery.showSlide(index + 1, 1);
   };
-  gallery.step = (delta) => gallery.showSlide(index + delta);
+  const restartAutoplay = () => {
+    clearInterval(autoplayTimer);
+    autoplayTimer = setInterval(autoplayTick, autoplayDelay);
+  };
+
+  gallery.showSlide = (next, direction = 0) => {
+    const previous = slides[index];
+    index = (next + slides.length) % slides.length;
+    const current = slides[index];
+    // 每張圖都有自己的箭頭，舊的那張藏起來焦點會掉；用鍵盤操作時把焦點移到新圖的同一顆按鈕
+    const focused = previous !== current && previous.contains(document.activeElement) ? document.activeElement : null;
+    slides.forEach((slide, i) => { slide.hidden = i !== index; });
+    if (focused) current.querySelector(`.${focused.classList[0]}`).focus();
+    if (direction) {
+      crossfade(previous, current);
+      replay(current, "is-switching");
+    }
+    preloadNext();
+    if (lightboxGallery === gallery) syncLightbox(current, direction);
+  };
+
+  // 下一張先載好，交叉淡化時新圖才不會是空白
+  const preloadNext = () => { slides[(index + 1) % slides.length].querySelector("img").loading = "eager"; };
+  preloadNext();
+  // 手動換圖後重新計時，剛按完不會馬上又被自動切走
+  gallery.step = (delta) => {
+    gallery.showSlide(index + delta, delta);
+    restartAutoplay();
+  };
+  // 兩組圖庫錯開半個間隔，不會同時換圖
+  setTimeout(restartAutoplay, galleryIndex * autoplayDelay / 2);
 
   slides.forEach((slide) => {
     slide.querySelector(".gallery-prev").addEventListener("click", () => gallery.step(-1));
@@ -434,11 +628,39 @@ document.querySelectorAll("[data-gallery]").forEach((gallery) => {
   });
 });
 
-function syncLightbox(slide) {
+function syncLightbox(slide, direction = 0) {
   const image = slide.querySelector("img");
   lightboxImage.src = image.currentSrc || image.src;
   lightboxImage.alt = image.alt;
   lightboxCaption.textContent = slide.querySelector("figcaption span").textContent;
+  if (direction) replay(lightbox, "is-switching");
+}
+
+// 交叉淡化：把舊圖複製一張疊在新圖上面慢慢變透明，新圖就從底下浮現；
+// 疊圖插在箭頭前面，箭頭仍在最上層，淡完就移除
+function crossfade(previous, current) {
+  const ghost = previous.querySelector(".gallery-zoom img").cloneNode();
+  ghost.className = "gallery-ghost";
+  ghost.alt = "";
+  ghost.removeAttribute("data-i18n-alt");
+  ghost.setAttribute("aria-hidden", "true");
+  const frame = current.querySelector(".gallery-frame");
+  frame.insertBefore(ghost, frame.querySelector(".gallery-prev"));
+  ghost.addEventListener("animationend", () => ghost.remove(), { once: true });
+}
+
+// 放大檢視關閉時先播退場動畫再真的關掉；按 Esc 也走同一條路
+function closeLightbox() {
+  if (!lightbox.open || lightbox.classList.contains("is-closing")) return;
+  lightbox.classList.add("is-closing");
+  const finish = () => {
+    if (!lightbox.classList.contains("is-closing")) return;
+    lightbox.classList.remove("is-closing");
+    lightbox.close();
+  };
+  lightbox.addEventListener("animationend", finish, { once: true });
+  // 分頁在背景時動畫不會跑完，時間到了也要關掉
+  setTimeout(finish, parseFloat(getComputedStyle(lightbox).animationDuration) * 1000 + 50);
 }
 
 // 手指在圖上左滑看下一張、右滑看上一張；點擊不受影響
@@ -455,10 +677,14 @@ function onSwipe(element, callback) {
 
 document.getElementById("lightboxPrev").addEventListener("click", () => lightboxGallery.step(-1));
 document.getElementById("lightboxNext").addEventListener("click", () => lightboxGallery.step(1));
-document.getElementById("lightboxClose").addEventListener("click", () => lightbox.close());
+document.getElementById("lightboxClose").addEventListener("click", closeLightbox);
 onSwipe(lightbox, (delta) => lightboxGallery && lightboxGallery.step(delta));
 lightbox.addEventListener("click", (event) => {
-  if (event.target === lightbox) lightbox.close();
+  if (event.target === lightbox) closeLightbox();
+});
+lightbox.addEventListener("cancel", (event) => {
+  event.preventDefault();
+  closeLightbox();
 });
 lightbox.addEventListener("keydown", (event) => {
   if (event.key === "ArrowLeft") lightboxGallery.step(-1);
@@ -471,24 +697,75 @@ lightbox.addEventListener("close", () => { lightboxGallery = null; });
 const pages = [...document.querySelectorAll("[data-page]")];
 const navTabs = [...document.querySelectorAll(".nav-links a")];
 const topbar = document.querySelector(".topbar");
-let currentPage = pages[0];
+const navIndicator = document.createElement("span");
+let currentPage = null;
+
+navIndicator.className = "nav-indicator";
+navIndicator.setAttribute("aria-hidden", "true");
+document.querySelector(".nav-links").appendChild(navIndicator);
 
 function showPageFromHash() {
   const id = decodeURIComponent(location.hash.slice(1));
   const target = id ? document.getElementById(id) : null;
-  const page = target ? target.closest("[data-page]") : pages[0];
-  if (page) currentPage = page;
+  const page = (target ? target.closest("[data-page]") : pages[0]) || currentPage || pages[0];
+  // 第一次載入不淡入（首頁開頭有自己的進場），之後換頁才淡入
+  if (currentPage && page !== currentPage) replay(page, "is-entering");
+  currentPage = page;
 
   pages.forEach((p) => { p.hidden = p !== currentPage; });
   navTabs.forEach((tab) => {
     if (tab.getAttribute("href") === `#${currentPage.id}`) tab.setAttribute("aria-current", "page");
     else tab.removeAttribute("aria-current");
   });
+  moveNavIndicator();
 
   if (!target || target === currentPage) window.scrollTo({ top: 0, behavior: "instant" });
   // 導覽列是黏在上方的，手機版會換行變高，所以用實際高度扣掉，目標才不會被蓋住
   else window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - topbar.offsetHeight, behavior: "instant" });
 }
 
+// 底線對齊目前分頁標籤的文字（扣掉左右內距）；語言切換或視窗縮放後標籤寬度會變，要重算
+function moveNavIndicator() {
+  const tab = navTabs.find((t) => t.hasAttribute("aria-current"));
+  if (!tab) return;
+  const inset = parseFloat(getComputedStyle(tab).paddingLeft);
+  const top = tab.offsetTop + tab.offsetHeight - navIndicator.offsetHeight;
+  navIndicator.style.width = `${tab.offsetWidth - inset * 2}px`;
+  navIndicator.style.transform = `translate(${tab.offsetLeft + inset}px, ${top}px)`;
+}
+
+// 重播一次 CSS 動畫：先拿掉 class、強制重排，再加回去；播完自動拿掉
+function replay(element, className) {
+  element.classList.remove(className);
+  void element.offsetWidth;
+  element.classList.add(className);
+  element.addEventListener("animationend", () => element.classList.remove(className), { once: true });
+}
+
+// 首頁開頭的進場只播一次：最後一個元素播完就拿掉 is-intro，之後回到首頁不再重播
+const hero = document.querySelector(".hero.is-intro");
+if (hero) hero.querySelector(".hero-proof").addEventListener("animationend", () => hero.classList.remove("is-intro"), { once: true });
+
+// 捲動進場：卡片進入畫面時淡入上移一次，播完拿掉 class，卡片原本的 hover 效果才不會被延遲
+if ("IntersectionObserver" in window) {
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const card = entry.target;
+      revealObserver.unobserve(card);
+      card.classList.add("is-visible");
+      card.addEventListener("transitionend", () => card.classList.remove("reveal", "is-visible"), { once: true });
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll(".preview-card, .contribution-card, .skill-block, .timeline article, .metric-row > div").forEach((card) => {
+    card.classList.add("reveal");
+    revealObserver.observe(card);
+  });
+}
+
 window.addEventListener("hashchange", showPageFromHash);
+window.addEventListener("resize", moveNavIndicator);
 showPageFromHash();
+// 第一次定位不要有滑動，下一個畫格才開啟轉場
+requestAnimationFrame(() => navIndicator.classList.add("is-ready"));

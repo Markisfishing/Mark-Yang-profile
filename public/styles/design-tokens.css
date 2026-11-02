@@ -24,10 +24,8 @@
   --color-bg-translucent: rgba(247, 248, 245, 0.92);     /* 黏在上方的導覽列，半透明才能透出下方內容 */
   --color-border-translucent: rgba(223, 227, 220, 0.76); /* 導覽列下緣線 */
   --color-surface-translucent: rgba(255, 255, 255, 0.62); /* 首頁卡片的霧面底 */
-  --color-surface-inverse: #202522;        /* 反白區塊（次要按鈕、貢獻卡）的深底 */
+  --color-surface-inverse: #202522;        /* 反白區塊（次要按鈕）的深底 */
   --color-on-inverse: #ffffff;             /* 反白區塊上的文字 */
-  --color-on-inverse-muted: rgba(255, 255, 255, 0.72); /* 反白區塊上的說明文字 */
-  --color-on-inverse-accent: #8ed6c8;      /* 反白區塊上的編號強調色 */
   --color-error-border: #d89d93;  /* 錯誤訊息的框線、底、字三件組 */
   --color-error-bg: #fff0ed;
   --color-error-text: #8a2e20;
@@ -79,13 +77,30 @@
   --measure-xl: 880px;
   --column-min-sm: 240px;            /* 雙欄版面左欄最小寬度（關於我、經歷） */
   --column-min-md: 260px;            /* AI 助理左欄最小寬度 */
-  --card-min-height: 220px;          /* 貢獻卡最小高度，讓三張卡齊高 */
   --chat-min-height: 320px;          /* 聊天記錄區最小與最大高度 */
   --chat-max-height: 480px;
   --bubble-max-width: 620px;         /* 聊天泡泡最大寬度 */
   --field-min-width: 280px;          /* 聯絡連結欄最小寬度 */
-  --size-icon-button: 40px;          /* 圖庫箭頭、放大檢視關閉鈕的邊長 */
+  --size-icon-button: 40px;          /* 放大檢視的箭頭與關閉鈕邊長 */
+  --size-icon-button-sm: 32px;       /* 作品圖庫上的小箭頭，滑鼠移過才出現 */
   --icon-stroke: 2px;                /* 箭頭與關閉圖示的線寬 */
+
+  /* 動態：狀態切換用。0.3 秒看得見又不用等；6px 約一個字高的三分之一，感覺得到出現但不會跳 */
+  --motion-duration: 0.3s;
+  --motion-rise: 6px;
+  /* 微互動：按鈕回饋要快（150ms），頁面與顏色切換稍慢（200ms），卡片進場用上面的 0.3s */
+  --motion-fast: 150ms;
+  --motion-base: 200ms;
+  --motion-stagger: 60ms;            /* 依序進場的間隔；首頁六個元素 5×60ms＋0.3s 剛好 600ms */
+  --motion-ease: cubic-bezier(0.2, 0, 0, 1);  /* 快出慢停，比 ease 俐落 */
+  --press-scale: 0.97;               /* 按下時縮小的比例 */
+  --hover-scale: 1.02;               /* 封面、人像滑過時放大的比例 */
+  --zoom-start-scale: 0.96;          /* 放大檢視開啟時圖片的起始比例 */
+  --motion-crossfade: 0.6s;          /* 圖庫換圖的交叉淡化，比一般轉場慢一倍，看起來比較柔和 */
+  --nudge: 4px;                      /* 箭頭滑過時往右推的距離 */
+  --tilt-hover: 2deg;                /* 人像滑過時的傾斜角度 */
+  --dot-size: 6px;                   /* AI 助理等待時三個跳動點的直徑 */
+  --opacity-disabled: 0.6;           /* 停用中的按鈕 */
   --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 

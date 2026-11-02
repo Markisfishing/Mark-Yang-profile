@@ -90,20 +90,48 @@ input {
   width: 100%;
   overflow-x: auto;
   padding-bottom: var(--space-1);
+  position: relative;
 }
 
-/* 導覽標籤：每個標籤是一個分頁，目前所在的分頁用主色淡底標示 */
+/* 導覽標籤：每個標籤是一個分頁，目前所在的分頁用主色字與底線標示 */
 .nav-links a {
   flex: 0 0 auto;
   padding: var(--space-2);
   border-radius: var(--radius-pill);
   font-weight: 700;
   white-space: nowrap;
+  transition: color var(--motion-fast) ease;
 }
 
 .nav-links a[aria-current="page"] {
-  background: var(--color-accent-soft);
   color: var(--color-accent-hover);
+}
+
+/* 滑動底線：app.js 依目前分頁算出位置與寬度，換頁時從舊標籤滑到新標籤 */
+.nav-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: var(--border-width-strong);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
+  pointer-events: none;
+}
+
+.nav-indicator.is-ready {
+  transition: transform var(--motion-duration) var(--motion-ease), width var(--motion-duration) var(--motion-ease);
+}
+
+/* 換頁時新分頁短暫淡入，只動透明度，捲動位置不會被位移影響 */
+.page.is-entering {
+  animation: fade-in var(--motion-base) var(--motion-ease);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
 }
 
 .nav-links a:hover,
@@ -125,13 +153,25 @@ input {
   cursor: pointer;
   font-size: var(--text-sm);
   font-weight: 700;
-  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+  transition: transform var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) ease, background var(--motion-fast) ease, opacity var(--motion-fast) ease;
 }
 
 .button:hover,
 .lang-toggle:hover {
   transform: translateY(var(--lift-hover));
   border-color: var(--color-accent-border-hover);
+}
+
+/* 按下回饋：縮到 0.97，放開就彈回；停用中的按鈕不縮也不浮 */
+.button:active,
+.lang-toggle:active {
+  transform: scale(var(--press-scale));
+}
+
+.button:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: progress;
+  transform: none;
 }
 
 /* 區塊：按鈕 · 用途：主要、次要、幽靈三種按鈕樣式 · 不需要可整段刪掉 */
@@ -276,6 +316,84 @@ h3 {
   object-fit: contain;
   border-radius: var(--radius);
   filter: var(--filter-portrait);
+  transition: transform var(--motion-duration) var(--motion-ease);
+}
+
+/* 貓咪滑過時歪頭一下，平常保持靜止 */
+.portrait:hover {
+  transform: rotate(var(--tilt-hover)) scale(var(--hover-scale));
+}
+
+/* 首頁開頭第一次出現：文字依序淡入上移（間隔 60ms，總長 600ms 內），人像只淡入；
+   is-intro 寫在 index.html，播完由 app.js 拿掉，之後回到首頁不再重播 */
+.hero.is-intro .hero-copy > * {
+  animation: rise var(--motion-duration) var(--motion-ease) backwards;
+}
+
+.hero.is-intro .hero-copy > :nth-child(2) {
+  animation-delay: var(--motion-stagger);
+}
+
+.hero.is-intro .hero-copy > :nth-child(3) {
+  animation-delay: calc(var(--motion-stagger) * 2);
+}
+
+.hero.is-intro .hero-copy > :nth-child(4) {
+  animation-delay: calc(var(--motion-stagger) * 3);
+}
+
+.hero.is-intro .hero-copy > :nth-child(5) {
+  animation-delay: calc(var(--motion-stagger) * 4);
+}
+
+.hero.is-intro .hero-copy > :nth-child(6) {
+  animation-delay: calc(var(--motion-stagger) * 5);
+}
+
+.hero.is-intro .portrait-wrap {
+  animation: fade-in var(--motion-duration) var(--motion-ease) var(--motion-stagger) backwards;
+}
+
+/* 捲動進場：app.js 替卡片加上 reveal，進入畫面才加 is-visible；同一排依序錯開 60ms。
+   沒有 JavaScript 時不會有 reveal，內容照常顯示 */
+.reveal {
+  opacity: 0;
+  transform: translateY(var(--motion-rise));
+}
+
+/* 轉場寫在 is-visible 上（兩個 class 的權重），才蓋得過卡片本身的 hover 轉場 */
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  transition: opacity var(--motion-duration) var(--motion-ease), transform var(--motion-duration) var(--motion-ease);
+}
+
+.reveal.is-visible:nth-child(2) {
+  transition-delay: var(--motion-stagger);
+}
+
+.reveal.is-visible:nth-child(3) {
+  transition-delay: calc(var(--motion-stagger) * 2);
+}
+
+.reveal.is-visible:nth-child(4) {
+  transition-delay: calc(var(--motion-stagger) * 3);
+}
+
+.reveal.is-visible:nth-child(5) {
+  transition-delay: calc(var(--motion-stagger) * 4);
+}
+
+.reveal.is-visible:nth-child(6) {
+  transition-delay: calc(var(--motion-stagger) * 5);
+}
+
+/* 深淺色切換：切換的那一下讓背景、文字、框線一起漸變，app.js 在漸變結束後拿掉 class */
+.theme-changing,
+.theme-changing *,
+.theme-changing *::before,
+.theme-changing *::after {
+  transition: background-color var(--motion-base) ease, color var(--motion-base) ease, border-color var(--motion-base) ease !important;
 }
 
 /* 區塊：區塊共用 · 用途：各區塊的間距與雙欄版面 · 不需要可整段刪掉 */
@@ -285,8 +403,11 @@ h3 {
   border-top: var(--border-width) solid var(--color-border);
 }
 
-/* 分頁：每頁第一個區塊緊接在導覽列下方，不需要再畫分隔線 */
+/* 分頁：每頁第一個區塊緊接在導覽列下方，不需要分隔線，也不需要區塊之間那 64px 的上方留白；
+   原本是一整頁往下捲時用來隔開上一個區塊，拆成分頁後上面已經沒有區塊，只剩空白。
+   首頁開頭刻意保留留白並撐滿第一個畫面，不套用這條 */
 .page > .section:first-child {
+  padding-top: var(--space-4);
   border-top: 0;
 }
 
@@ -342,13 +463,23 @@ h3 {
   border-color: var(--color-accent-border-hover);
 }
 
-.preview-card img {
+.preview-cover {
+  margin-bottom: var(--space-3);
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+
+.preview-cover img {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
-  margin-bottom: var(--space-3);
-  border-radius: var(--radius);
   object-fit: cover;
+  transition: transform var(--motion-duration) var(--motion-ease);
+}
+
+/* 滑過卡片：封面輕微放大、「查看」後面的箭頭往右推 */
+.preview-card:hover .preview-cover img {
+  transform: scale(var(--hover-scale));
 }
 
 .preview-card h3 {
@@ -366,6 +497,19 @@ h3 {
   color: var(--color-accent-hover);
   font-size: var(--text-sm);
   font-weight: 800;
+}
+
+/* 箭頭由 CSS 補上才能單獨移動；「/ ""」讓螢幕閱讀器不念出箭頭 */
+.preview-cta::after {
+  display: inline-block;
+  margin-left: var(--space-1);
+  content: "→";
+  content: "→" / "";
+  transition: transform var(--motion-fast) var(--motion-ease);
+}
+
+.preview-card:hover .preview-cta::after {
+  transform: translateX(var(--nudge));
 }
 
 /* 區塊：作品列表 · 用途：CodeMind 與 QSearch 專案卡片 · 不需要可整段刪掉 */
@@ -588,7 +732,8 @@ h3 {
   font-size: var(--text-sm);
 }
 
-/* 區塊：我能貢獻什麼 · 用途：三張深色卡片 · 不需要可整段刪掉 */
+/* 區塊：我能貢獻什麼 · 用途：三張淺色卡片，左側主色線標出順序感；
+   原本是深色底，在整頁淺色裡最搶眼卻不是重點，改成和技能卡同一套底色 · 不需要可整段刪掉 */
 
 .contribution-grid {
   display: grid;
@@ -597,29 +742,91 @@ h3 {
 }
 
 .contribution-card {
-  min-height: var(--card-min-height);
   padding: var(--space-4);
   border: var(--border-width) solid var(--color-border);
+  border-left: var(--border-width-accent) solid var(--color-accent);
   border-radius: var(--radius);
-  background: var(--color-surface-inverse);
-  color: var(--color-on-inverse);
+  background: var(--color-surface);
 }
 
 .contribution-card p {
   margin-bottom: 0;
-  color: var(--color-on-inverse-muted);
 }
 
 .contribution-card h3 {
-  margin-top: var(--space-5);
+  margin: var(--space-2) 0;
   font-size: var(--text-lg);
 }
 
 .contribution-number {
-  color: var(--color-on-inverse-accent);
+  color: var(--color-accent);
   font-size: var(--text-xs);
   font-weight: 800;
   letter-spacing: 0.12em;
+}
+
+/* 關於我分頁：只有最上面的「關於我」用大標，後面三個區塊標題縮成小一級，
+   區塊間距從 64px 縮到 40px，整頁讀起來比較連貫 */
+.page-about > .section {
+  padding-bottom: var(--space-5);
+}
+
+.page-about > .section + .section {
+  padding-top: var(--space-5);
+}
+
+.page-about > .section + .section h2 {
+  font-size: var(--text-subtitle);
+  line-height: 1.3;
+}
+
+.page-about .section-heading {
+  margin-bottom: var(--space-4);
+}
+
+/* 關於我開頭：標題在上，三段介紹排成「小標籤＋內文」的清單。
+   原本左右兩欄、內文全灰，視線要左右跳而且沒有切入點；改成上下排、標籤用主色，
+   第一眼先掃到「背景／延伸方向／目標」，想細看再讀內文 */
+.about-intro h2 {
+  max-width: var(--measure-lg);
+  margin-bottom: var(--space-4);
+}
+
+/* 不限制欄寬，用滿整頁寬度：每段都是一兩句話，桌面版「背景」那段才能排成一行 */
+.about-facts {
+  display: grid;
+  margin: 0;
+}
+
+.about-facts div {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3) 0;
+  border-top: var(--border-width) solid var(--color-border);
+}
+
+.about-facts dt {
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+  font-weight: 800;
+}
+
+.about-facts dd {
+  margin: 0;
+  color: var(--color-text);
+}
+
+/* 平板以上：標籤固定在左欄、內文在右欄，三列的標籤寬度一致（subgrid 對齊最寬的標籤） */
+@media (min-width: 768px) {
+  .about-facts {
+    grid-template-columns: max-content minmax(0, 1fr);
+    column-gap: var(--space-5);
+  }
+
+  .about-facts div {
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+  }
 }
 
 /* 區塊：經歷 · 用途：工作與志工經歷時間軸 · 不需要可整段刪掉 */
@@ -702,8 +909,105 @@ h3 {
   margin: var(--space-3) 0;
 }
 
+/* 新訊息由下方 8px 淡入；app.js 只替新加入的訊息加 is-entering */
+.message.is-entering {
+  animation: message-in var(--motion-duration) var(--motion-ease);
+}
+
+@keyframes message-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-2));
+  }
+}
+
+/* 串流中的回答：文字後面接一個閃爍游標，回答完就拿掉 */
+.message.is-streaming::after {
+  display: inline-block;
+  width: var(--border-width-strong);
+  height: 1em;
+  margin-left: var(--space-1);
+  background: var(--color-accent);
+  vertical-align: text-bottom;
+  content: "";
+  animation: caret-blink calc(var(--motion-duration) * 3) steps(1) infinite;
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* 等待回覆：三個點依序跳動，接在「正在整理」文字前面 */
+.typing-dots {
+  display: inline-flex;
+  gap: var(--space-1);
+  margin-right: var(--space-2);
+  vertical-align: middle;
+}
+
+.typing-dots span {
+  width: var(--dot-size);
+  height: var(--dot-size);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
+  animation: typing-bounce calc(var(--motion-duration) * 4) var(--motion-ease) infinite;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: calc(var(--motion-stagger) * 2);
+}
+
+.typing-dots span:nth-child(3) {
+  animation-delay: calc(var(--motion-stagger) * 4);
+}
+
+@keyframes typing-bounce {
+  0%,
+  60%,
+  100% {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+
+  30% {
+    opacity: 1;
+    transform: translateY(calc(-1 * var(--space-1)));
+  }
+}
+
 .prompt-chips button {
   cursor: pointer;
+  transition: background var(--motion-fast) ease, border-color var(--motion-fast) ease, color var(--motion-fast) ease, transform var(--motion-fast) var(--motion-ease);
+}
+
+.prompt-chips button:hover {
+  border-color: var(--color-accent-border-hover);
+  background: var(--color-surface);
+}
+
+.prompt-chips button:active {
+  transform: scale(var(--press-scale));
+}
+
+.prompt-chips button:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: progress;
+}
+
+/* 點選的推薦問題短暫亮成主色，讓人知道剛剛問了哪一題 */
+.prompt-chips button.is-picked {
+  animation: chip-picked calc(var(--motion-duration) * 2) var(--motion-ease);
+}
+
+@keyframes chip-picked {
+  from {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    opacity: 1;
+  }
 }
 
 .chat-form {
@@ -746,6 +1050,16 @@ h3 {
   gap: var(--space-3);
   min-width: var(--field-min-width);
   font-weight: 750;
+}
+
+/* 滑過聯絡連結：底線由左往右畫出來 */
+.contact-links a {
+  background: linear-gradient(currentColor, currentColor) left bottom / 0 var(--border-width) no-repeat;
+  transition: background-size var(--motion-base) var(--motion-ease), color var(--motion-fast) ease;
+}
+
+.contact-links a:hover {
+  background-size: 100% var(--border-width);
 }
 
 /* 區塊：頁尾 · 用途：版權與頁底連結 · 不需要可整段刪掉 */
@@ -809,6 +1123,7 @@ h3 {
   background: var(--color-bg-translucent);
   color: var(--color-text);
   cursor: pointer;
+  transition: transform var(--motion-fast) var(--motion-ease), background var(--motion-fast) ease, border-color var(--motion-fast) ease, opacity var(--motion-base) ease;
 }
 
 .gallery-prev,
@@ -818,12 +1133,74 @@ h3 {
   transform: translateY(-50%);
 }
 
+/* 箭頭與關閉鈕按下回饋：左右箭頭本身靠 translateY 置中，縮放要疊在後面 */
+.gallery-prev:active,
+.gallery-next:active {
+  transform: translateY(-50%) scale(var(--press-scale));
+}
+
+.lightbox-close:active {
+  transform: scale(var(--press-scale));
+}
+
+/* 換圖：交叉淡化，舊圖（app.js 疊上的 gallery-ghost）慢慢淡出、新圖從底下浮現，
+   說明文字同步淡入；不位移，箭頭留在原位，眼睛才有固定的參考點 */
+.gallery-ghost {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  animation: fade-out var(--motion-crossfade) ease-in-out forwards;
+}
+
+.is-switching .gallery-caption,
+.is-switching .lightbox-image,
+.is-switching .lightbox-caption {
+  animation: fade-in var(--motion-crossfade) ease-in-out;
+}
+
 .gallery-prev {
   left: var(--space-2);
 }
 
 .gallery-next {
   right: var(--space-2);
+}
+
+/* 圖庫上的左右箭頭：縮小、淺色，不搶截圖的視線（放大檢視裡的箭頭維持原樣） */
+.gallery-frame .gallery-prev,
+.gallery-frame .gallery-next {
+  width: var(--size-icon-button-sm);
+  height: var(--size-icon-button-sm);
+  border-color: var(--color-border-translucent);
+  background: var(--color-surface-translucent);
+  color: var(--color-text-muted);
+}
+
+.gallery-frame .gallery-prev svg,
+.gallery-frame .gallery-next svg {
+  width: var(--space-3);
+  height: var(--space-3);
+}
+
+/* 有滑鼠的裝置：平常藏起來，滑鼠移到圖上或用鍵盤聚焦時才出現；
+   手機平板沒有 hover，箭頭維持顯示，也可以左右滑 */
+@media (hover: hover) {
+  .gallery-frame .gallery-prev,
+  .gallery-frame .gallery-next {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .gallery-frame:hover .gallery-prev,
+  .gallery-frame:hover .gallery-next,
+  .gallery-frame:focus-within .gallery-prev,
+  .gallery-frame:focus-within .gallery-next {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 
 .gallery-prev:hover,
@@ -879,6 +1256,41 @@ h3 {
 
 .lightbox::backdrop {
   background: transparent;
+}
+
+/* 開啟：黑幕淡入、圖片從 0.96 放大；關閉（app.js 加上 is-closing）反向退場後才真的關掉 */
+.lightbox[open] {
+  animation: fade-in var(--motion-base) var(--motion-ease);
+}
+
+.lightbox[open] .lightbox-frame {
+  animation: zoom-in var(--motion-base) var(--motion-ease);
+}
+
+.lightbox.is-closing {
+  animation: fade-out var(--motion-base) var(--motion-ease) forwards;
+}
+
+.lightbox.is-closing .lightbox-frame {
+  animation: zoom-out var(--motion-base) var(--motion-ease) forwards;
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes zoom-in {
+  from {
+    transform: scale(var(--zoom-start-scale));
+  }
+}
+
+@keyframes zoom-out {
+  to {
+    transform: scale(var(--zoom-start-scale));
+  }
 }
 
 .lightbox-frame {
@@ -983,6 +1395,19 @@ h3 {
     min-height: calc(100vh - var(--topbar-height));
   }
 
+  /* 作品集兩欄：兩張卡片共用同一組橫列（subgrid），標籤、標題、介紹、截圖、角色各自對齊，
+     介紹字數不同時截圖也會在同一高度開始。CodeMind 有 8 個子元素，所以每張卡都佔 8 列 */
+  .project-grid {
+    row-gap: 0;
+  }
+
+  .project-card {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 8;
+    align-content: start;
+  }
+
   .portrait-wrap {
     max-width: var(--portrait-width);
   }
@@ -1009,5 +1434,217 @@ h3 {
 
   .contact-description {
     white-space: nowrap;
+  }
+}
+
+/* 區塊：互動工具頁 · 用途：tools/ 底下各個小工具共用的版面（手機優先，768 以上欄位排兩欄） · 刪掉的話 tools/ 的頁面會沒有樣式 */
+
+.tool-page {
+  max-width: var(--measure);
+  padding: var(--space-5) 0 var(--space-6);
+}
+
+.tool-back {
+  display: inline-block;
+  margin-bottom: var(--space-4);
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.tool-back:hover {
+  color: var(--color-accent-hover);
+}
+
+.tool-title {
+  margin: 0 0 var(--space-2);
+  color: var(--color-heading);
+  font-size: var(--text-title);
+  line-height: 1.2;
+}
+
+.tool-lead {
+  margin: 0 0 var(--space-4);
+  color: var(--color-text-muted);
+}
+
+.tool-card {
+  margin-bottom: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+}
+
+.tool-fields {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+
+.tool-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.tool-field label {
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.tool-field input {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.tool-field input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 var(--border-width-accent) var(--color-focus-ring);
+}
+
+.tool-field input[aria-invalid] {
+  border-color: var(--color-error-border);
+  background: var(--color-error-bg);
+}
+
+.tool-field-error {
+  min-height: 0;
+  margin: 0;
+  color: var(--color-error-text);
+  font-size: var(--text-sm);
+}
+
+.tool-field-error:empty {
+  display: none;
+}
+
+.tool-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.tool-result-message {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.tool-result[data-state="error"] {
+  background: var(--color-error-bg);
+  border-color: var(--color-error-border);
+}
+
+.tool-result[data-state="error"] .tool-result-message,
+.tool-error-list {
+  color: var(--color-error-text);
+}
+
+.tool-error-list {
+  margin: var(--space-2) 0 0;
+  padding-left: var(--space-4);
+}
+
+.tool-result-label {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.tool-result-value {
+  margin: 0 0 var(--space-3);
+  color: var(--color-accent);
+  font-size: var(--text-display);
+  font-weight: 800;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.tool-breakdown {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.tool-breakdown div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: var(--border-width) solid var(--color-border);
+}
+
+.tool-breakdown dt {
+  color: var(--color-text-muted);
+}
+
+.tool-breakdown dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+/* 結果出現時淡入並往上移，讓人看得出「剛剛換了」；rise 也給首頁開頭與捲動進場共用 */
+.tool-result.is-entering {
+  animation: rise var(--motion-duration) ease-out;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--motion-rise));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tool-note h2 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-lg);
+}
+
+.tool-note p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+@media (min-width: 768px) {
+  .tool-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tool-breakdown {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .tool-breakdown div {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+/* 打開系統「減少動態效果」的人：動畫與轉場全部縮成瞬間完成，功能不受影響。
+   用極短時間而不是 none，app.js 等 animationend／transitionend 的流程才會照常走完 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
   }
 }

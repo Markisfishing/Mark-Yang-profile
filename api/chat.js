@@ -1,10 +1,10 @@
 const PROFILE_CONTEXT = `
-Mark Yang / 楊祐瑜 is seeking an AI Application Engineering Internship.
+Mark Yang / 楊祐瑜 is looking for internship opportunities.
 
 Core positioning:
 - Chinese name: 楊祐瑜
 - English name: Mark Yang
-- Target role: AI Application Engineering Intern
+- Target: internship opportunities where he can keep building and learning through real projects
 - Education: Intelligent Computing and Big Data, Chung Yuan Christian University
 - GitHub: https://github.com/Markisfishing
 - Email: y7632457@gmail.com
@@ -118,10 +118,20 @@ module.exports = async function handler(req, res) {
     const body = await readJson(req);
     const messages = normalizeMessages(body.messages);
     const provider = (process.env.AI_PROVIDER || "groq").toLowerCase();
-    const reply = provider === "openai"
-      ? await callOpenAI(messages)
-      : await callGroq(messages);
+    const callProvider = provider === "openai" ? callOpenAI : callGroq;
 
+    // 前端帶 stream: true 時改成串流：模型一邊產生，這裡一邊轉送給瀏覽器；
+    // 訪客關掉頁面就中止對模型的請求，不浪費額度
+    if (body.stream === true) {
+      const controller = new AbortController();
+      res.on("close", () => {
+        if (!res.writableEnded) controller.abort();
+      });
+      const upstream = await callProvider(messages, { stream: true, signal: controller.signal });
+      return pipeReplyStream(upstream, res);
+    }
+
+    const reply = await callProvider(messages);
     res.writeHead(200);
     res.end(JSON.stringify({ reply }));
   } catch (error) {
@@ -133,7 +143,7 @@ module.exports = async function handler(req, res) {
   }
 };
 
-async function callGroq(messages) {
+async function callGroq(messages, options = {}) {
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
     throw publicError(500, "GROQ_API_KEY is not configured on the server.");
@@ -143,7 +153,8 @@ async function callGroq(messages) {
     url: "https://api.groq.com/openai/v1/chat/completions",
     apiKey,
     model: getGroqModel(),
-    messages
+    messages,
+    ...options
   });
 }
 
@@ -154,7 +165,7 @@ function getGroqModel() {
     : DEFAULT_GROQ_MODEL;
 }
 
-async function callOpenAI(messages) {
+async function callOpenAI(messages, options = {}) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     throw publicError(500, "OPENAI_API_KEY is not configured on the server.");
@@ -164,11 +175,15 @@ async function callOpenAI(messages) {
     url: "https://api.openai.com/v1/chat/completions",
     apiKey,
     model: process.env.AI_MODEL || "set-AI_MODEL-in-env",
-    messages
+    messages,
+    ...options
   });
 }
 
-async function callChatCompletions({ url, apiKey, model, messages }) {
+const EMPTY_REPLY = "目前履歷中沒有列出這項資訊，建議直接聯絡 Mark 確認。";
+
+// stream 為 true 時回傳模型的原始串流回應（交給 pipeReplyStream），否則回傳整段文字
+async function callChatCompletions({ url, apiKey, model, messages, stream = false, signal }) {
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -179,20 +194,62 @@ async function callChatCompletions({ url, apiKey, model, messages }) {
       model,
       temperature: 0.35,
       max_tokens: 500,
+      stream,
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
         ...messages
       ]
-    })
+    }),
+    signal
   });
 
-  const data = await response.json().catch(() => ({}));
   if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
     throw publicError(response.status, data.error?.message || "The AI provider rejected the request.");
   }
+  if (stream) return response;
 
-  return data.choices?.[0]?.message?.content?.trim()
-    || "目前履歷中沒有列出這項資訊，建議直接聯絡 Mark 確認。";
+  const data = await response.json().catch(() => ({}));
+  return data.choices?.[0]?.message?.content?.trim() || EMPTY_REPLY;
+}
+
+// 把模型的 SSE 串流（每行 data: {...}）轉成給前端的 NDJSON，一行一個事件：
+// {"delta":"文字片段"}、最後 {"done":true}；中途出錯送 {"error":"..."}。
+// 狀態碼已經送出 200，中途的錯誤只能放在內容裡告訴前端
+async function pipeReplyStream(upstream, res) {
+  res.writeHead(200, {
+    "Content-Type": "application/x-ndjson; charset=utf-8",
+    "Cache-Control": "no-cache, no-transform"
+  });
+  const send = (event) => {
+    if (!res.writableEnded && !res.destroyed) res.write(`${JSON.stringify(event)}\n`);
+  };
+
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let sentText = false;
+  try {
+    for await (const chunk of upstream.body) {
+      buffer += decoder.decode(chunk, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith("data:")) continue;
+        const data = line.slice(5).trim();
+        if (data === "[DONE]") continue;
+        const delta = JSON.parse(data).choices?.[0]?.delta?.content;
+        if (delta) {
+          sentText = true;
+          send({ delta });
+        }
+      }
+    }
+    if (!sentText) send({ delta: EMPTY_REPLY });
+    send({ done: true });
+  } catch {
+    send({ error: "AI Profile Agent is temporarily unavailable." });
+  }
+  res.end();
 }
 
 function normalizeMessages(messages) {
