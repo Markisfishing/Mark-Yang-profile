@@ -792,9 +792,9 @@ h3 {
   margin-bottom: var(--space-4);
 }
 
+/* 不限制欄寬，用滿整頁寬度：每段都是一兩句話，桌面版「背景」那段才能排成一行 */
 .about-facts {
   display: grid;
-  max-width: var(--measure-xl);
   margin: 0;
 }
 
