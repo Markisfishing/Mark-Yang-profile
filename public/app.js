@@ -278,6 +278,7 @@ langToggle.addEventListener("click", () => {
   localStorage.setItem("lang", currentLang);
   applyLanguage(currentLang);
   resetChat();
+  moveNavIndicator();
 });
 
 themeToggle.addEventListener("click", () => {
@@ -479,24 +480,53 @@ lightbox.addEventListener("close", () => { lightboxGallery = null; });
 const pages = [...document.querySelectorAll("[data-page]")];
 const navTabs = [...document.querySelectorAll(".nav-links a")];
 const topbar = document.querySelector(".topbar");
-let currentPage = pages[0];
+const navIndicator = document.createElement("span");
+let currentPage = null;
+
+navIndicator.className = "nav-indicator";
+navIndicator.setAttribute("aria-hidden", "true");
+document.querySelector(".nav-links").appendChild(navIndicator);
 
 function showPageFromHash() {
   const id = decodeURIComponent(location.hash.slice(1));
   const target = id ? document.getElementById(id) : null;
-  const page = target ? target.closest("[data-page]") : pages[0];
-  if (page) currentPage = page;
+  const page = (target ? target.closest("[data-page]") : pages[0]) || currentPage || pages[0];
+  // 第一次載入不淡入（首頁開頭有自己的進場），之後換頁才淡入
+  if (currentPage && page !== currentPage) replay(page, "is-entering");
+  currentPage = page;
 
   pages.forEach((p) => { p.hidden = p !== currentPage; });
   navTabs.forEach((tab) => {
     if (tab.getAttribute("href") === `#${currentPage.id}`) tab.setAttribute("aria-current", "page");
     else tab.removeAttribute("aria-current");
   });
+  moveNavIndicator();
 
   if (!target || target === currentPage) window.scrollTo({ top: 0, behavior: "instant" });
   // 導覽列是黏在上方的，手機版會換行變高，所以用實際高度扣掉，目標才不會被蓋住
   else window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - topbar.offsetHeight, behavior: "instant" });
 }
 
+// 底線對齊目前分頁標籤的文字（扣掉左右內距）；語言切換或視窗縮放後標籤寬度會變，要重算
+function moveNavIndicator() {
+  const tab = navTabs.find((t) => t.hasAttribute("aria-current"));
+  if (!tab) return;
+  const inset = parseFloat(getComputedStyle(tab).paddingLeft);
+  const top = tab.offsetTop + tab.offsetHeight - navIndicator.offsetHeight;
+  navIndicator.style.width = `${tab.offsetWidth - inset * 2}px`;
+  navIndicator.style.transform = `translate(${tab.offsetLeft + inset}px, ${top}px)`;
+}
+
+// 重播一次 CSS 動畫：先拿掉 class、強制重排，再加回去；播完自動拿掉
+function replay(element, className) {
+  element.classList.remove(className);
+  void element.offsetWidth;
+  element.classList.add(className);
+  element.addEventListener("animationend", () => element.classList.remove(className), { once: true });
+}
+
 window.addEventListener("hashchange", showPageFromHash);
+window.addEventListener("resize", moveNavIndicator);
 showPageFromHash();
+// 第一次定位不要有滑動，下一個畫格才開啟轉場
+requestAnimationFrame(() => navIndicator.classList.add("is-ready"));
