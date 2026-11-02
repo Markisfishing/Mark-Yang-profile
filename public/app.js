@@ -367,7 +367,7 @@ function renderChat(animateFrom = messages.length) {
   messages.forEach((message, i) => {
     const bubble = document.createElement("div");
     bubble.className = `message ${message.role}${message.error ? " error" : ""}${message.streaming ? " is-streaming" : ""}${i >= animateFrom ? " is-entering" : ""}`;
-    bubble.textContent = message.content;
+    bubble.textContent = message.display ?? message.content;
     if (message.pending) {
       const dots = document.createElement("span");
       dots.className = "typing-dots";
@@ -405,6 +405,26 @@ async function sendMessage(content) {
   let raw = "";
   let bubble = null;
 
+  // 收到的文字交給打字機，畫面上一個字一個字打出來；第一次打字時把「正在整理」換成回答泡泡
+  const typer = createTypewriter((text) => {
+    reply.display = text;
+    // 等待途中切換語言會清空對話，這則回答已不在畫面上就不用再畫
+    if (!messages.includes(reply)) return;
+    if (!bubble) {
+      reply.pending = false;
+      reply.streaming = true;
+      renderChat(messages.length - 1);
+      bubble = chatLog.lastElementChild;
+    } else {
+      bubble.textContent = text;
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+  });
+  const receive = () => {
+    reply.content = cleanAgentReply(raw);
+    typer.update(reply.content);
+  };
+
   try {
     const response = await fetch("/api/chat", {
       method: "POST",
@@ -416,32 +436,22 @@ async function sendMessage(content) {
       throw Object.assign(new Error("chat failed"), { publicMessage: data.error });
     }
 
-    // 後端還是舊版（沒重開的本機伺服器）會一次回整段 JSON，照舊顯示，不要卡在「正在整理」
     if ((response.headers.get("Content-Type") || "").includes("application/json")) {
+      // 後端還是舊版（沒重開的本機伺服器）會一次回整段 JSON，一樣用打字機打出來
       const data = await response.json();
       raw = String(data.reply || "");
-      reply.content = cleanAgentReply(raw);
-      return;
+      receive();
+    } else {
+      // 串流：每收到一段就交給打字機，打字速度穩定，不會隨網路一塊一塊跳出來
+      await readReplyStream(response, (delta) => {
+        raw += delta;
+        receive();
+      });
     }
-
-    // 串流：每收到一段就接到同一個泡泡後面，第一段到達時把「正在整理」換成回答
-    await readReplyStream(response, (delta) => {
-      raw += delta;
-      reply.content = cleanAgentReply(raw);
-      // 等待途中切換語言會清空對話，這則回答已不在畫面上就不用再畫
-      if (!messages.includes(reply)) return;
-      if (reply.pending) {
-        reply.pending = false;
-        reply.streaming = true;
-        renderChat(messages.length - 1);
-        bubble = chatLog.lastElementChild;
-      } else {
-        bubble.textContent = reply.content;
-        chatLog.scrollTop = chatLog.scrollHeight;
-      }
-    });
+    await typer.finish();
   } catch (error) {
-    // 回答到一半斷掉：保留已收到的文字，後面接上錯誤說明
+    // 回答到一半斷掉：停止打字，保留已收到的文字，後面接上錯誤說明
+    typer.stop();
     reply.error = true;
     reply.content = raw
       ? `${cleanAgentReply(raw)}\n\n${fallbackError()}`
@@ -452,12 +462,64 @@ async function sendMessage(content) {
       reply.error = true;
       reply.content = fallbackError();
     }
+    delete reply.display;
     reply.pending = false;
     reply.streaming = false;
     setSending(false);
     // 有串流過的泡泡已經在畫面上，不再重播進場；錯誤或整段回覆才播
     if (messages.includes(reply)) renderChat(bubble ? messages.length : messages.length - 1);
   }
+}
+
+// 打字機：update 給它目前收到的完整文字，畫面依經過的時間多顯示幾個字追上去。
+// 平常每秒 60 字；落後的字數比 60 多時，改成「每秒補上落後的字數」，越落後打越快，
+// 長回答也不會讓人等太久。用時間而不是畫格計算，120Hz 螢幕或掉格時速度都一樣。
+// 計時用 setTimeout 而不是 requestAnimationFrame：視窗被擋住時畫格會停，回答就會卡住不出來。
+// 分頁在背景或開了「減少動態效果」就直接顯示全部
+const typeCharsPerSecond = 60;
+const typeTickMs = 16;
+
+function createTypewriter(onRender) {
+  let target = "";
+  let shown = 0;
+  let last = null;
+  let frame = null;
+  let resolveDone = null;
+
+  const settle = () => {
+    frame = null;
+    last = null;
+    if (resolveDone) resolveDone();
+    resolveDone = null;
+  };
+  const tick = () => {
+    const now = performance.now();
+    const elapsed = last === null ? 0 : (now - last) / 1000;
+    last = now;
+    const backlog = target.length - shown;
+    const step = reduceMotion.matches || document.hidden
+      ? backlog
+      : Math.max(typeCharsPerSecond, backlog) * elapsed;
+    shown = Math.min(target.length, shown + step);
+    onRender(target.slice(0, Math.floor(shown)));
+    if (shown < target.length) frame = setTimeout(tick, typeTickMs);
+    else settle();
+  };
+
+  return {
+    update(text) {
+      target = text;
+      shown = Math.min(shown, target.length);
+      if (!frame && shown < target.length) frame = setTimeout(tick);
+    },
+    finish() {
+      return frame ? new Promise((resolve) => { resolveDone = resolve; }) : Promise.resolve();
+    },
+    stop() {
+      clearTimeout(frame);
+      settle();
+    }
+  };
 }
 
 // 讀 /api/chat 的 NDJSON 串流：一行一個事件，{"delta"} 是文字片段、{"error"} 是中途出錯
