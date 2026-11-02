@@ -855,6 +855,24 @@ h3 {
   }
 }
 
+/* 串流中的回答：文字後面接一個閃爍游標，回答完就拿掉 */
+.message.is-streaming::after {
+  display: inline-block;
+  width: var(--border-width-strong);
+  height: 1em;
+  margin-left: var(--space-1);
+  background: var(--color-accent);
+  vertical-align: text-bottom;
+  content: "";
+  animation: caret-blink calc(var(--motion-duration) * 3) steps(1) infinite;
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
 /* 等待回覆：三個點依序跳動，接在「正在整理」文字前面 */
 .typing-dots {
   display: inline-flex;

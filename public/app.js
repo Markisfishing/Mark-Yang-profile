@@ -366,7 +366,7 @@ function renderChat(animateFrom = messages.length) {
   chatLog.innerHTML = "";
   messages.forEach((message, i) => {
     const bubble = document.createElement("div");
-    bubble.className = `message ${message.role}${message.error ? " error" : ""}${i >= animateFrom ? " is-entering" : ""}`;
+    bubble.className = `message ${message.role}${message.error ? " error" : ""}${message.streaming ? " is-streaming" : ""}${i >= animateFrom ? " is-entering" : ""}`;
     bubble.textContent = message.content;
     if (message.pending) {
       const dots = document.createElement("span");
@@ -385,47 +385,84 @@ function setSending(sending) {
   isSending = sending;
   chatSend.disabled = sending;
   chatSend.toggleAttribute("aria-busy", sending);
+  // 串流時文字一直在變，aria-busy 讓螢幕閱讀器等回答完整了再一次念出來
+  chatLog.toggleAttribute("aria-busy", sending);
   promptChips.querySelectorAll("button").forEach((button) => { button.disabled = sending; });
 }
 
 async function sendMessage(content) {
   setSending(true);
   messages.push({ role: "user", content });
-  messages.push({
+  const reply = {
     role: "assistant",
     content: currentLang === "zh" ? "正在整理 Mark 的履歷資料" : "Reviewing Mark's profile",
     pending: true
-  });
+  };
+  messages.push(reply);
   renderChat(messages.length - 2);
+
+  const history = messages.filter((message) => !message.error && message !== reply);
+  let raw = "";
+  let bubble = null;
 
   try {
     const response = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        messages: messages
-          .filter((message) => !message.error)
-          .slice(0, -1)
-      })
+      body: JSON.stringify({ stream: true, messages: history })
     });
-    const data = await response.json();
-    const reply = response.ok
-      ? cleanAgentReply(data.reply)
-      : data.error || fallbackError();
-    messages[messages.length - 1] = {
-      role: "assistant",
-      content: reply,
-      error: !response.ok
-    };
-  } catch {
-    messages[messages.length - 1] = {
-      role: "assistant",
-      content: fallbackError(),
-      error: true
-    };
+    if (!response.ok || !response.body) {
+      const data = await response.json().catch(() => ({}));
+      throw Object.assign(new Error("chat failed"), { publicMessage: data.error });
+    }
+
+    // 串流：每收到一段就接到同一個泡泡後面，第一段到達時把「正在整理」換成回答
+    await readReplyStream(response, (delta) => {
+      raw += delta;
+      reply.content = cleanAgentReply(raw);
+      // 等待途中切換語言會清空對話，這則回答已不在畫面上就不用再畫
+      if (!messages.includes(reply)) return;
+      if (reply.pending) {
+        reply.pending = false;
+        reply.streaming = true;
+        renderChat(messages.length - 1);
+        bubble = chatLog.lastElementChild;
+      } else {
+        bubble.textContent = reply.content;
+        chatLog.scrollTop = chatLog.scrollHeight;
+      }
+    });
+  } catch (error) {
+    // 回答到一半斷掉：保留已收到的文字，後面接上錯誤說明
+    reply.error = true;
+    reply.content = raw
+      ? `${cleanAgentReply(raw)}\n\n${fallbackError()}`
+      : error.publicMessage || fallbackError();
   } finally {
+    reply.pending = false;
+    reply.streaming = false;
     setSending(false);
-    renderChat(messages.length - 1);
+    if (messages.includes(reply)) renderChat(reply.error ? messages.length - 1 : messages.length);
+  }
+}
+
+// 讀 /api/chat 的 NDJSON 串流：一行一個事件，{"delta"} 是文字片段、{"error"} 是中途出錯
+async function readReplyStream(response, onDelta) {
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  for (;;) {
+    const { value, done } = await reader.read();
+    buffer += decoder.decode(value, { stream: !done });
+    const lines = buffer.split("\n");
+    buffer = done ? "" : lines.pop();
+    for (const line of lines) {
+      if (!line.trim()) continue;
+      const event = JSON.parse(line);
+      if (event.error) throw new Error(event.error);
+      if (event.delta) onDelta(event.delta);
+    }
+    if (done) return;
   }
 }
 
