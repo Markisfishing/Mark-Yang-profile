@@ -416,6 +416,14 @@ async function sendMessage(content) {
       throw Object.assign(new Error("chat failed"), { publicMessage: data.error });
     }
 
+    // 後端還是舊版（沒重開的本機伺服器）會一次回整段 JSON，照舊顯示，不要卡在「正在整理」
+    if ((response.headers.get("Content-Type") || "").includes("application/json")) {
+      const data = await response.json();
+      raw = String(data.reply || "");
+      reply.content = cleanAgentReply(raw);
+      return;
+    }
+
     // 串流：每收到一段就接到同一個泡泡後面，第一段到達時把「正在整理」換成回答
     await readReplyStream(response, (delta) => {
       raw += delta;
@@ -439,10 +447,16 @@ async function sendMessage(content) {
       ? `${cleanAgentReply(raw)}\n\n${fallbackError()}`
       : error.publicMessage || fallbackError();
   } finally {
+    // 串流結束卻一個字都沒收到：顯示錯誤說明，而不是把「正在整理」留在畫面上
+    if (!reply.error && !raw) {
+      reply.error = true;
+      reply.content = fallbackError();
+    }
     reply.pending = false;
     reply.streaming = false;
     setSending(false);
-    if (messages.includes(reply)) renderChat(reply.error ? messages.length - 1 : messages.length);
+    // 有串流過的泡泡已經在畫面上，不再重播進場；錯誤或整段回覆才播
+    if (messages.includes(reply)) renderChat(bubble ? messages.length : messages.length - 1);
   }
 }
 
