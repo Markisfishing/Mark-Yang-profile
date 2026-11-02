@@ -99,7 +99,7 @@
   --press-scale: 0.97;               /* 按下時縮小的比例 */
   --hover-scale: 1.02;               /* 封面、人像滑過時放大的比例 */
   --zoom-start-scale: 0.96;          /* 放大檢視開啟時圖片的起始比例 */
-  --slide-distance: 24px;            /* 圖庫換圖時新圖滑入的距離 */
+  --motion-crossfade: 0.6s;          /* 圖庫換圖的交叉淡化，比一般轉場慢一倍，看起來比較柔和 */
   --nudge: 4px;                      /* 箭頭滑過時往右推的距離 */
   --tilt-hover: 2deg;                /* 人像滑過時的傾斜角度 */
   --dot-size: 6px;                   /* AI 助理等待時三個跳動點的直徑 */

@@ -1059,36 +1059,22 @@ h3 {
   transform: scale(var(--press-scale));
 }
 
-/* 換圖：只動圖片與說明，箭頭留在原位，眼睛才有固定的參考點 */
-.slide-from-next .gallery-zoom img,
-.slide-from-next .lightbox-image {
-  animation: slide-from-next var(--motion-duration) var(--motion-ease);
+/* 換圖：交叉淡化，舊圖（app.js 疊上的 gallery-ghost）慢慢淡出、新圖從底下浮現，
+   說明文字同步淡入；不位移，箭頭留在原位，眼睛才有固定的參考點 */
+.gallery-ghost {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  animation: fade-out var(--motion-crossfade) ease-in-out forwards;
 }
 
-.slide-from-prev .gallery-zoom img,
-.slide-from-prev .lightbox-image {
-  animation: slide-from-prev var(--motion-duration) var(--motion-ease);
-}
-
-.slide-from-next .gallery-caption,
-.slide-from-prev .gallery-caption,
-.slide-from-next .lightbox-caption,
-.slide-from-prev .lightbox-caption {
-  animation: fade-in var(--motion-duration) var(--motion-ease);
-}
-
-@keyframes slide-from-next {
-  from {
-    opacity: 0;
-    transform: translateX(var(--slide-distance));
-  }
-}
-
-@keyframes slide-from-prev {
-  from {
-    opacity: 0;
-    transform: translateX(calc(-1 * var(--slide-distance)));
-  }
+.is-switching .gallery-caption,
+.is-switching .lightbox-image,
+.is-switching .lightbox-caption {
+  animation: fade-in var(--motion-crossfade) ease-in-out;
 }
 
 .gallery-prev {

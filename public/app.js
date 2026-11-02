@@ -480,9 +480,17 @@ document.querySelectorAll("[data-gallery]").forEach((gallery, galleryIndex) => {
     const focused = previous !== current && previous.contains(document.activeElement) ? document.activeElement : null;
     slides.forEach((slide, i) => { slide.hidden = i !== index; });
     if (focused) current.querySelector(`.${focused.classList[0]}`).focus();
-    if (direction) replay(current, slideClass(direction));
+    if (direction) {
+      crossfade(previous, current);
+      replay(current, "is-switching");
+    }
+    preloadNext();
     if (lightboxGallery === gallery) syncLightbox(current, direction);
   };
+
+  // 下一張先載好，交叉淡化時新圖才不會是空白
+  const preloadNext = () => { slides[(index + 1) % slides.length].querySelector("img").loading = "eager"; };
+  preloadNext();
   // 手動換圖後重新計時，剛按完不會馬上又被自動切走
   gallery.step = (delta) => {
     gallery.showSlide(index + delta, delta);
@@ -508,12 +516,20 @@ function syncLightbox(slide, direction = 0) {
   lightboxImage.src = image.currentSrc || image.src;
   lightboxImage.alt = image.alt;
   lightboxCaption.textContent = slide.querySelector("figcaption span").textContent;
-  if (direction) replay(lightbox, slideClass(direction));
+  if (direction) replay(lightbox, "is-switching");
 }
 
-// 看下一張時新圖從右邊滑進來，看上一張時從左邊
-function slideClass(direction) {
-  return direction > 0 ? "slide-from-next" : "slide-from-prev";
+// 交叉淡化：把舊圖複製一張疊在新圖上面慢慢變透明，新圖就從底下浮現；
+// 疊圖插在箭頭前面，箭頭仍在最上層，淡完就移除
+function crossfade(previous, current) {
+  const ghost = previous.querySelector(".gallery-zoom img").cloneNode();
+  ghost.className = "gallery-ghost";
+  ghost.alt = "";
+  ghost.removeAttribute("data-i18n-alt");
+  ghost.setAttribute("aria-hidden", "true");
+  const frame = current.querySelector(".gallery-frame");
+  frame.insertBefore(ghost, frame.querySelector(".gallery-prev"));
+  ghost.addEventListener("animationend", () => ghost.remove(), { once: true });
 }
 
 // 放大檢視關閉時先播退場動畫再真的關掉；按 Esc 也走同一條路
