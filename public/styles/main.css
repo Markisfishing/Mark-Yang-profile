@@ -125,13 +125,25 @@ input {
   cursor: pointer;
   font-size: var(--text-sm);
   font-weight: 700;
-  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+  transition: transform var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) ease, background var(--motion-fast) ease, opacity var(--motion-fast) ease;
 }
 
 .button:hover,
 .lang-toggle:hover {
   transform: translateY(var(--lift-hover));
   border-color: var(--color-accent-border-hover);
+}
+
+/* 按下回饋：縮到 0.97，放開就彈回；停用中的按鈕不縮也不浮 */
+.button:active,
+.lang-toggle:active {
+  transform: scale(var(--press-scale));
+}
+
+.button:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: progress;
+  transform: none;
 }
 
 /* 區塊：按鈕 · 用途：主要、次要、幽靈三種按鈕樣式 · 不需要可整段刪掉 */
@@ -1167,12 +1179,12 @@ h3 {
   font-weight: 700;
 }
 
-/* 結果出現時淡入並往上移，讓人看得出「剛剛換了」 */
+/* 結果出現時淡入並往上移，讓人看得出「剛剛換了」；rise 也給首頁開頭與捲動進場共用 */
 .tool-result.is-entering {
-  animation: tool-rise var(--motion-duration) ease-out;
+  animation: rise var(--motion-duration) ease-out;
 }
 
-@keyframes tool-rise {
+@keyframes rise {
   from {
     opacity: 0;
     transform: translateY(var(--motion-rise));
@@ -1209,9 +1221,17 @@ h3 {
   }
 }
 
-/* 打開系統「減少動態效果」的人：動畫全部關掉，功能不受影響 */
+/* 打開系統「減少動態效果」的人：動畫與轉場全部縮成瞬間完成，功能不受影響。
+   用極短時間而不是 none，app.js 等 animationend／transitionend 的流程才會照常走完 */
 @media (prefers-reduced-motion: reduce) {
-  .tool-result.is-entering {
-    animation: none;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
   }
 }
