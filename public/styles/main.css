@@ -403,8 +403,11 @@ h3 {
   border-top: var(--border-width) solid var(--color-border);
 }
 
-/* 分頁：每頁第一個區塊緊接在導覽列下方，不需要再畫分隔線 */
-.page > .section:first-child {
+/* 分頁：每頁第一個區塊緊接在導覽列下方，不需要分隔線，也不需要區塊之間那 64px 的上方留白；
+   原本是一整頁往下捲時用來隔開上一個區塊，拆成分頁後上面已經沒有區塊，只剩空白 */
+.page > .section:first-child,
+.page > .hero:first-child {
+  padding-top: var(--space-4);
   border-top: 0;
 }
 
@@ -1323,10 +1326,6 @@ h3 {
 
   .agent-section {
     grid-template-columns: minmax(var(--column-min-md), 0.72fr) minmax(0, 1.28fr);
-  }
-
-  .hero {
-    min-height: calc(100vh - var(--topbar-height));
   }
 
   .portrait-wrap {
