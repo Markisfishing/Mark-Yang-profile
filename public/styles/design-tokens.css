@@ -84,7 +84,8 @@
   --chat-max-height: 480px;
   --bubble-max-width: 620px;         /* 聊天泡泡最大寬度 */
   --field-min-width: 280px;          /* 聯絡連結欄最小寬度 */
-  --size-icon-button: 40px;          /* 圖庫箭頭、放大檢視關閉鈕的邊長 */
+  --size-icon-button: 40px;          /* 放大檢視的箭頭與關閉鈕邊長 */
+  --size-icon-button-sm: 32px;       /* 作品圖庫上的小箭頭，滑鼠移過才出現 */
   --icon-stroke: 2px;                /* 箭頭與關閉圖示的線寬 */
 
   /* 動態：狀態切換用。0.3 秒看得見又不用等；6px 約一個字高的三分之一，感覺得到出現但不會跳 */

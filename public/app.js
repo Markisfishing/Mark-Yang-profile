@@ -451,11 +451,26 @@ const lightbox = document.getElementById("lightbox");
 const lightboxImage = document.getElementById("lightboxImage");
 const lightboxCaption = document.getElementById("lightboxCaption");
 const swipeThreshold = 40;
+const autoplayDelay = 4000;
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
 let lightboxGallery = null;
 
-document.querySelectorAll("[data-gallery]").forEach((gallery) => {
+document.querySelectorAll("[data-gallery]").forEach((gallery, galleryIndex) => {
   const slides = [...gallery.querySelectorAll(".gallery-slide")];
   let index = 0;
+  let autoplayTimer = null;
+
+  // 自動輪播：像電視牆一樣每 4 秒換下一張。滑鼠停在圖上、鍵盤焦點在圖庫裡、放大檢視開著、
+  // 分頁不在畫面上、或使用者開了「減少動態效果」時都先停下來，不搶正在看的人
+  const autoplayTick = () => {
+    const paused = gallery.matches(":hover, :focus-within") || lightbox.open || document.hidden
+      || !gallery.offsetParent || reduceMotion.matches;
+    if (!paused) gallery.showSlide(index + 1, 1);
+  };
+  const restartAutoplay = () => {
+    clearInterval(autoplayTimer);
+    autoplayTimer = setInterval(autoplayTick, autoplayDelay);
+  };
 
   gallery.showSlide = (next, direction = 0) => {
     const previous = slides[index];
@@ -468,7 +483,13 @@ document.querySelectorAll("[data-gallery]").forEach((gallery) => {
     if (direction) replay(current, slideClass(direction));
     if (lightboxGallery === gallery) syncLightbox(current, direction);
   };
-  gallery.step = (delta) => gallery.showSlide(index + delta, delta);
+  // 手動換圖後重新計時，剛按完不會馬上又被自動切走
+  gallery.step = (delta) => {
+    gallery.showSlide(index + delta, delta);
+    restartAutoplay();
+  };
+  // 兩組圖庫錯開半個間隔，不會同時換圖
+  setTimeout(restartAutoplay, galleryIndex * autoplayDelay / 2);
 
   slides.forEach((slide) => {
     slide.querySelector(".gallery-prev").addEventListener("click", () => gallery.step(-1));

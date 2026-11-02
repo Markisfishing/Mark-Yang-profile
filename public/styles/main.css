@@ -1039,7 +1039,7 @@ h3 {
   background: var(--color-bg-translucent);
   color: var(--color-text);
   cursor: pointer;
-  transition: transform var(--motion-fast) var(--motion-ease), background var(--motion-fast) ease, border-color var(--motion-fast) ease;
+  transition: transform var(--motion-fast) var(--motion-ease), background var(--motion-fast) ease, border-color var(--motion-fast) ease, opacity var(--motion-base) ease;
 }
 
 .gallery-prev,
@@ -1097,6 +1097,40 @@ h3 {
 
 .gallery-next {
   right: var(--space-2);
+}
+
+/* 圖庫上的左右箭頭：縮小、淺色，不搶截圖的視線（放大檢視裡的箭頭維持原樣） */
+.gallery-frame .gallery-prev,
+.gallery-frame .gallery-next {
+  width: var(--size-icon-button-sm);
+  height: var(--size-icon-button-sm);
+  border-color: var(--color-border-translucent);
+  background: var(--color-surface-translucent);
+  color: var(--color-text-muted);
+}
+
+.gallery-frame .gallery-prev svg,
+.gallery-frame .gallery-next svg {
+  width: var(--space-3);
+  height: var(--space-3);
+}
+
+/* 有滑鼠的裝置：平常藏起來，滑鼠移到圖上或用鍵盤聚焦時才出現；
+   手機平板沒有 hover，箭頭維持顯示，也可以左右滑 */
+@media (hover: hover) {
+  .gallery-frame .gallery-prev,
+  .gallery-frame .gallery-next {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .gallery-frame:hover .gallery-prev,
+  .gallery-frame:hover .gallery-next,
+  .gallery-frame:focus-within .gallery-prev,
+  .gallery-frame:focus-within .gallery-next {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 
 .gallery-prev:hover,
