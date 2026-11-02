@@ -316,6 +316,84 @@ h3 {
   object-fit: contain;
   border-radius: var(--radius);
   filter: var(--filter-portrait);
+  transition: transform var(--motion-duration) var(--motion-ease);
+}
+
+/* 貓咪滑過時歪頭一下，平常保持靜止 */
+.portrait:hover {
+  transform: rotate(var(--tilt-hover)) scale(var(--hover-scale));
+}
+
+/* 首頁開頭第一次出現：文字依序淡入上移（間隔 60ms，總長 600ms 內），人像只淡入；
+   is-intro 寫在 index.html，播完由 app.js 拿掉，之後回到首頁不再重播 */
+.hero.is-intro .hero-copy > * {
+  animation: rise var(--motion-duration) var(--motion-ease) backwards;
+}
+
+.hero.is-intro .hero-copy > :nth-child(2) {
+  animation-delay: var(--motion-stagger);
+}
+
+.hero.is-intro .hero-copy > :nth-child(3) {
+  animation-delay: calc(var(--motion-stagger) * 2);
+}
+
+.hero.is-intro .hero-copy > :nth-child(4) {
+  animation-delay: calc(var(--motion-stagger) * 3);
+}
+
+.hero.is-intro .hero-copy > :nth-child(5) {
+  animation-delay: calc(var(--motion-stagger) * 4);
+}
+
+.hero.is-intro .hero-copy > :nth-child(6) {
+  animation-delay: calc(var(--motion-stagger) * 5);
+}
+
+.hero.is-intro .portrait-wrap {
+  animation: fade-in var(--motion-duration) var(--motion-ease) var(--motion-stagger) backwards;
+}
+
+/* 捲動進場：app.js 替卡片加上 reveal，進入畫面才加 is-visible；同一排依序錯開 60ms。
+   沒有 JavaScript 時不會有 reveal，內容照常顯示 */
+.reveal {
+  opacity: 0;
+  transform: translateY(var(--motion-rise));
+}
+
+/* 轉場寫在 is-visible 上（兩個 class 的權重），才蓋得過卡片本身的 hover 轉場 */
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  transition: opacity var(--motion-duration) var(--motion-ease), transform var(--motion-duration) var(--motion-ease);
+}
+
+.reveal.is-visible:nth-child(2) {
+  transition-delay: var(--motion-stagger);
+}
+
+.reveal.is-visible:nth-child(3) {
+  transition-delay: calc(var(--motion-stagger) * 2);
+}
+
+.reveal.is-visible:nth-child(4) {
+  transition-delay: calc(var(--motion-stagger) * 3);
+}
+
+.reveal.is-visible:nth-child(5) {
+  transition-delay: calc(var(--motion-stagger) * 4);
+}
+
+.reveal.is-visible:nth-child(6) {
+  transition-delay: calc(var(--motion-stagger) * 5);
+}
+
+/* 深淺色切換：切換的那一下讓背景、文字、框線一起漸變，app.js 在漸變結束後拿掉 class */
+.theme-changing,
+.theme-changing *,
+.theme-changing *::before,
+.theme-changing *::after {
+  transition: background-color var(--motion-base) ease, color var(--motion-base) ease, border-color var(--motion-base) ease !important;
 }
 
 /* 區塊：區塊共用 · 用途：各區塊的間距與雙欄版面 · 不需要可整段刪掉 */
@@ -382,13 +460,23 @@ h3 {
   border-color: var(--color-accent-border-hover);
 }
 
-.preview-card img {
+.preview-cover {
+  margin-bottom: var(--space-3);
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+
+.preview-cover img {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
-  margin-bottom: var(--space-3);
-  border-radius: var(--radius);
   object-fit: cover;
+  transition: transform var(--motion-duration) var(--motion-ease);
+}
+
+/* 滑過卡片：封面輕微放大、「查看」後面的箭頭往右推 */
+.preview-card:hover .preview-cover img {
+  transform: scale(var(--hover-scale));
 }
 
 .preview-card h3 {
@@ -406,6 +494,19 @@ h3 {
   color: var(--color-accent-hover);
   font-size: var(--text-sm);
   font-weight: 800;
+}
+
+/* 箭頭由 CSS 補上才能單獨移動；「/ ""」讓螢幕閱讀器不念出箭頭 */
+.preview-cta::after {
+  display: inline-block;
+  margin-left: var(--space-1);
+  content: "→";
+  content: "→" / "";
+  transition: transform var(--motion-fast) var(--motion-ease);
+}
+
+.preview-card:hover .preview-cta::after {
+  transform: translateX(var(--nudge));
 }
 
 /* 區塊：作品列表 · 用途：CodeMind 與 QSearch 專案卡片 · 不需要可整段刪掉 */
@@ -865,6 +966,16 @@ h3 {
   gap: var(--space-3);
   min-width: var(--field-min-width);
   font-weight: 750;
+}
+
+/* 滑過聯絡連結：底線由左往右畫出來 */
+.contact-links a {
+  background: linear-gradient(currentColor, currentColor) left bottom / 0 var(--border-width) no-repeat;
+  transition: background-size var(--motion-base) var(--motion-ease), color var(--motion-fast) ease;
+}
+
+.contact-links a:hover {
+  background-size: 100% var(--border-width);
 }
 
 /* 區塊：頁尾 · 用途：版權與頁底連結 · 不需要可整段刪掉 */

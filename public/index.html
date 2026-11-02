@@ -11,8 +11,8 @@
     <script>
       try { document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch (e) {}
     </script>
-    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261102-motion" />
-    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261102-motion" />
+    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261102-motion-2" />
+    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261102-motion-2" />
   </head>
   <body>
     <div class="site-shell">
@@ -40,7 +40,7 @@
         <!-- 分頁：首頁 · 用途：開頭、關於我、作品速覽與聯絡方式，導覽列每個分頁各自一頁 -->
         <div class="page" id="home" data-page>
         <!-- 區塊：開頭 · 用途：姓名、一句話介紹、人像與重點數字 · 不需要可整段刪掉 -->
-        <section class="hero">
+        <section class="hero is-intro">
           <div class="hero-copy">
             <p class="eyebrow" data-i18n="hero.eyebrow">AI Application Engineering Internship Portfolio</p>
             <h1>
@@ -103,16 +103,20 @@
           </div>
           <div class="preview-grid">
             <a class="preview-card" href="#codemind">
-              <img src="/assets/projects/codemind-classes.png" alt="" data-i18n-alt="projects.codemind.gallery.classes" loading="lazy" />
+              <div class="preview-cover">
+                <img src="/assets/projects/codemind-classes.png" alt="" data-i18n-alt="projects.codemind.gallery.classes" loading="lazy" />
+              </div>
               <h3 data-i18n="projects.codemind.title">CodeMind / AI Programming Learning &amp; Weakness Diagnosis Platform</h3>
               <p data-i18n="projects.codemind.contribution">Lead developer | Teacher Web, backend teaching workflows, and weakness-diagnosis integration</p>
-              <span class="preview-cta" data-i18n="home.projects.cta">See screenshots and details →</span>
+              <span class="preview-cta" data-i18n="home.projects.cta">See screenshots and details</span>
             </a>
             <a class="preview-card" href="#qsearch">
-              <img src="/assets/projects/qsearch-model-comparison.png" alt="" data-i18n-alt="projects.qsearch.gallery.comparison" loading="lazy" />
+              <div class="preview-cover">
+                <img src="/assets/projects/qsearch-model-comparison.png" alt="" data-i18n-alt="projects.qsearch.gallery.comparison" loading="lazy" />
+              </div>
               <h3 data-i18n="projects.qsearch.title">SNA / Viral Post Prediction &amp; Content Strategy</h3>
               <p data-i18n="projects.qsearch.contribution">Team leadership, weighted-index design, data cleaning, model comparison, and project direction</p>
-              <span class="preview-cta" data-i18n="home.projects.cta">See screenshots and details →</span>
+              <span class="preview-cta" data-i18n="home.projects.cta">See screenshots and details</span>
             </a>
           </div>
         </section>
@@ -369,7 +373,7 @@
               </div>
               <h3 data-i18n="projects.tools.llmCost.title">LLM API Cost Estimator</h3>
               <p data-i18n="projects.tools.llmCost.body">Enter tokens per call, calls per day, and per-million-token prices to estimate the monthly API bill before shipping an AI feature.</p>
-              <span class="preview-cta" data-i18n="projects.tools.cta">Open the tool →</span>
+              <span class="preview-cta" data-i18n="projects.tools.cta">Open the tool</span>
             </a>
           </div>
         </section>
@@ -521,6 +525,6 @@
       <p class="lightbox-caption" id="lightboxCaption"></p>
     </dialog>
 
-    <script src="/app.js?cache-bust=20261102-motion"></script>
+    <script src="/app.js?cache-bust=20261102-motion-2"></script>
   </body>
 </html>

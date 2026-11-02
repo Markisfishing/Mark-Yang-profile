@@ -25,7 +25,7 @@ const translations = {
     "about.p2": "I am expanding from AI and data projects into automation and full-stack development, with a focus on building useful tools and connecting the pieces into working systems.",
     "about.p3": "I am looking for an AI application engineering internship where I can keep building and learning through real projects.",
     "projects.title": "Portfolio",
-    "home.projects.cta": "See screenshots and details →",
+    "home.projects.cta": "See screenshots and details",
     "projects.contributionLabel": "My contribution",
     "projects.codemind.roleLabel": "My role",
     "projects.codemind.contribution": "Lead developer | Teacher Web, backend teaching workflows, and weakness-diagnosis integration",
@@ -49,7 +49,7 @@ const translations = {
     "projects.qsearch.hitRate": "Top-1,000 Hit Rate",
     "projects.qsearch.methodLabel": "From model to recommendation",
     "projects.tools.title": "Interactive Tools",
-    "projects.tools.cta": "Open the tool →",
+    "projects.tools.cta": "Open the tool",
     "projects.tools.llmCost.title": "LLM API Cost Estimator",
     "projects.tools.llmCost.body": "Enter tokens per call, calls per day, and per-million-token prices to estimate the monthly API bill before shipping an AI feature.",
     "projects.qsearch.method": "Weighted interaction index → LightGBM ranking → Support, Viral Rate, Lift, composition, and original-post evidence.",
@@ -142,7 +142,7 @@ const translations = {
     "about.p2": "目前正從 AI 與資料專案延伸到自動化與前後端開發，持續練習把不同技術整合成可以實際運作的工具。",
     "about.p3": "我正在尋找 AI 應用工程實習機會，希望在真實專案中持續實作與學習。",
     "projects.title": "作品集",
-    "home.projects.cta": "查看截圖與完整介紹 →",
+    "home.projects.cta": "查看截圖與完整介紹",
     "projects.contributionLabel": "我的貢獻",
     "projects.codemind.roleLabel": "我的角色",
     "projects.codemind.contribution": "主要開發者｜Teacher Web、Backend 教學流程與弱點診斷整合",
@@ -166,7 +166,7 @@ const translations = {
     "projects.qsearch.hitRate": "前 1,000 篇命中率",
     "projects.qsearch.methodLabel": "從模型到內容建議",
     "projects.tools.title": "互動小工具",
-    "projects.tools.cta": "開啟工具 →",
+    "projects.tools.cta": "開啟工具",
     "projects.tools.llmCost.title": "LLM API 成本估算器",
     "projects.tools.llmCost.body": "輸入每次呼叫的 token 數、每天呼叫次數與每百萬 token 單價，在上線 AI 功能之前先估出每月的 API 花費。",
     "projects.qsearch.method": "加權互動指標 → LightGBM 排名 → Support、Viral Rate、Lift、互動組成與原文證據。",
@@ -283,8 +283,18 @@ langToggle.addEventListener("click", () => {
 });
 
 themeToggle.addEventListener("click", () => {
-  const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-  document.documentElement.dataset.theme = next;
+  const root = document.documentElement;
+  const next = root.dataset.theme === "dark" ? "light" : "dark";
+  // 只在切換的這一下開啟全頁顏色漸變，等 body 背景漸變完就拿掉，平常的轉場不受影響
+  root.classList.add("theme-changing");
+  const finish = (event) => {
+    if (event && event.target !== document.body) return;
+    root.classList.remove("theme-changing");
+    document.body.removeEventListener("transitionend", finish);
+  };
+  document.body.addEventListener("transitionend", finish);
+  setTimeout(finish, 500);
+  root.dataset.theme = next;
   try { localStorage.setItem("theme", next); } catch (e) {}
   updateThemeToggle();
 });
@@ -576,6 +586,28 @@ function replay(element, className) {
   void element.offsetWidth;
   element.classList.add(className);
   element.addEventListener("animationend", () => element.classList.remove(className), { once: true });
+}
+
+// 首頁開頭的進場只播一次：最後一個元素播完就拿掉 is-intro，之後回到首頁不再重播
+const hero = document.querySelector(".hero.is-intro");
+if (hero) hero.querySelector(".hero-proof").addEventListener("animationend", () => hero.classList.remove("is-intro"), { once: true });
+
+// 捲動進場：卡片進入畫面時淡入上移一次，播完拿掉 class，卡片原本的 hover 效果才不會被延遲
+if ("IntersectionObserver" in window) {
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const card = entry.target;
+      revealObserver.unobserve(card);
+      card.classList.add("is-visible");
+      card.addEventListener("transitionend", () => card.classList.remove("reveal", "is-visible"), { once: true });
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll(".preview-card, .contribution-card, .skill-block, .timeline article, .metric-row > div").forEach((card) => {
+    card.classList.add("reveal");
+    revealObserver.observe(card);
+  });
 }
 
 window.addEventListener("hashchange", showPageFromHash);
