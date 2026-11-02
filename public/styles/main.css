@@ -404,9 +404,9 @@ h3 {
 }
 
 /* 分頁：每頁第一個區塊緊接在導覽列下方，不需要分隔線，也不需要區塊之間那 64px 的上方留白；
-   原本是一整頁往下捲時用來隔開上一個區塊，拆成分頁後上面已經沒有區塊，只剩空白 */
-.page > .section:first-child,
-.page > .hero:first-child {
+   原本是一整頁往下捲時用來隔開上一個區塊，拆成分頁後上面已經沒有區塊，只剩空白。
+   首頁開頭刻意保留留白並撐滿第一個畫面，不套用這條 */
+.page > .section:first-child {
   padding-top: var(--space-4);
   border-top: 0;
 }
@@ -1326,6 +1326,23 @@ h3 {
 
   .agent-section {
     grid-template-columns: minmax(var(--column-min-md), 0.72fr) minmax(0, 1.28fr);
+  }
+
+  .hero {
+    min-height: calc(100vh - var(--topbar-height));
+  }
+
+  /* 作品集兩欄：兩張卡片共用同一組橫列（subgrid），標籤、標題、介紹、截圖、角色各自對齊，
+     介紹字數不同時截圖也會在同一高度開始。CodeMind 有 8 個子元素，所以每張卡都佔 8 列 */
+  .project-grid {
+    row-gap: 0;
+  }
+
+  .project-card {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 8;
+    align-content: start;
   }
 
   .portrait-wrap {
