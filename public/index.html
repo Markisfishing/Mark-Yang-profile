@@ -11,8 +11,8 @@
     <script>
       try { document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch (e) {}
     </script>
-    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261102-about" />
-    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261102-about" />
+    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261102-calm" />
+    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261102-calm" />
   </head>
   <body>
     <div class="site-shell">
@@ -361,7 +361,7 @@
         </div>
 
         <!-- 分頁：關於我 · 用途：個人簡介、貢獻方向、技能與經歷合併成一頁（網址沿用 #skills，舊連結不會失效） -->
-        <div class="page" id="skills" data-page>
+        <div class="page page-about" id="skills" data-page>
         <!-- 區塊：關於我 · 用途：個人簡介 · 不需要可整段刪掉 -->
         <section class="section two-column" id="about">
           <div>
@@ -525,6 +525,6 @@
       <p class="lightbox-caption" id="lightboxCaption"></p>
     </dialog>
 
-    <script src="/app.js?cache-bust=20261102-about"></script>
+    <script src="/app.js?cache-bust=20261102-calm"></script>
   </body>
 </html>

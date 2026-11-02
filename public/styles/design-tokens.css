@@ -24,10 +24,8 @@
   --color-bg-translucent: rgba(247, 248, 245, 0.92);     /* 黏在上方的導覽列，半透明才能透出下方內容 */
   --color-border-translucent: rgba(223, 227, 220, 0.76); /* 導覽列下緣線 */
   --color-surface-translucent: rgba(255, 255, 255, 0.62); /* 首頁卡片的霧面底 */
-  --color-surface-inverse: #202522;        /* 反白區塊（次要按鈕、貢獻卡）的深底 */
+  --color-surface-inverse: #202522;        /* 反白區塊（次要按鈕）的深底 */
   --color-on-inverse: #ffffff;             /* 反白區塊上的文字 */
-  --color-on-inverse-muted: rgba(255, 255, 255, 0.72); /* 反白區塊上的說明文字 */
-  --color-on-inverse-accent: #8ed6c8;      /* 反白區塊上的編號強調色 */
   --color-error-border: #d89d93;  /* 錯誤訊息的框線、底、字三件組 */
   --color-error-bg: #fff0ed;
   --color-error-text: #8a2e20;
@@ -79,7 +77,6 @@
   --measure-xl: 880px;
   --column-min-sm: 240px;            /* 雙欄版面左欄最小寬度（關於我、經歷） */
   --column-min-md: 260px;            /* AI 助理左欄最小寬度 */
-  --card-min-height: 220px;          /* 貢獻卡最小高度，讓三張卡齊高 */
   --chat-min-height: 320px;          /* 聊天記錄區最小與最大高度 */
   --chat-max-height: 480px;
   --bubble-max-width: 620px;         /* 聊天泡泡最大寬度 */
