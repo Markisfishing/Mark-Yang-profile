@@ -269,6 +269,7 @@ const chatLog = document.getElementById("chatLog");
 const promptChips = document.getElementById("promptChips");
 const chatForm = document.getElementById("chatForm");
 const chatInput = document.getElementById("chatInput");
+const chatSend = chatForm.querySelector("button[type='submit']");
 
 applyLanguage(currentLang);
 resetChat();
@@ -331,7 +332,7 @@ function applyLanguage(lang) {
 
 function resetChat() {
   messages = [{ role: "assistant", content: welcome[currentLang] }];
-  renderChat();
+  renderChat(0);
 }
 
 function renderPromptChips() {
@@ -340,30 +341,52 @@ function renderPromptChips() {
     const button = document.createElement("button");
     button.type = "button";
     button.textContent = prompt;
-    button.addEventListener("click", () => sendMessage(prompt));
+    button.disabled = isSending;
+    button.addEventListener("click", () => {
+      if (isSending) return;
+      replay(button, "is-picked");
+      sendMessage(prompt);
+    });
     promptChips.appendChild(button);
   });
 }
 
-function renderChat() {
+// animateFrom：從第幾則訊息開始播進場動畫，之前的訊息直接顯示，重畫時才不會整串一起動
+function renderChat(animateFrom = messages.length) {
   chatLog.innerHTML = "";
-  messages.forEach((message) => {
+  messages.forEach((message, i) => {
     const bubble = document.createElement("div");
-    bubble.className = `message ${message.role}${message.error ? " error" : ""}`;
+    bubble.className = `message ${message.role}${message.error ? " error" : ""}${i >= animateFrom ? " is-entering" : ""}`;
     bubble.textContent = message.content;
+    if (message.pending) {
+      const dots = document.createElement("span");
+      dots.className = "typing-dots";
+      dots.setAttribute("aria-hidden", "true");
+      dots.append(document.createElement("span"), document.createElement("span"), document.createElement("span"));
+      bubble.prepend(dots);
+    }
     chatLog.appendChild(bubble);
   });
   chatLog.scrollTop = chatLog.scrollHeight;
 }
 
+// 等待回覆時送出鈕與推薦問題都停用，避免重複送出
+function setSending(sending) {
+  isSending = sending;
+  chatSend.disabled = sending;
+  chatSend.toggleAttribute("aria-busy", sending);
+  promptChips.querySelectorAll("button").forEach((button) => { button.disabled = sending; });
+}
+
 async function sendMessage(content) {
-  isSending = true;
+  setSending(true);
   messages.push({ role: "user", content });
   messages.push({
     role: "assistant",
-    content: currentLang === "zh" ? "正在整理 Mark 的履歷資料..." : "Reviewing Mark's profile..."
+    content: currentLang === "zh" ? "正在整理 Mark 的履歷資料" : "Reviewing Mark's profile",
+    pending: true
   });
-  renderChat();
+  renderChat(messages.length - 2);
 
   try {
     const response = await fetch("/api/chat", {
@@ -391,8 +414,8 @@ async function sendMessage(content) {
       error: true
     };
   } finally {
-    isSending = false;
-    renderChat();
+    setSending(false);
+    renderChat(messages.length - 1);
   }
 }
 

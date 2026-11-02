@@ -742,8 +742,87 @@ h3 {
   margin: var(--space-3) 0;
 }
 
+/* 新訊息由下方 8px 淡入；app.js 只替新加入的訊息加 is-entering */
+.message.is-entering {
+  animation: message-in var(--motion-duration) var(--motion-ease);
+}
+
+@keyframes message-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-2));
+  }
+}
+
+/* 等待回覆：三個點依序跳動，接在「正在整理」文字前面 */
+.typing-dots {
+  display: inline-flex;
+  gap: var(--space-1);
+  margin-right: var(--space-2);
+  vertical-align: middle;
+}
+
+.typing-dots span {
+  width: var(--dot-size);
+  height: var(--dot-size);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
+  animation: typing-bounce calc(var(--motion-duration) * 4) var(--motion-ease) infinite;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: calc(var(--motion-stagger) * 2);
+}
+
+.typing-dots span:nth-child(3) {
+  animation-delay: calc(var(--motion-stagger) * 4);
+}
+
+@keyframes typing-bounce {
+  0%,
+  60%,
+  100% {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+
+  30% {
+    opacity: 1;
+    transform: translateY(calc(-1 * var(--space-1)));
+  }
+}
+
 .prompt-chips button {
   cursor: pointer;
+  transition: background var(--motion-fast) ease, border-color var(--motion-fast) ease, color var(--motion-fast) ease, transform var(--motion-fast) var(--motion-ease);
+}
+
+.prompt-chips button:hover {
+  border-color: var(--color-accent-border-hover);
+  background: var(--color-surface);
+}
+
+.prompt-chips button:active {
+  transform: scale(var(--press-scale));
+}
+
+.prompt-chips button:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: progress;
+}
+
+/* 點選的推薦問題短暫亮成主色，讓人知道剛剛問了哪一題 */
+.prompt-chips button.is-picked {
+  animation: chip-picked calc(var(--motion-duration) * 2) var(--motion-ease);
+}
+
+@keyframes chip-picked {
+  from {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    opacity: 1;
+  }
 }
 
 .chat-form {
