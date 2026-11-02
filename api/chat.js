@@ -1,10 +1,10 @@
 const PROFILE_CONTEXT = `
-Mark Yang / 楊祐瑜 is seeking an AI Application Engineering Internship.
+Mark Yang / 楊祐瑜 is looking for internship opportunities.
 
 Core positioning:
 - Chinese name: 楊祐瑜
 - English name: Mark Yang
-- Target role: AI Application Engineering Intern
+- Target: internship opportunities where he can keep building and learning through real projects
 - Education: Intelligent Computing and Big Data, Chung Yuan Christian University
 - GitHub: https://github.com/Markisfishing
 - Email: y7632457@gmail.com

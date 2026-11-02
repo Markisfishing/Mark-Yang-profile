@@ -7,10 +7,10 @@ const translations = {
     "hero.github": "GitHub",
     "theme.dark": "Dark",
     "theme.light": "Light",
-    "hero.eyebrow": "AI Application Engineering Internship Portfolio",
+    "hero.eyebrow": "Internship Portfolio",
     "hero.name": "Mark Yang / 楊祐瑜",
     "hero.position": "I turn data and LLM workflows into practical AI applications.",
-    "hero.text": "I am building toward an AI application engineering internship, with hands-on experience across AI agents, data preprocessing, dashboards, and practical automation.",
+    "hero.text": "I am looking for internship opportunities, bringing hands-on experience across AI agents, data preprocessing, dashboards, and practical automation.",
     "hero.projects": "View Project Evidence",
     "hero.askAgent": "Ask AI Profile Agent",
     "hero.download": "Resume",
@@ -116,7 +116,7 @@ const translations = {
     "contact.title": "Let's talk about AI applications, automation, and web development.",
     "contact.description": "Interested in my work? Let's connect.",
     "contact.resume": "Download PDF Resume",
-    "footer.note": "AI application engineering internship portfolio"
+    "footer.note": "Internship portfolio"
   },
   zh: {
     "nav.home": "首頁",
@@ -126,10 +126,10 @@ const translations = {
     "hero.github": "GitHub",
     "theme.dark": "深色",
     "theme.light": "淺色",
-    "hero.eyebrow": "AI 應用工程實習作品集",
+    "hero.eyebrow": "實習作品集",
     "hero.name": "楊祐瑜 / Mark Yang",
     "hero.position": "我把資料與 LLM workflow 轉化成可以實際使用的 AI 應用。",
-    "hero.text": "我正在準備投入 AI 應用工程實習，累積 AI Agent、資料處理、dashboard 與實務自動化的實作經驗。",
+    "hero.text": "我正在尋找實習機會，已累積 AI Agent、資料處理、dashboard 與實務自動化的實作經驗。",
     "hero.projects": "查看專案成果",
     "hero.askAgent": "詢問 AI Profile Agent",
     "hero.download": "履歷",
@@ -235,14 +235,14 @@ const translations = {
     "contact.title": "歡迎一起聊聊 AI 應用、自動化與網站開發。",
     "contact.description": "對我的作品有興趣，歡迎與我聯絡。",
     "contact.resume": "下載 PDF 履歷",
-    "footer.note": "AI 應用工程實習作品集"
+    "footer.note": "實習作品集"
   }
 };
 
 const prompts = {
   en: [
     "Tell me about Mark.",
-    "Why AI Application Engineering?",
+    "What kind of internship is Mark looking for?",
     "What AI projects has Mark built?",
     "What is Mark currently learning?",
     "What are Mark's technical skills?",
@@ -250,7 +250,7 @@ const prompts = {
   ],
   zh: [
     "介紹一下楊祐瑜",
-    "為什麼想做 AI 應用工程？",
+    "想找什麼樣的實習？",
     "有哪些 AI 專案經驗？",
     "目前正在學習什麼？",
     "具備哪些技術能力？",
