@@ -49,7 +49,7 @@
       <section class="tool-note">
         <h2>資料來源</h2>
         <p>
-          資料來自 NASA 的 APOD API。金鑰放在網站的伺服器端，不會出現在網頁原始碼裡。查過的日期會先存在這個分頁裡，再看一次不會再打 API。日期以美國東部時間為準，所以台灣早上看到的「今天」可能還是美國的昨天。
+          資料來自 NASA 的 APOD API。APOD 官網搬到 science.nasa.gov 之後，官方 API 常回 NASA 標誌而不是當天的圖，這時伺服器會改從 science.nasa.gov 的文章取得同一天的內容。金鑰放在網站的伺服器端，不會出現在網頁原始碼裡。查過的日期會先存在這個分頁裡，再看一次不會再打 API。日期以美國東部時間為準，所以台灣早上看到的「今天」可能還是美國的昨天。
         </p>
       </section>
     </main>
@@ -177,7 +177,7 @@
       function show(state, nodes) {
         result.dataset.state = state;
         result.setAttribute("aria-busy", String(state === "loading"));
-        result.replaceChildren(...[].concat(nodes));
+        result.replaceChildren(...[].concat(nodes).filter(Boolean));
         result.classList.remove("is-entering");
         void result.offsetWidth;
         result.classList.add("is-entering");
@@ -255,8 +255,16 @@
           media,
           el("h2", { className: "apod-title", textContent: data.title }),
           el("p", { className: "apod-meta", textContent: meta.join(" · ") }),
-          el("p", { className: "apod-explanation", lang: "en", textContent: data.explanation })
+          el("p", { className: "apod-explanation", lang: "en", textContent: data.explanation }),
+          sourceLink(data)
         ]);
+      }
+
+      // 資料來自 science.nasa.gov 備援時，附上原文連結；只接受 NASA 自己的網址
+      function sourceLink(data) {
+        if (!/^https:\/\/science\.nasa\.gov\//.test(data.source_url || "")) return null;
+        return el("p", { className: "apod-meta" },
+          el("a", { href: data.source_url, target: "_blank", rel: "noopener", textContent: "在 NASA Science 看原文 ↗" }));
       }
 
       function describeError(err) {
