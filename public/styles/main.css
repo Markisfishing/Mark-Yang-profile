@@ -1619,6 +1619,87 @@ h3 {
   font-size: var(--text-sm);
 }
 
+/* NASA 每日一天文圖（tools/apod.html）：額度提示、圖片／影片、標題與說明 */
+.apod-quota {
+  margin: var(--space-2) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.apod-quota:empty {
+  display: none;
+}
+
+.tool-result[data-state="loading"] .tool-result-message::after {
+  content: "";
+  display: inline-block;
+  width: var(--dot-size);
+  height: var(--dot-size);
+  margin-left: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
+  animation: typing-bounce calc(var(--motion-duration) * 4) var(--motion-ease) infinite;
+}
+
+.apod-media {
+  display: block;
+  margin: 0 0 var(--space-3);
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--color-bg);
+}
+
+.apod-zoom {
+  cursor: zoom-in;
+}
+
+.apod-media img,
+.apod-media video,
+.apod-media iframe {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border: 0;
+}
+
+.apod-media img {
+  height: auto;
+  transition: transform var(--motion-base) var(--motion-ease);
+}
+
+.apod-zoom:hover img {
+  transform: scale(var(--hover-scale));
+}
+
+.apod-video iframe {
+  aspect-ratio: 16 / 9;
+  height: auto;
+}
+
+.apod-title {
+  margin: 0 0 var(--space-1);
+  color: var(--color-heading);
+  font-size: var(--text-lg);
+  line-height: 1.3;
+}
+
+.apod-meta {
+  margin: var(--space-2) 0 var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+
+.apod-meta a {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.apod-explanation {
+  margin: 0;
+  line-height: 1.7;
+}
+
 @media (min-width: 768px) {
   .tool-fields {
     grid-template-columns: repeat(2, minmax(0, 1fr));
