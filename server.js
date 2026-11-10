@@ -2,6 +2,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const chatHandler = require("./api/chat");
+const apodHandler = require("./api/apod");
 
 const root = __dirname;
 const publicDir = path.join(root, "public");
@@ -24,6 +25,10 @@ const mimeTypes = {
 const server = http.createServer(async (req, res) => {
   if (req.url === "/api/chat" && req.method === "POST") {
     return chatHandler(req, res);
+  }
+
+  if ((req.url || "").split("?")[0] === "/api/apod") {
+    return apodHandler(req, res);
   }
 
   const urlPath = decodeURIComponent((req.url || "/").split("?")[0]);
