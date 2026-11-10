@@ -49,7 +49,7 @@
       <section class="tool-note">
         <h2>資料來源</h2>
         <p>
-          資料來自 NASA 的 APOD API，使用 NASA 公開給大家試用的 DEMO_KEY，每個 IP 每小時只能查少量次數。查過的日期會先存在這個分頁裡，再看一次不會再用掉額度。日期以美國東部時間為準，所以台灣早上看到的「今天」可能還是美國的昨天。
+          資料來自 NASA 的 APOD API，使用 NASA 公開給大家試用的 DEMO_KEY，每個 IP 一天大約只能查 10 次。查過的日期會先存在這個分頁裡，再看一次不會再用掉額度。日期以美國東部時間為準，所以台灣早上看到的「今天」可能還是美國的昨天。
         </p>
       </section>
     </main>
@@ -75,7 +75,7 @@
       let currentDate = null;   // 目前畫面上（或剛才嘗試查詢）的日期
       let lastRequest = null;   // 出錯時「重試」要重送的日期；null 代表「最新一天」
       let loading = false;
-      let lastRemaining = null; // 這個小時還剩幾次，從回應標頭讀
+      let lastRemaining = null; // 免費額度還剩幾次，從回應標頭讀
 
       // ---------- 日期工具 ----------
 
@@ -198,7 +198,7 @@
         searchButton.disabled = loading;
         prevButton.disabled = loading || !currentDate || currentDate <= FIRST_DATE;
         nextButton.disabled = loading || !currentDate || currentDate >= max;
-        quota.textContent = lastRemaining === null ? "" : `這個小時還能查 ${lastRemaining} 次`;
+        quota.textContent = lastRemaining === null ? "" : `免費額度還能查 ${lastRemaining} 次`;
       }
 
       function showEmpty(text) {
@@ -265,7 +265,7 @@
         if (err.kind === "timeout") return "NASA 的伺服器超過 8 秒沒有回應，已經自動重試一次還是不行。";
         if (err.kind === "network") {
           return lastRemaining === 0
-            ? "連不上 NASA，可能是這個小時的免費查詢次數用完了，請過一陣子再試。"
+            ? "連不上 NASA，可能是免費查詢次數用完了，通常要等到隔天才會恢復。"
             : "連不上 NASA，請檢查網路連線。已經自動重試一次。";
         }
         if (err.status >= 500) return `NASA 的伺服器暫時出問題（${err.status}），已經自動重試一次還是不行。`;
@@ -301,7 +301,7 @@
         } catch (err) {
           if (err.kind === "http" && err.status === 429) {
             lastRemaining = 0;
-            showEmpty("這個小時的免費查詢次數用完了。查過的日期還能看，新的日期請過一陣子再來。");
+            showEmpty("免費查詢次數用完了，通常要等到隔天才會恢復。查過的日期還能看。");
           } else if (err.kind === "http" && (err.status === 400 || err.status === 404)) {
             // 400：日期超出範圍；404：當天還沒發布。都不是壞掉，所以走「沒有資料」，不用紅色
             showEmpty(`這一天沒有資料。可以選的範圍是 ${FIRST_DATE} 到 ${easternToday()}。`);
