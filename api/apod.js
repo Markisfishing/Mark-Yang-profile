@@ -9,7 +9,7 @@ const NASA_URL = "https://api.nasa.gov/planetary/apod";
 const SCIENCE_URL = "https://science.nasa.gov/wp-json/wp/v2/image-article";
 const FIRST_DATE = "1995-06-16";
 const TOTAL_BUDGET_MS = 7000; // 整個請求最多 7 秒，比前端的 8 秒短，前端才收得到我們的回應而不是自己逾時
-const NASA_API_BUDGET_MS = 4500; // 官方 API 有時要等十幾秒，備援已經在跑了，不必等那麼久
+const NASA_API_BUDGET_MS = 6000; // 官方 API 有時要等十幾秒；備援先拿到就不等它，這只是兩邊都沒結果時的上限
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
 
@@ -189,30 +189,31 @@ module.exports = async function handler(req, res) {
     return send(res, 400, { code: 400, msg: `Date must be between ${FIRST_DATE} and ${today}.` }, { "Cache-Control": "no-store" });
   }
 
+  // 兩邊同時開跑，誰先拿到「真的」當天內容就用誰（兩邊是同一篇 APOD）。
+  // 官方 API 常常十幾秒才回、或回佔位圖，不必等它；額度用完（429）也不影響備援，因為備援不用金鑰
   const deadline = Date.now() + TOTAL_BUDGET_MS;
-  const fallbackPromise = askScienceSite(date, deadline); // 先開跑，不必等官方 API 失敗才開始
-  const official = await askNasaApi(date, deadline);
-  const rateHeader = { "X-RateLimit-Remaining": official.remaining };
+  const officialPromise = askNasaApi(date, deadline);
+  const fallbackPromise = askScienceSite(date, deadline).catch(() => null);
 
   // 成功的結果放在 Vercel CDN 快取：過去的日期內容不會再變，快取一天；今天只快取一小時
   const goodCache = `public, max-age=0, s-maxage=${date === today ? 3600 : 86400}, stale-while-revalidate=86400`;
 
-  if (official.status === 200 && !isPlaceholder(official.body)) {
-    fallbackPromise.catch(() => {});
-    return send(res, 200, official.body, { "Cache-Control": goodCache, ...rateHeader });
+  try {
+    const winner = await Promise.any([
+      officialPromise.then((r) => (r.status === 200 && !isPlaceholder(r.body) ? { source: "api", r } : Promise.reject())),
+      fallbackPromise.then((body) => (body ? { source: "science.nasa.gov", r: { status: 200, body } } : Promise.reject()))
+    ]);
+    return send(res, 200, winner.r.body, {
+      "Cache-Control": goodCache,
+      "X-APOD-Source": winner.source,
+      "X-RateLimit-Remaining": winner.r.remaining
+    });
+  } catch (e) {
+    // 兩邊都沒有：照官方的回應回（佔位圖、429、5xx、504），前端各有對應畫面；都不快取，NASA 恢復後才拿得到真資料
+    const official = await officialPromise;
+    return send(res, official.status, official.body, {
+      "Cache-Control": "no-store",
+      "X-RateLimit-Remaining": official.remaining
+    });
   }
-
-  // 400、429 這類是請求本身的問題，備援也幫不上，照原樣回給前端
-  if (official.status >= 400 && official.status < 500) {
-    fallbackPromise.catch(() => {});
-    return send(res, official.status, official.body, { "Cache-Control": "no-store", ...rateHeader });
-  }
-
-  const fallback = await fallbackPromise.catch(() => null);
-  if (fallback) {
-    return send(res, 200, fallback, { "Cache-Control": goodCache, "X-APOD-Source": "science.nasa.gov", ...rateHeader });
-  }
-
-  // 兩邊都沒有：佔位圖照樣回（前端會顯示沒有資料），錯誤也照樣回；都不快取，NASA 恢復後才拿得到真資料
-  return send(res, official.status, official.body, { "Cache-Control": "no-store", ...rateHeader });
 };
