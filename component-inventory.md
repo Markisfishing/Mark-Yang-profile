@@ -14,11 +14,13 @@ HTML 放一個掛載點，`src/main.js` 會把它換成對應的元件，掛載�
 
 ## 元件
 
-| 元件 | 檔案 | 用在哪裡 | props |
-|---|---|---|---|
-| SiteNav | `src/components/SiteNav.vue` | 首頁、`tools/llm-cost.html`、`tools/apod.html` | `linkBase`、`current`、`lang`、`toggles` |
-| ProjectCardList | `src/components/ProjectCardList.vue` | 首頁「作品速覽」、作品集分頁「互動小工具」 | `list` |
-| ProjectCard | `src/components/ProjectCard.vue` | 由 ProjectCardList 產生，不直接掛載 | `href`、`image`、`imageAltKey`、`tags`、`title`/`titleKey`、`body`/`bodyKey`、`cta`/`ctaKey` |
+| 元件 | 檔案 | 用在哪裡 | props | 什麼時候該用它 |
+|---|---|---|---|---|
+| SiteNav | `src/components/SiteNav.vue` | 首頁、`tools/llm-cost.html`、`tools/apod.html` | `linkBase`、`current`、`lang`、`toggles` | 每加一個新頁面（例如下週的新工具）就放一個，讓訪客隨時能回到首頁四個分頁。不要在新頁面自己再寫一份導覽列 |
+| ProjectCardList | `src/components/ProjectCardList.vue` | 首頁「作品速覽」、作品集分頁「互動小工具」 | `list` | 想在某個區塊排出一整組作品或工具卡時用。新增一組卡片，就在 `cards.js` 開一個新清單，再放一個掛載點 |
+| ProjectCard | `src/components/ProjectCard.vue` | 由 ProjectCardList 產生，不直接掛載 | `href`、`image`、`imageAltKey`、`tags`、`title`/`titleKey`、`body`/`bodyKey`、`cta`/`ctaKey` | 只需要「標題＋一句說明＋點進去」的作品摘要時用，例如每週新工具。如果需要截圖輪播、成果數字或詳細貢獻，就不適合，要寫成作品集分頁裡的完整作品卡 |
+
+> 「什麼時候該用它」是依目前的使用方式寫的草稿，作者要依自己的判斷修改。
 
 ### SiteNav：全站導覽列
 
