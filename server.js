@@ -5,7 +5,8 @@ const chatHandler = require("./api/chat");
 const apodHandler = require("./api/apod");
 
 const root = __dirname;
-const publicDir = path.join(root, "public");
+// 改用 Vite 之後，頁面要先 npm run build 打包到 dist/，這支伺服器再提供打包好的檔案
+const publicDir = path.join(root, "dist");
 const port = Number(process.env.PORT || 3000);
 
 loadEnvFile(path.join(root, ".env.local"));
