@@ -31,6 +31,7 @@
 ## 使用技術
 
 - HTML、CSS、JavaScript
+- Vue 3 + Vite（共用元件與多頁打包）
 - Node.js API
 - Groq / OpenAI API
 - GitHub 與 Vercel
@@ -39,14 +40,25 @@
 ## 專案結構
 
 ```text
+index.html              首頁（首頁、作品集、關於我、AI 助理四個分頁）
+tools/
+├── llm-cost.html       LLM API 成本估算器
+└── apod.html           NASA 每日一天文圖
+src/
+├── main.js             找出 data-component 掛載點並掛上 Vue 元件
+├── components/         SiteNav、ProjectCard、ProjectCardList
+└── data/cards.js       作品卡資料
 public/
-├── index.html
-├── app.js
+├── app.js              中英切換、聊天、截圖輪播
+├── assets/
 └── styles/
     ├── design-tokens.css
     └── main.css
 api/
-└── chat.js
+├── chat.js
+└── apod.js
+component-inventory.md  元件清單
+vite.config.mjs
 server.js
 vercel.json
 ```
@@ -79,10 +91,19 @@ AI_MODEL=your-openai-model
 ### 啟動網站
 
 ```bash
-npm start
+npm run dev
 ```
 
-啟動後開啟 <http://localhost:3000>。
+啟動後開啟 <http://localhost:5173>。AI 聊天與 APOD 的 `/api/*` 由 Vite 伺服器直接提供，不用另外開伺服器。
+
+### 打包與預覽
+
+```bash
+npm run build
+npm run preview
+```
+
+`npm run build` 會打包到 `dist/`，`npm run preview` 用打包好的檔案開在 <http://localhost:4173>。也可以在打包後用 `npm start`，以 `server.js` 在 <http://localhost:3000> 提供 `dist/`。
 
 ## 我的貢獻
 
