@@ -6,7 +6,7 @@
 ## 技術規範
 - 直接修改 D:\project\intro，不建立新的專案資料夾
 - 延續現有 Git repository，不重新建立另一個
-- 沿用現有結構：index.html 留在 public/，不在根目錄另建 styles/
+- 頁面（index.html、tools/*.html）放專案根目錄給 Vite 當入口；素材、樣式與 app.js 留在 public/，不在根目錄另建 styles/
 - 前端框架使用 Vue 3 + Vite（多頁入口）；不另外加入 React、Tailwind 或其他 UI／CSS 框架
 - 導覽列、作品卡等重複區塊抽成共用 Vue 元件，所有頁面共用同一份導覽列
 - 現有工具頁沿用 public/tools/llm-cost.html 與 public/tools/apod.html，不另做分帳、小費、天氣工具
