@@ -38,6 +38,11 @@ input {
 
 /* 區塊：導覽列 · 用途：品牌、主選單、語言與深淺色切換 · 不需要可整段刪掉 */
 
+/* Vue 掛載點本身不產生方框，導覽列的 sticky 才會以整個 .site-shell 為範圍黏在上方 */
+[data-component="SiteNav"] {
+  display: contents;
+}
+
 .topbar {
   position: sticky;
   top: 0;
@@ -1441,6 +1446,7 @@ h3 {
 
 .tool-page {
   max-width: var(--measure);
+  margin-inline: auto;
   padding: var(--space-5) 0 var(--space-6);
 }
 

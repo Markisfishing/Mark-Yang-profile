@@ -19,25 +19,8 @@
   </head>
   <body>
     <div class="site-shell">
-      <!-- 區塊：導覽列 · 用途：品牌、主選單、語言與深淺色切換 · 不需要可整段刪掉 -->
-      <header class="topbar">
-        <a class="brand" href="#home" aria-label="Mark Yang resume home">
-          <span class="brand-mark">MY</span>
-          <span>Mark Yang</span>
-        </a>
-        <nav class="nav-links" aria-label="Primary navigation">
-          <a href="#home" data-i18n="nav.home">Home</a>
-          <a href="#projects" data-i18n="nav.projects">Portfolio</a>
-          <a href="#skills" data-i18n="nav.skills">About</a>
-          <a href="#agent" data-i18n="nav.agent">AI Agent</a>
-        </nav>
-        <div class="actions">
-          <button class="lang-toggle" type="button" id="langToggle" aria-label="Toggle language">
-            中文
-          </button>
-          <button class="lang-toggle theme-toggle" type="button" id="themeToggle" aria-label="Toggle color theme"></button>
-        </div>
-      </header>
+      <!-- 區塊：導覽列 · 用途：品牌、主選單、語言與深淺色切換，內容在 src/components/SiteNav.vue（全站共用） · 不需要可整段刪掉 -->
+      <div data-component="SiteNav" data-toggles></div>
 
       <main id="top">
         <!-- 分頁：首頁 · 用途：開頭、關於我、作品速覽與聯絡方式，導覽列每個分頁各自一頁 -->
@@ -85,24 +68,8 @@
           <div class="section-heading">
             <h2 data-i18n="projects.title">Portfolio</h2>
           </div>
-          <div class="preview-grid">
-            <a class="preview-card" href="#codemind">
-              <div class="preview-cover">
-                <img src="/assets/projects/codemind-classes.png" alt="" data-i18n-alt="projects.codemind.gallery.classes" loading="lazy" />
-              </div>
-              <h3 data-i18n="projects.codemind.title">CodeMind / AI Programming Learning &amp; Weakness Diagnosis Platform</h3>
-              <p data-i18n="projects.codemind.contribution">Lead developer | Teacher Web, backend teaching workflows, and weakness-diagnosis integration</p>
-              <span class="preview-cta" data-i18n="home.projects.cta">See screenshots and details</span>
-            </a>
-            <a class="preview-card" href="#qsearch">
-              <div class="preview-cover">
-                <img src="/assets/projects/qsearch-model-comparison.png" alt="" data-i18n-alt="projects.qsearch.gallery.comparison" loading="lazy" />
-              </div>
-              <h3 data-i18n="projects.qsearch.title">SNA / Viral Post Prediction &amp; Content Strategy</h3>
-              <p data-i18n="projects.qsearch.contribution">Team leadership, weighted-index design, data cleaning, model comparison, and project direction</p>
-              <span class="preview-cta" data-i18n="home.projects.cta">See screenshots and details</span>
-            </a>
-          </div>
+          <!-- 卡片由 src/components/ProjectCard.vue 產生，資料在 src/data/cards.js 的 home-projects -->
+          <div class="preview-grid" data-component="ProjectCardList" data-list="home-projects"></div>
         </section>
 
         <!-- 區塊：聯絡方式 · 用途：Email 與 GitHub 連結，只放在首頁最下方 · 不需要可整段刪掉 -->
@@ -348,28 +315,8 @@
           <div class="section-heading">
             <h2 data-i18n="projects.tools.title">Interactive Tools</h2>
           </div>
-          <div class="preview-grid">
-            <a class="preview-card" href="/tools/llm-cost.html">
-              <div class="project-meta">
-                <span>HTML</span>
-                <span>JavaScript</span>
-                <span>LLM API</span>
-              </div>
-              <h3 data-i18n="projects.tools.llmCost.title">LLM API Cost Estimator</h3>
-              <p data-i18n="projects.tools.llmCost.body">Enter tokens per call, calls per day, and per-million-token prices to estimate the monthly API bill before shipping an AI feature.</p>
-              <span class="preview-cta" data-i18n="projects.tools.cta">Open the tool</span>
-            </a>
-            <a class="preview-card" href="/tools/apod.html">
-              <div class="project-meta">
-                <span>HTML</span>
-                <span>JavaScript</span>
-                <span>NASA API</span>
-              </div>
-              <h3 data-i18n="projects.tools.apod.title">NASA Astronomy Picture of the Day</h3>
-              <p data-i18n="projects.tools.apod.body">Pick any date since 1995 to see NASA's featured photo or video for that day, with loading, empty, and error states, an 8-second timeout, and retries.</p>
-              <span class="preview-cta" data-i18n="projects.tools.cta">Open the tool</span>
-            </a>
-          </div>
+          <!-- 卡片由 src/components/ProjectCard.vue 產生，資料在 src/data/cards.js 的 tools -->
+          <div class="preview-grid" data-component="ProjectCardList" data-list="tools"></div>
         </section>
         </div>
 
@@ -538,6 +485,8 @@
       <p class="lightbox-caption" id="lightboxCaption"></p>
     </dialog>
 
-    <script src="/app.js?cache-bust=20261102-title"></script>
+    <!-- 先由 Vue 畫出導覽列與作品卡，app.js 再接手中英切換、聊天與截圖；兩支都是延後執行，順序不可對調 -->
+    <script type="module" src="/src/main.js"></script>
+    <script src="/app.js?cache-bust=20261119-vue" defer></script>
   </body>
 </html>

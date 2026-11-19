@@ -13,7 +13,11 @@
     <link rel="stylesheet" href="/styles/main.css" />
   </head>
   <body>
-    <main class="site-shell tool-page">
+    <div class="site-shell">
+      <!-- 區塊：導覽列 · 用途：跟首頁同一份導覽列（src/components/SiteNav.vue），連結回首頁的各分頁 · 不需要可整段刪掉 -->
+      <div data-component="SiteNav" data-link-base="/" data-current="projects" data-lang="zh"></div>
+
+    <main class="tool-page">
       <!-- 區塊：返回列 · 用途：回作品集首頁 · 不需要可整段刪掉 -->
       <a class="tool-back" href="/">← 回作品集</a>
 
@@ -74,6 +78,7 @@
         </p>
       </section>
     </main>
+    </div>
 
     <!-- 區塊：計算邏輯 · 用途：事件 → 判斷 → 更新畫面 · 不可刪（按鈕會沒反應） -->
     <script>
@@ -190,5 +195,8 @@
         return text.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
       }
     </script>
+
+    <!-- 區塊：共用元件 · 用途：畫出導覽列 · 不可刪（頁面上方會沒有導覽列） -->
+    <script type="module" src="/src/main.js"></script>
   </body>
 </html>
