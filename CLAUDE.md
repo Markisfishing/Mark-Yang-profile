@@ -7,7 +7,9 @@
 - 直接修改 D:\project\intro，不建立新的專案資料夾
 - 延續現有 Git repository，不重新建立另一個
 - 沿用現有結構：index.html 留在 public/，不在根目錄另建 styles/
-- 不新增 React、Vue、Tailwind 或其他前端框架；頁面本身用 HTML 和 CSS
+- 前端框架使用 Vue 3 + Vite（多頁入口）；不另外加入 React、Tailwind 或其他 UI／CSS 框架
+- 導覽列、作品卡等重複區塊抽成共用 Vue 元件，所有頁面共用同一份導覽列
+- 現有工具頁沿用 public/tools/llm-cost.html 與 public/tools/apod.html，不另做分帳、小費、天氣工具
 - 保留 public/app.js 與 api/chat.js，中英切換、AI 聊天、Groq/OpenAI 串接都不可退化
 - 顏色、字級、間距的變數統一定義在 public/styles/design-tokens.css
 - 版面樣式放在 public/styles/main.css，且只使用 design-tokens.css 內已有的變數
@@ -35,6 +37,10 @@
 - 所有按鈕與連結都能正常使用
 - Git 修改已依功能分段 commit，訊息為繁體中文
 - Vercel 公開網址可以正常開啟
+- 首頁、LLM 成本估算、APOD 三頁都能獨立開啟，且共用同一份導覽列，連結不跳錯
+- 元件化重構後兩個工具的計算、查詢與錯誤處理（含 APOD 斷網時的重試按鈕）行為不變
+- npm run build 成功，npm run preview 功能正常
+- 已建立 component-inventory.md 元件清單與元件化重構的 SKILL.md
 
 ## 絕對不可以做的事
 - 不可以把密碼、API 金鑰或其他機密資料寫進程式碼
@@ -43,7 +49,6 @@
 - 不可以自行修改或補充聯絡資料；要改變呈現位置或公開範圍，必須先問作者
 - 不可以刪除與本次作品集改造無關的檔案
 - 不可以移除既有的中英切換、聊天功能或 Groq/OpenAI 串接
-- 不可以加入 React、Vue、Tailwind 或其他前端框架
 - 不可以在 main.css 寫死色碼，必須用 design-tokens.css 的變數
 - 不可以自行發明 design-tokens.css 裡不存在的變數
 - 不可以直接刪除原本的自我介紹內容，要先判斷哪些能整合進作品集
