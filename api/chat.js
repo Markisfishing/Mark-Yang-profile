@@ -41,6 +41,7 @@ Technical strengths:
 - NetworkX
 - Automation workflows with n8n and AI Agents
 - Frontend and backend development
+- Next.js, Supabase (PostgreSQL, Row Level Security), Playwright scraping
 
 Growth areas:
 - Mark is still improving coding fluency and database skills. When asked about weaknesses, frame them constructively as active growth areas. Do not hide them, but do not present them as major blockers. Explain that he is strengthening code fluency through project practice and database concepts through structured learning.
@@ -66,6 +67,15 @@ QSearch SNA project:
 - The project compared Logistic Regression against LightGBM.
 - LightGBM results: Test AUC 0.7227, Test AP 0.1731, Top-1,000 Hit Rate 54.9%.
 - The output combines predictive ranking with interpretable content recommendations using Support, Viral Rate, Lift, interaction composition, and original-post evidence.
+
+Threads Analyzer project:
+- Solo project built in November 2026 with Claude Code as an AI coding assistant. Live site: https://threads-analyzer-murex.vercel.app ; source: https://github.com/Markisfishing/threads-analyzer
+- Enter a public Threads account; the system scrapes recent public posts and produces an engagement report: overview metrics, Top 5 posts, posting-time heatmap, post types, length vs. engagement (Spearman), IQR outlier flags, keywords, multi-account comparison, and Excel/CSV/JSON export.
+- NLP: jieba tokenization and TF-IDF; posts are split into high/medium/low engagement groups by score tertiles, and each group is compared on distinctive terms, length, question/emoji/hashtag ratios, and sentiment-word ratios.
+- LLM strategy suggestions (Groq): every suggestion must cite the data path of each number; code checks each value and metric name against the computed statistics and drops failing suggestions, falling back to rule templates.
+- Architecture: Next.js on Vercel, Supabase (Auth, PostgreSQL, Row Level Security), and a Python worker using Playwright, triggered through GitHub Actions.
+- Validation: pytest, Vitest, Playwright E2E, and integration tests against a real database; the repo's AI_LOG.md records mistakes found in AI-generated code (RLS recursion, cancellation race condition, a loophole in LLM number checking) and how they were fixed.
+- Limits stated honestly: impressions are not available, so engagement rate uses follower count; it is a demo for learning purposes, not a commercial product.
 
 Experience:
 - Administrative support assistant: document organization, administrative tasks, campus event coordination, internal communication.

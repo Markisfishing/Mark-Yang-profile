@@ -15,7 +15,7 @@
       try { document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch (e) {}
     </script>
     <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261102-title" />
-    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261102-title" />
+    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261121-threads" />
   </head>
   <body>
     <div class="site-shell">
@@ -88,7 +88,7 @@
         </section>
         </div>
 
-        <!-- 分頁：作品 · 用途：CodeMind 與 QSearch 完整介紹 -->
+        <!-- 分頁：作品 · 用途：CodeMind、QSearch 與 Threads Analyzer 完整介紹 -->
         <div class="page" id="projects" data-page>
         <!-- 區塊：作品列表 · 用途：CodeMind 與 QSearch 專案成果 · 不需要可整段刪掉 -->
         <section class="section">
@@ -307,6 +307,116 @@
               </div>
             </article>
 
+            <article class="project-card" id="threads">
+              <div class="project-meta">
+                <span>Next.js</span>
+                <span>Supabase</span>
+                <span>Playwright</span>
+                <span>LLM</span>
+              </div>
+              <h3 data-i18n="projects.threads.title">Threads Analyzer / Social Post Engagement Analytics Platform</h3>
+              <p data-i18n="projects.threads.body">
+                Enter a public Threads account and get an engagement report on its recent posts: overview metrics, Top 5 posts, posting-time heatmap, high/medium/low engagement group comparison, and LLM strategy suggestions. It extends my QSearch social-media analysis into a live web app.
+              </p>
+              <div class="gallery" data-gallery role="group" aria-roledescription="carousel" data-i18n-label="projects.threads.galleryLabel">
+                <figure class="gallery-slide">
+                  <div class="gallery-frame">
+                    <button class="gallery-zoom" type="button" data-i18n-label="gallery.zoom">
+                      <img src="/assets/projects/threads-overview.png" alt="" data-i18n-alt="projects.threads.gallery.overview" />
+                    </button>
+                    <button class="gallery-prev" type="button" data-i18n-label="gallery.prev">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" /></svg>
+                    </button>
+                    <button class="gallery-next" type="button" data-i18n-label="gallery.next">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7" /></svg>
+                    </button>
+                  </div>
+                  <figcaption class="gallery-caption">
+                    <span data-i18n="projects.threads.gallery.overview"></span>
+                    <span class="gallery-count">1 / 4</span>
+                  </figcaption>
+                </figure>
+                <figure class="gallery-slide" hidden>
+                  <div class="gallery-frame">
+                    <button class="gallery-zoom" type="button" data-i18n-label="gallery.zoom">
+                      <img src="/assets/projects/threads-groups.png" alt="" data-i18n-alt="projects.threads.gallery.groups" loading="lazy" />
+                    </button>
+                    <button class="gallery-prev" type="button" data-i18n-label="gallery.prev">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" /></svg>
+                    </button>
+                    <button class="gallery-next" type="button" data-i18n-label="gallery.next">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7" /></svg>
+                    </button>
+                  </div>
+                  <figcaption class="gallery-caption">
+                    <span data-i18n="projects.threads.gallery.groups"></span>
+                    <span class="gallery-count">2 / 4</span>
+                  </figcaption>
+                </figure>
+                <figure class="gallery-slide" hidden>
+                  <div class="gallery-frame">
+                    <button class="gallery-zoom" type="button" data-i18n-label="gallery.zoom">
+                      <img src="/assets/projects/threads-strategy.png" alt="" data-i18n-alt="projects.threads.gallery.strategy" loading="lazy" />
+                    </button>
+                    <button class="gallery-prev" type="button" data-i18n-label="gallery.prev">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" /></svg>
+                    </button>
+                    <button class="gallery-next" type="button" data-i18n-label="gallery.next">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7" /></svg>
+                    </button>
+                  </div>
+                  <figcaption class="gallery-caption">
+                    <span data-i18n="projects.threads.gallery.strategy"></span>
+                    <span class="gallery-count">3 / 4</span>
+                  </figcaption>
+                </figure>
+                <figure class="gallery-slide" hidden>
+                  <div class="gallery-frame">
+                    <button class="gallery-zoom" type="button" data-i18n-label="gallery.zoom">
+                      <img src="/assets/projects/threads-charts.png" alt="" data-i18n-alt="projects.threads.gallery.charts" loading="lazy" />
+                    </button>
+                    <button class="gallery-prev" type="button" data-i18n-label="gallery.prev">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" /></svg>
+                    </button>
+                    <button class="gallery-next" type="button" data-i18n-label="gallery.next">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7" /></svg>
+                    </button>
+                  </div>
+                  <figcaption class="gallery-caption">
+                    <span data-i18n="projects.threads.gallery.charts"></span>
+                    <span class="gallery-count">4 / 4</span>
+                  </figcaption>
+                </figure>
+              </div>
+              <div class="project-detail">
+                <span data-i18n="projects.threads.roleLabel">My role</span>
+                <strong data-i18n="projects.threads.contribution">Solo project | full-stack development, analytics pipeline, LLM output checking, and testing, built with Claude Code</strong>
+              </div>
+              <ul class="project-points">
+                <li data-i18n="projects.threads.point1">Analytics: engagement mean and median, IQR outlier flags, Spearman correlation between length and engagement, and jieba + TF-IDF features for high/medium/low engagement groups split by score tertiles.</li>
+                <li data-i18n="projects.threads.point2">LLM checking: every Groq suggestion must cite the data path of each number; code verifies each value and metric name and falls back to rule templates when a suggestion fails.</li>
+                <li data-i18n="projects.threads.point3">Architecture: Next.js on Vercel, Supabase Auth and PostgreSQL with Row Level Security, and a Python Playwright worker triggered through GitHub Actions; supports multi-account comparison and Excel/CSV/JSON export.</li>
+              </ul>
+              <dl class="evidence-row">
+                <div>
+                  <dt data-i18n="projects.threads.evidence.pipelineTitle">Job pipeline</dt>
+                  <dd data-i18n="projects.threads.evidence.pipelineBody">Queued → scraping → cleaning → analyzing → report</dd>
+                </div>
+                <div>
+                  <dt data-i18n="projects.threads.evidence.qualityTitle">Quality validation</dt>
+                  <dd data-i18n="projects.threads.evidence.qualityBody">pytest, Vitest, Playwright E2E, and RLS integration tests on a real database</dd>
+                </div>
+                <div>
+                  <dt data-i18n="projects.threads.evidence.aiTitle">AI collaboration log</dt>
+                  <dd data-i18n="projects.threads.evidence.aiBody">AI_LOG.md records bugs found in AI-written code and how they were fixed</dd>
+                </div>
+              </dl>
+              <div class="project-links">
+                <a class="button button-primary" href="https://threads-analyzer-murex.vercel.app/" target="_blank" rel="noreferrer" data-i18n="projects.threads.live">Open the live site</a>
+                <a class="button button-secondary" href="https://github.com/Markisfishing/threads-analyzer" target="_blank" rel="noreferrer" data-i18n="projects.threads.source">Source code on GitHub</a>
+              </div>
+            </article>
+
           </div>
         </section>
 
@@ -487,6 +597,6 @@
 
     <!-- 先由 Vue 畫出導覽列與作品卡，app.js 再接手中英切換、聊天與截圖；兩支都是延後執行，順序不可對調 -->
     <script type="module" src="/src/main.js"></script>
-    <script src="/app.js?cache-bust=20261102-title" defer></script>
+    <script src="/app.js?cache-bust=20261121-threads" defer></script>
   </body>
 </html>

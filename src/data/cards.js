@@ -25,6 +25,17 @@ export const cardLists = {
       bodyKey: "projects.qsearch.contribution",
       cta: "See screenshots and details",
       ctaKey: "home.projects.cta"
+    },
+    {
+      href: "#threads",
+      image: "/assets/projects/threads-overview.png",
+      imageAltKey: "projects.threads.gallery.overview",
+      title: "Threads Analyzer / Social Post Engagement Analytics Platform",
+      titleKey: "projects.threads.title",
+      body: "Solo project | full-stack development, analytics pipeline, LLM output checking, and testing, built with Claude Code",
+      bodyKey: "projects.threads.contribution",
+      cta: "See screenshots and details",
+      ctaKey: "home.projects.cta"
     }
   ],
 

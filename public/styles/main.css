@@ -674,6 +674,7 @@ h3 {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
+  margin-top: var(--space-4);
 }
 
 .metric-row {
