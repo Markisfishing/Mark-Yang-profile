@@ -4,6 +4,11 @@ const translations = {
     "nav.projects": "Portfolio",
     "nav.skills": "About",
     "nav.agent": "AI Agent",
+    "nav.projects.all": "All work",
+    "nav.projects.featured": "Featured work",
+    "nav.projects.tools": "Mini tools",
+    "nav.tools.llmCost": "LLM cost estimator",
+    "nav.tools.apod": "NASA APOD",
     "hero.github": "GitHub",
     "theme.dark": "Dark",
     "theme.light": "Light",
@@ -145,6 +150,11 @@ const translations = {
     "nav.projects": "作品集",
     "nav.skills": "關於我",
     "nav.agent": "AI 助理",
+    "nav.projects.all": "全部作品",
+    "nav.projects.featured": "主要作品",
+    "nav.projects.tools": "互動小工具",
+    "nav.tools.llmCost": "LLM 成本估算",
+    "nav.tools.apod": "NASA 每日天文圖",
     "hero.github": "GitHub",
     "theme.dark": "深色",
     "theme.light": "淺色",
@@ -739,14 +749,16 @@ lightbox.addEventListener("close", () => { lightboxGallery = null; });
 // 分頁：導覽列每個標籤各自一頁，依網址的 # 決定顯示哪一頁；
 // 指向頁內區塊的連結（例如 #about、#contact、#codemind）會切到該區塊所在的分頁再捲過去
 const pages = [...document.querySelectorAll("[data-page]")];
-const navTabs = [...document.querySelectorAll(".nav-links a")];
+// 只抓第一層分頁標籤；「作品集」下拉選單裡的連結不算分頁
+const navTabs = [...document.querySelectorAll(".nav-links .nav-tab")];
+const navLinks = document.querySelector(".nav-links");
 const topbar = document.querySelector(".topbar");
 const navIndicator = document.createElement("span");
 let currentPage = null;
 
 navIndicator.className = "nav-indicator";
 navIndicator.setAttribute("aria-hidden", "true");
-document.querySelector(".nav-links").appendChild(navIndicator);
+navLinks.appendChild(navIndicator);
 
 function showPageFromHash() {
   const id = decodeURIComponent(location.hash.slice(1));
@@ -772,10 +784,14 @@ function showPageFromHash() {
 function moveNavIndicator() {
   const tab = navTabs.find((t) => t.hasAttribute("aria-current"));
   if (!tab) return;
+  // 「作品集」標籤包在下拉選單容器裡，offsetLeft 會以容器為準，所以改用畫面座標換算成相對導覽列的位置
   const inset = parseFloat(getComputedStyle(tab).paddingLeft);
-  const top = tab.offsetTop + tab.offsetHeight - navIndicator.offsetHeight;
+  const tabBox = tab.getBoundingClientRect();
+  const navBox = navLinks.getBoundingClientRect();
+  const left = tabBox.left - navBox.left + navLinks.scrollLeft;
+  const top = tabBox.bottom - navBox.top + navLinks.scrollTop - navIndicator.offsetHeight;
   navIndicator.style.width = `${tab.offsetWidth - inset * 2}px`;
-  navIndicator.style.transform = `translate(${tab.offsetLeft + inset}px, ${top}px)`;
+  navIndicator.style.transform = `translate(${left + inset}px, ${top}px)`;
 }
 
 // 重播一次 CSS 動畫：先拿掉 class、強制重排，再加回去；播完自動拿掉

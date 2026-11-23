@@ -99,7 +99,7 @@ input {
 }
 
 /* 導覽標籤：每個標籤是一個分頁，目前所在的分頁用主色字與底線標示 */
-.nav-links a {
+.nav-links .nav-tab {
   flex: 0 0 auto;
   padding: var(--space-2);
   border-radius: var(--radius-pill);
@@ -108,7 +108,7 @@ input {
   transition: color var(--motion-fast) ease;
 }
 
-.nav-links a[aria-current="page"] {
+.nav-links .nav-tab[aria-current="page"] {
   color: var(--color-accent-hover);
 }
 
@@ -139,9 +139,87 @@ input {
   }
 }
 
-.nav-links a:hover,
+.nav-links .nav-tab:hover,
 .contact-links a:hover {
   color: var(--color-accent);
+}
+
+/* 作品集下拉選單：「作品集」標籤旁加箭頭，展開時翻轉；內容從作品卡資料產生 */
+.nav-links .nav-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.nav-dropdown {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.nav-chevron {
+  width: 1em;
+  height: 1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--icon-stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform var(--motion-fast) ease;
+}
+
+.nav-dropdown.is-open .nav-chevron {
+  transform: rotate(180deg);
+}
+
+/* 浮動選單只在桌面出現；窄螢幕改用下方的 .nav-panel */
+.nav-menu {
+  display: none;
+}
+
+.nav-menu-link {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background-color var(--motion-fast) ease, color var(--motion-fast) ease;
+}
+
+.nav-menu-link:hover,
+.nav-menu-link:focus-visible {
+  background: var(--color-accent-soft);
+  color: var(--color-accent-hover);
+}
+
+/* 分組標題兼分隔線：主要作品、互動小工具 */
+.nav-menu-heading {
+  margin: var(--space-2) 0 0;
+  padding: var(--space-2) var(--space-3) var(--space-1);
+  border-top: var(--border-width) solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+/* 窄螢幕：導覽列下方整排展開，每項加大點擊範圍 */
+.nav-panel {
+  order: 4;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-top: var(--space-2);
+  border-top: var(--border-width) solid var(--color-border);
+}
+
+.nav-panel[hidden] {
+  display: none;
+}
+
+.nav-panel .nav-menu-link {
+  padding: var(--space-3);
 }
 
 .actions {
@@ -1348,7 +1426,7 @@ h3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .nav-links a {
+  .nav-links .nav-tab {
     padding: var(--space-2) var(--space-3);
   }
 
@@ -1371,6 +1449,28 @@ h3 {
 
 /* 斷點：1024px 以上（平板橫放、小筆電、桌面）改回多欄 */
 @media (min-width: 1024px) {
+  .nav-panel {
+    display: none;
+  }
+
+  .nav-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+    flex-direction: column;
+    min-width: max-content;
+    padding: var(--space-2);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+  }
+
+  .nav-dropdown.is-open .nav-menu {
+    display: flex;
+  }
+
   .topbar {
     align-items: center;
     flex-wrap: nowrap;
@@ -1734,5 +1834,18 @@ h3 {
     transition-duration: 0.01ms !important;
     transition-delay: 0s !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* 有滑鼠的桌面：滑過或用鍵盤移到「作品集」就展開（用 :focus-visible，滑鼠點過後的焦點不會讓選單一直開著）；選了一項後先收起，滑鼠離開再恢復 */
+@media (min-width: 1024px) and (hover: hover) {
+  .nav-dropdown:not(.is-dismissed):hover .nav-menu,
+  .nav-dropdown:not(.is-dismissed):has(:focus-visible) .nav-menu {
+    display: flex;
+  }
+
+  .nav-dropdown:not(.is-dismissed):hover .nav-chevron,
+  .nav-dropdown:not(.is-dismissed):has(:focus-visible) .nav-chevron {
+    transform: rotate(180deg);
   }
 }

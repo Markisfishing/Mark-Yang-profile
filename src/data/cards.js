@@ -1,11 +1,13 @@
 // 作品卡資料：新增一週的作品，只要在對應的清單加一筆，不用改 HTML
 // title / body / cta 是預設文字（英文，跟原本的 HTML 一樣），*Key 對應 public/app.js 的翻譯表，
 // 首頁載入後 app.js 會依目前語言換成中文或英文；新增卡片時兩種語言都要加進翻譯表
+// navLabel 是導覽列「作品集」下拉選單裡的短名稱；有 navKey 的項目要在 app.js 翻譯表加上中英兩種
 export const cardLists = {
   // 首頁「作品速覽」：點了跳到作品集分頁的那一項
   "home-projects": [
     {
       href: "#codemind",
+      navLabel: { en: "CodeMind", zh: "CodeMind" },
       image: "/assets/projects/codemind-classes.png",
       imageAltKey: "projects.codemind.gallery.classes",
       title: "CodeMind / AI Programming Learning & Weakness Diagnosis Platform",
@@ -17,6 +19,7 @@ export const cardLists = {
     },
     {
       href: "#qsearch",
+      navLabel: { en: "QSearch", zh: "QSearch" },
       image: "/assets/projects/qsearch-model-comparison.png",
       imageAltKey: "projects.qsearch.gallery.comparison",
       title: "SNA / Viral Post Prediction & Content Strategy",
@@ -28,6 +31,7 @@ export const cardLists = {
     },
     {
       href: "#threads",
+      navLabel: { en: "Threads Analyzer", zh: "Threads Analyzer" },
       image: "/assets/projects/threads-overview.png",
       imageAltKey: "projects.threads.gallery.overview",
       title: "Threads Analyzer / Social Post Engagement Analytics Platform",
@@ -43,6 +47,8 @@ export const cardLists = {
   tools: [
     {
       href: "/tools/llm-cost.html",
+      navLabel: { en: "LLM cost estimator", zh: "LLM 成本估算" },
+      navKey: "nav.tools.llmCost",
       tags: ["HTML", "JavaScript", "LLM API"],
       title: "LLM API Cost Estimator",
       titleKey: "projects.tools.llmCost.title",
@@ -53,6 +59,8 @@ export const cardLists = {
     },
     {
       href: "/tools/apod.html",
+      navLabel: { en: "NASA APOD", zh: "NASA 每日天文圖" },
+      navKey: "nav.tools.apod",
       tags: ["HTML", "JavaScript", "NASA API"],
       title: "NASA Astronomy Picture of the Day",
       titleKey: "projects.tools.apod.title",
