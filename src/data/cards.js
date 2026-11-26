@@ -19,12 +19,13 @@ export const cardLists = {
     },
     {
       href: "#qsearch",
-      navLabel: { en: "QSearch", zh: "QSearch" },
+      navLabel: { en: "SNA Viral Post Prediction", zh: "SNA 社群貼文爆紅預測" },
+      navKey: "nav.projects.sna",
       image: "/assets/projects/qsearch-model-comparison.png",
       imageAltKey: "projects.qsearch.gallery.comparison",
-      title: "SNA / Viral Post Prediction & Content Strategy",
+      title: "SNA Viral Post Prediction & Content Strategy",
       titleKey: "projects.qsearch.title",
-      body: "Team leadership, weighted-index design, data cleaning, model comparison, and project direction",
+      body: "Team lead | weighted-index design, data cleaning, model comparison, and project direction",
       bodyKey: "projects.qsearch.contribution",
       cta: "See full details",
       ctaKey: "home.projects.cta"
@@ -36,7 +37,7 @@ export const cardLists = {
       imageAltKey: "projects.threads.gallery.overview",
       title: "Threads Analyzer / Social Post Engagement Analytics Platform",
       titleKey: "projects.threads.title",
-      body: "Solo project | full-stack development, analytics pipeline, LLM output checking, and testing, built with Claude Code",
+      body: "Solo developer | full-stack development, analytics pipeline, LLM output checking, and testing, built with Claude Code",
       bodyKey: "projects.threads.contribution",
       cta: "See full details",
       ctaKey: "home.projects.cta"
