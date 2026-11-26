@@ -374,19 +374,18 @@ h3 {
   margin-top: var(--space-5);
 }
 
+/* 重點數字：不用卡片外框，每項上方一條細線分隔；數字是主角，標籤縮小 */
 .hero-proof {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-2);
+  gap: var(--space-3) var(--space-4);
   max-width: var(--measure);
   margin-top: var(--space-5);
 }
 
 .hero-proof div {
-  padding: var(--space-3);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius);
-  background: var(--color-surface-translucent);
+  padding-top: var(--space-3);
+  border-top: var(--border-width) solid var(--color-border);
 }
 
 .hero-proof strong,
@@ -395,8 +394,16 @@ h3 {
 }
 
 .hero-proof strong {
-  color: var(--color-accent-hover);
+  color: var(--color-heading);
   font-size: var(--text-lg);
+}
+
+/* 唯一的真實指標放大成展示字，用主色 */
+.hero-proof-metric strong {
+  color: var(--color-accent-hover);
+  font-size: var(--text-display);
+  font-weight: 800;
+  line-height: 1.1;
 }
 
 .hero-proof span {
@@ -1508,8 +1515,13 @@ h3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  /* 平板以上：大數字佔整排，兩項文字在下面並排 */
   .hero-proof {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hero-proof-metric {
+    grid-column: 1 / -1;
   }
 
   .chat-form {
