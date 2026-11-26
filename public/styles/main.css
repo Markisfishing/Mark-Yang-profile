@@ -451,11 +451,11 @@ h3 {
   display: none;
 }
 
-/* 旋轉徽章：手機與平板放在人像右上角、只往上破出，不會造成橫向捲軸；1024px 以上改到左上角破進文字與人像之間的空白 */
+/* 旋轉徽章：人像去背後四角是空的，徽章放進頭部旁邊的空角，不再往外破出；手機與平板在右上角，1024px 以上在左上角（靠近文字那側） */
 .hero-badge {
   position: absolute;
-  top: calc(var(--space-4) * -1);
-  right: calc(var(--space-2) * -1);
+  top: var(--space-3);
+  right: 0;
   z-index: 1;
   width: var(--size-badge);
   height: var(--size-badge);
@@ -470,7 +470,7 @@ h3 {
 
 .hero-badge-text {
   fill: var(--color-accent);
-  font-size: var(--text-sm);
+  font-size: var(--text-base); /* 徽章變小後字跟著縮，用大一級的字維持可讀 */
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1653,7 +1653,7 @@ h3 {
 
   .hero-badge {
     right: auto;
-    left: calc(var(--space-5) * -1);
+    left: 0;
   }
 
   .skill-grid {
