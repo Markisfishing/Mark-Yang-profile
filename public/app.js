@@ -800,8 +800,14 @@ function showPageFromHash() {
     else tab.removeAttribute("aria-current");
   });
   moveNavIndicator();
+  scrollToHashTarget();
+}
 
-  // 單一作品是整頁只剩那一項，回到頁面頂端就好
+// 捲到網址 # 對應的位置
+function scrollToHashTarget() {
+  const id = decodeURIComponent(location.hash.slice(1));
+  const target = id ? document.getElementById(id) : null;
+  // 分頁本身或單一作品是整頁只剩那一塊，回到頁面頂端就好
   if (!target || target === currentPage || target === currentProject) window.scrollTo({ top: 0, behavior: "instant" });
   // 導覽列是黏在上方的，手機版會換行變高，所以用實際高度扣掉，目標才不會被蓋住
   else window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - topbar.offsetHeight, behavior: "instant" });
@@ -932,5 +938,21 @@ if (parallaxImages.length && "IntersectionObserver" in window && !reduceMotion.m
 window.addEventListener("hashchange", showPageFromHash);
 window.addEventListener("resize", moveNavIndicator);
 showPageFromHash();
+// 從工具頁點導覽列進來（例如 /#home、/#codemind）時，瀏覽器會在整頁載完後自己捲到 # 對應的元素，
+// 蓋掉上面算好的位置，開頭就被黏在上方的導覽列擋住；載完後再捲一次。使用者已經自己捲過就不動
+const initialScroll = window.scrollY;
+window.addEventListener("load", () => {
+  if (!location.hash) return;
+  requestAnimationFrame(() => {
+    if (Math.abs(window.scrollY - initialScroll) > 0 && !landedOnHash()) return;
+    scrollToHashTarget();
+  });
+}, { once: true });
+
+// 現在的捲動位置是不是瀏覽器「跳到 # 元素」造成的：元素頂端剛好貼齊畫面頂端
+function landedOnHash() {
+  const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  return Boolean(target) && Math.abs(target.getBoundingClientRect().top) < 2;
+}
 // 第一次定位不要有滑動，下一個畫格才開啟轉場
 requestAnimationFrame(() => navIndicator.classList.add("is-ready"));
