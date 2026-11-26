@@ -9,8 +9,8 @@
     <script>
       try { document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch (e) {}
     </script>
-    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261127-guestbook3" />
-    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261127-guestbook3" />
+    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261127-copy2" />
+    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261127-copy2" />
   </head>
   <body>
     <div class="site-shell">
@@ -23,7 +23,7 @@
 
       <!-- 區塊：標題 · 用途：說明這個工具在做什麼 · 不可刪（使用者會不知道這頁是什麼） -->
       <header class="tool-header">
-        <p class="eyebrow">API Tool</p>
+        <p class="eyebrow" data-i18n="eyebrow">小工具</p>
         <h1 class="tool-title" data-i18n="title">NASA 每日一天文圖</h1>
         <p class="tool-lead" data-i18n="lead">
           NASA 從 1995 年 6 月 16 日起每天挑一張宇宙照片或影片，附上天文學家寫的說明。選一個日期，看那天的宇宙。
@@ -53,7 +53,7 @@
       <section class="tool-note">
         <h2 data-i18n="note.title">資料來源</h2>
         <p data-i18n="note.body">
-          資料來自 NASA 的 APOD API。APOD 官網搬到 science.nasa.gov 之後，官方 API 常回 NASA 標誌而不是當天的圖，這時伺服器會改從 science.nasa.gov 的文章取得同一天的內容。金鑰放在網站的伺服器端，不會出現在網頁原始碼裡。查過的日期會先存在這個分頁裡，再看一次不會再打 API。日期以美國東部時間為準，所以台灣早上看到的「今天」可能還是美國的昨天。
+          資料來自 NASA APOD。日期以美國東部時間為準，台灣早上看到的「今天」可能還是美國的昨天。
         </p>
       </section>
     </main>
@@ -85,8 +85,9 @@
           search: "查詢",
           prev: "← 前一天",
           next: "後一天 →",
+          eyebrow: "小工具",
           "note.title": "資料來源",
-          "note.body": "資料來自 NASA 的 APOD API。APOD 官網搬到 science.nasa.gov 之後，官方 API 常回 NASA 標誌而不是當天的圖，這時伺服器會改從 science.nasa.gov 的文章取得同一天的內容。金鑰放在網站的伺服器端，不會出現在網頁原始碼裡。查過的日期會先存在這個分頁裡，再看一次不會再打 API。日期以美國東部時間為準，所以台灣早上看到的「今天」可能還是美國的昨天。",
+          "note.body": "資料來自 NASA APOD。日期以美國東部時間為準，台灣早上看到的「今天」可能還是美國的昨天。",
           quota: "這個小時還能查 {n} 次",
           loadingDate: "正在載入 {date}…",
           loadingLatest: "正在載入最新一天…",
@@ -117,8 +118,9 @@
           search: "Search",
           prev: "← Previous day",
           next: "Next day →",
+          eyebrow: "Mini tool",
           "note.title": "Data source",
-          "note.body": "Data comes from NASA's APOD API. Since the APOD site moved to science.nasa.gov, the official API often returns the NASA logo instead of the day's picture; when that happens, the server falls back to the same day's article on science.nasa.gov. The API key stays on the server and never appears in the page source. Dates you've viewed are cached in this tab, so viewing them again doesn't call the API. Dates follow US Eastern Time, so \"today\" on a Taiwan morning may still be yesterday in the US.",
+          "note.body": "Data comes from NASA APOD. Dates follow US Eastern Time, so \"today\" on a Taiwan morning may still be yesterday in the US.",
           quota: "{n} searches left this hour",
           loadingDate: "Loading {date}…",
           loadingLatest: "Loading the latest day…",

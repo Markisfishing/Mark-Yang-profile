@@ -9,8 +9,8 @@
     <script>
       try { document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch (e) {}
     </script>
-    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261127-guestbook3" />
-    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261127-guestbook3" />
+    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261127-copy2" />
+    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261127-copy2" />
   </head>
   <body>
     <div class="site-shell">
@@ -23,10 +23,10 @@
 
       <!-- 區塊：標題 · 用途：說明這個工具在算什麼 · 不可刪（使用者會不知道這頁是什麼） -->
       <header class="tool-header">
-        <p class="eyebrow">Interactive Tool</p>
+        <p class="eyebrow" data-i18n="eyebrow">小工具</p>
         <h1 class="tool-title" data-i18n="title">LLM API 成本估算器</h1>
         <p class="tool-lead" data-i18n="lead">
-          上線一個 AI 功能之前，先算一下每個月要付多少。單價請填你要用的模型在官方價目表上的價格（美元／每百萬 token）。
+          上線 AI 功能前，先估算每月要花多少。
         </p>
       </header>
 
@@ -50,12 +50,12 @@
           </div>
           <div class="tool-field">
             <label for="inputPrice" data-i18n="field.inputPrice">輸入單價（US$／百萬 token）</label>
-            <input id="inputPrice" name="inputPrice" inputmode="decimal" autocomplete="off" placeholder="例如 3" data-i18n-placeholder="placeholder.inputPrice" aria-describedby="inputPrice-error" />
+            <input id="inputPrice" name="inputPrice" inputmode="decimal" autocomplete="off" placeholder="例如 3（查模型官方價目表）" data-i18n-placeholder="placeholder.inputPrice" aria-describedby="inputPrice-error" />
             <p class="tool-field-error" id="inputPrice-error" aria-live="polite"></p>
           </div>
           <div class="tool-field">
             <label for="outputPrice" data-i18n="field.outputPrice">輸出單價（US$／百萬 token）</label>
-            <input id="outputPrice" name="outputPrice" inputmode="decimal" autocomplete="off" placeholder="例如 15" data-i18n-placeholder="placeholder.outputPrice" aria-describedby="outputPrice-error" />
+            <input id="outputPrice" name="outputPrice" inputmode="decimal" autocomplete="off" placeholder="例如 15（查模型官方價目表）" data-i18n-placeholder="placeholder.outputPrice" aria-describedby="outputPrice-error" />
             <p class="tool-field-error" id="outputPrice-error" aria-live="polite"></p>
           </div>
         </div>
@@ -67,7 +67,7 @@
 
       <!-- 區塊：結果區 · 用途：顯示空值、錯誤、成功三種狀態 · 不可刪（使用者看不到答案） -->
       <section class="tool-card tool-result" id="result" data-state="empty" aria-live="polite">
-        <p class="tool-result-message">填好上面五欄，按「算一下」，這裡會顯示每個月大約要花多少。</p>
+        <p class="tool-result-message">結果會顯示在這裡。</p>
       </section>
 
       <!-- 區塊：計算說明 · 用途：交代公式與假設，讓人知道數字怎麼來 · 不需要可整段刪掉 -->
@@ -96,7 +96,8 @@
           "meta.description": "LLM API 成本估算器：輸入 token 用量、呼叫次數與單價，算出每月大約要花多少錢。",
           back: "← 回作品集",
           title: "LLM API 成本估算器",
-          lead: "上線一個 AI 功能之前，先算一下每個月要付多少。單價請填你要用的模型在官方價目表上的價格（美元／每百萬 token）。",
+          eyebrow: "小工具",
+          lead: "上線 AI 功能前，先估算每月要花多少。",
           "field.inputTokens": "每次呼叫的輸入 token 數",
           "field.outputTokens": "每次呼叫的輸出 token 數",
           "field.callsPerDay": "每天呼叫次數",
@@ -105,8 +106,8 @@
           "placeholder.inputTokens": "例如 1500",
           "placeholder.outputTokens": "例如 500",
           "placeholder.callsPerDay": "例如 1000",
-          "placeholder.inputPrice": "例如 3",
-          "placeholder.outputPrice": "例如 15",
+          "placeholder.inputPrice": "例如 3（查模型官方價目表）",
+          "placeholder.outputPrice": "例如 15（查模型官方價目表）",
           submit: "算一下",
           reset: "清空",
           "note.title": "怎麼算的",
@@ -123,7 +124,7 @@
           "error.integer": "「{label}」要填整數，不能有小數（你填的是 {text}）",
           "error.min": "「{label}」至少要是 {min}",
           "error.summary": "有 {n} 欄還沒填對：",
-          empty: "填好上面五欄，按「算一下」，這裡會顯示每個月大約要花多少。",
+          empty: "結果會顯示在這裡。",
           "result.month": "每個月大約",
           "result.perCall": "每次呼叫",
           "result.perDay": "每天",
@@ -134,7 +135,8 @@
           "meta.description": "LLM API cost estimator: enter token usage, calls per day, and prices to estimate the monthly bill.",
           back: "← Back to portfolio",
           title: "LLM API Cost Estimator",
-          lead: "Before shipping an AI feature, estimate what it will cost each month. Enter the prices from your model's official pricing page (US$ per million tokens).",
+          eyebrow: "Mini tool",
+          lead: "Estimate the monthly cost before shipping an AI feature.",
           "field.inputTokens": "Input tokens per call",
           "field.outputTokens": "Output tokens per call",
           "field.callsPerDay": "Calls per day",
@@ -143,8 +145,8 @@
           "placeholder.inputTokens": "e.g. 1500",
           "placeholder.outputTokens": "e.g. 500",
           "placeholder.callsPerDay": "e.g. 1000",
-          "placeholder.inputPrice": "e.g. 3",
-          "placeholder.outputPrice": "e.g. 15",
+          "placeholder.inputPrice": "e.g. 3 (see the model's pricing page)",
+          "placeholder.outputPrice": "e.g. 15 (see the model's pricing page)",
           submit: "Calculate",
           reset: "Clear",
           "note.title": "How it's calculated",
@@ -160,7 +162,7 @@
           "error.integer": "“{label}” must be a whole number (you entered {text})",
           "error.min": "“{label}” must be at least {min}",
           "error.summary": "{n} field(s) need fixing:",
-          empty: "Fill in the five fields and press “Calculate” to see the estimated monthly cost here.",
+          empty: "Your result will appear here.",
           "result.month": "Estimated per month",
           "result.perCall": "Per call",
           "result.perDay": "Per day",

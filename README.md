@@ -124,3 +124,11 @@ npm run preview
 
 - Email：y7632457@gmail.com
 - GitHub：[Markisfishing](https://github.com/Markisfishing)
+
+## NASA APOD 工具的實作細節
+
+頁面上只留給訪客看的說明，下面這些技術細節記在這裡：
+
+- APOD 官網搬到 science.nasa.gov 之後，官方 API 常回 NASA 標誌而不是當天的圖；這時 `api/apod.js` 會改從 science.nasa.gov 的文章取得同一天的內容。
+- NASA 金鑰只放在伺服器端（`.env.local` 與 Vercel 環境變數），不會出現在網頁原始碼裡。
+- 查過的日期會先存在瀏覽器分頁裡，再看一次不會再打 API。
