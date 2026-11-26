@@ -631,6 +631,34 @@ h3 {
   margin-inline: auto;
 }
 
+/* 進入單一作品：返回按鈕與作品內容由上而下依序淡入上移（間隔 60ms）。
+   作品平常是 hidden（display: none），每次顯示都會重播，從一項作品換到另一項也會播 */
+.project-single .back-link,
+.project-grid > article > * {
+  animation: rise var(--motion-duration) var(--motion-ease) backwards;
+}
+
+.project-grid > article > :nth-child(2) {
+  animation-delay: var(--motion-stagger);
+}
+
+.project-grid > article > :nth-child(3) {
+  animation-delay: calc(var(--motion-stagger) * 2);
+}
+
+.project-grid > article > :nth-child(4) {
+  animation-delay: calc(var(--motion-stagger) * 3);
+}
+
+.project-grid > article > :nth-child(5) {
+  animation-delay: calc(var(--motion-stagger) * 4);
+}
+
+/* 第 6 項之後一起出現，整段控制在 0.3s + 5×60ms = 600ms 內 */
+.project-grid > article > :nth-child(n + 6) {
+  animation-delay: calc(var(--motion-stagger) * 5);
+}
+
 .project-card,
 .skill-block,
 .agent-panel,
