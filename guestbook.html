@@ -9,8 +9,8 @@
     <script>
       try { document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch (e) {}
     </script>
-    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261127-spam3" />
-    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261127-spam3" />
+    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261127-gb1" />
+    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261127-gb1" />
   </head>
   <body>
     <div class="site-shell">
@@ -109,6 +109,8 @@
           "error.server": "伺服器出錯了（{status}）",
           "error.rateLimited": "留言送得太快了，請 {wait}後再試。",
           "error.duplicate": "這則留言剛剛已經有人送過了。",
+          cooldown: "{n} 秒後可再送",
+          mine: "你的留言",
           "wait.seconds": "{n} 秒",
           "wait.minutes": "{n} 分鐘",
           "field.empty": "{label}不能空白",
@@ -143,6 +145,8 @@
           "error.server": "server error {status}",
           "error.rateLimited": "You're posting too fast. Please try again in {wait}.",
           "error.duplicate": "This exact message was just posted.",
+          cooldown: "Wait {n}s",
+          mine: "Yours",
           "wait.seconds": "{n} seconds",
           "wait.minutes": "{n} minutes",
           "field.empty": "{label} can't be blank",
@@ -165,7 +169,22 @@
       const list = document.getElementById("commentList");
 
       // 畫面狀態：重畫（例如切換語言）時照這份資料重新產生，不用再打一次 API
-      const state = { list: "loading", comments: [], listError: null, sending: false, formError: null, sent: false, invalid: [] };
+      const state = { list: "loading", comments: [], listError: null, sending: false, formError: null, sent: false, invalid: [], cooldownUntil: 0 };
+
+      // ── 存在訪客自己瀏覽器的資料（localStorage）──────────────
+      // 草稿：重新整理或不小心關掉分頁，打到一半的字還在；暱稱送出後保留，下次不用再打
+      // 我的留言：記住自己送過哪幾則（只存 id），列表上標「你的留言」
+      // 無痕模式或被封鎖時 localStorage 會丟錯，一律當成沒有，不影響留言
+      const DRAFT_KEY = "guestbook-draft";
+      const MINE_KEY = "guestbook-mine";
+      const MINE_LIMIT = 20;
+      function readStore(key, fallback) {
+        try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
+      }
+      function writeStore(key, value) {
+        try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* 存不了就算了 */ }
+      }
+      let mine = new Set(readStore(MINE_KEY, []));
 
       const { t, lang } = setupToolPage(TEXT, render);
 
@@ -229,16 +248,22 @@
             state.invalid = Array.isArray(data.fieldErrors) ? data.fieldErrors : [];
             if (!state.invalid.some((e) => e.field)) state.formError = { kind: "message", text: data.error };
           } else if (response.status === 429 || response.status === 409) {
-            // 送太快、重複送：留言留在表單裡，顯示要等多久或為什麼
+            // 送太快、重複送：留言留在表單裡，顯示要等多久或為什麼；送太快時按鈕倒數，數完才能再按
             state.formError = { kind: data.reason || "rateLimited", retryAfter: data.retryAfter, text: data.error };
+            if (response.status === 429) startCooldown(Number(data.retryAfter) || 30);
           } else if (!response.ok) {
             throw { kind: "server", status: response.status };
           } else {
-            // 送出成功：把伺服器回的那一筆（含 id 與時間）放到最上面，表單清空
+            // 送出成功：把伺服器回的那一筆（含 id 與時間）放到最上面，記成「你的留言」
+            // 只清空留言框，暱稱留著，下次留言不用再打
             state.comments = [data.comment, ...state.comments];
             if (state.list !== "ready") state.list = "ready";
             state.sent = true;
-            form.reset();
+            mine = new Set([data.comment.id, ...mine].slice(0, MINE_LIMIT));
+            writeStore(MINE_KEY, [...mine]);
+            inputs.body.value = "";
+            saveDraft();
+            justPosted = data.comment.id;
           }
         } catch (error) {
           state.formError = error;
@@ -248,14 +273,45 @@
           // 有欄位不合格時，游標直接跳到第一個要改的欄位
           const first = state.invalid.find((e) => inputs[e.field]);
           if (first) inputs[first.field].focus();
+          revealPosted();
         }
+      }
+
+      // 剛送出的留言捲到看得到的地方：手機上列表在表單下面，不捲過去看不到自己的留言
+      let justPosted = null;
+      function revealPosted() {
+        if (justPosted === null) return;
+        const item = list.querySelector(`[data-id="${CSS.escape(String(justPosted))}"]`);
+        justPosted = null;
+        const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        item?.scrollIntoView({ block: "nearest", behavior: reduce ? "auto" : "smooth" });
+      }
+
+      // 送太快被擋：按鈕停用並倒數秒數，數完自動恢復、清掉錯誤訊息
+      let cooldownTimer = null;
+      function startCooldown(seconds) {
+        state.cooldownUntil = Date.now() + seconds * 1000;
+        clearInterval(cooldownTimer);
+        cooldownTimer = setInterval(() => {
+          if (Date.now() >= state.cooldownUntil) {
+            clearInterval(cooldownTimer);
+            state.cooldownUntil = 0;
+            if (state.formError?.kind === "rateLimited") state.formError = null;
+          }
+          renderForm();
+        }, 1000);
+      }
+      const cooldownLeft = () => Math.max(0, Math.ceil((state.cooldownUntil - Date.now()) / 1000));
+
+      function saveDraft() {
+        writeStore(DRAFT_KEY, { name: inputs.name.value, body: inputs.body.value });
       }
 
       function formErrorText(error) {
         if (error.kind === "message") return error.text;
         if (error.kind === "duplicate") return t("error.duplicate");
         if (error.kind === "rateLimited") {
-          const s = Number(error.retryAfter) || 30;
+          const s = cooldownLeft() || Number(error.retryAfter) || 30;
           const wait = s >= 60 ? t("wait.minutes", { n: Math.ceil(s / 60) }) : t("wait.seconds", { n: s });
           return t("error.rateLimited", { wait });
         }
@@ -269,10 +325,16 @@
       }
 
       // 依 state 重畫表單提示與留言列表；別人打的字一律用 textContent 放進畫面，不當成 HTML
+      // 打字時只重畫表單，列表不動：不用每打一個字就重建整個列表，螢幕閱讀器也不會一直重念
       function render() {
-        // 表單
-        submitButton.disabled = state.sending;
-        submitLabel.textContent = t(state.sending ? "sending" : "submit");
+        renderForm();
+        renderList();
+      }
+
+      function renderForm() {
+        const wait = cooldownLeft();
+        submitButton.disabled = state.sending || wait > 0;
+        submitLabel.textContent = state.sending ? t("sending") : wait > 0 ? t("cooldown", { n: wait }) : t("submit");
         shortcut.textContent = t("shortcut", { key: modKey });
         form.setAttribute("aria-label", t("formLabel"));
         form.setAttribute("aria-busy", state.sending ? "true" : "false");
@@ -291,8 +353,9 @@
         } else {
           formStatus.textContent = state.sent ? t("sent") : "";
         }
+      }
 
-        // 列表
+      function renderList() {
         list.dataset.state = state.list === "ready" && !state.comments.length ? "empty" : state.list;
         list.setAttribute("aria-busy", state.list === "loading" ? "true" : "false");
         list.replaceChildren();
@@ -361,6 +424,7 @@
       function commentItem(comment) {
         const li = document.createElement("li");
         li.className = "guestbook-item";
+        li.dataset.id = comment.id;
         // 頭像：暱稱第一個字＋依暱稱固定的底色；暱稱只有一個字時頭像改放人形圖示，不會跟暱稱重複
         const name = comment.name.trim();
         const avatar = document.createElement("span");
@@ -378,7 +442,15 @@
         const time = document.createElement("time");
         time.dateTime = comment.createdAt;
         updateTime(time);
-        meta.append(nameNode, time);
+        meta.append(nameNode);
+        // 自己送過的留言加一個小標籤，一眼找得到
+        if (mine.has(comment.id)) {
+          const tag = document.createElement("span");
+          tag.className = "guestbook-tag";
+          tag.textContent = t("mine");
+          meta.append(tag);
+        }
+        meta.append(time);
         const body = document.createElement("p");
         body.className = "guestbook-body";
         body.textContent = comment.body;
@@ -395,7 +467,8 @@
         inputs[field].addEventListener("input", () => {
           state.invalid = state.invalid.filter((e) => e.field !== field);
           state.sent = false;
-          render();
+          saveDraft();
+          renderForm();
         });
       }
       form.addEventListener("submit", submitComment);
@@ -411,6 +484,11 @@
           form.requestSubmit();
         }
       });
+
+      // 載入時放回上次的草稿（暱稱、打到一半的留言）
+      const draft = readStore(DRAFT_KEY, {});
+      if (typeof draft.name === "string") inputs.name.value = draft.name.slice(0, LIMITS.name);
+      if (typeof draft.body === "string") inputs.body.value = draft.body.slice(0, LIMITS.body);
 
       loadComments();
     </script>

@@ -2364,6 +2364,16 @@ h3 {
   cursor: help;
 }
 
+/* 自己送過的留言：暱稱旁的小標籤 */
+.guestbook-tag {
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-hover);
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
+
 /* 暱稱 · 3 分鐘前 */
 .guestbook-meta time::before {
   content: "· ";
