@@ -603,16 +603,19 @@ h3 {
   border-top: 0;
 }
 
+/* 返回按鈕固定在區塊左上角，不跟著下方置中的作品內容縮排 */
 .back-link {
+  display: inline-flex;
   margin-bottom: var(--space-3);
-  padding-left: 0;
 }
 
+/* 作品內容限制欄寬並水平置中 */
 .project-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-3);
   max-width: var(--measure-xl);
+  margin-inline: auto;
 }
 
 .project-card,
