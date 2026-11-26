@@ -1,5 +1,5 @@
 <!-- 元件：ProjectCardList · 用途：把 src/data/cards.js 裡的一組卡片排出來
-     props：list 卡片組的名稱（例如 home-projects、tools）
+     props：list 卡片組的名稱（例如 projects、tools）
      外層的 .preview-grid 寫在 HTML 上（掛載點本身），這裡只負責產生一張張卡片 -->
 <script setup>
 import { computed } from "vue";

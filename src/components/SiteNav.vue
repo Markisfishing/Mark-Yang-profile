@@ -30,7 +30,7 @@ const menuGroups = [
   {
     key: "nav.projects.featured",
     label: { en: "Featured work", zh: "主要作品" },
-    links: cardLists["home-projects"].map((card) => ({ href: card.href, key: card.navKey, label: card.navLabel }))
+    links: cardLists.projects.map((card) => ({ href: card.href, key: card.navKey, label: card.navLabel }))
   },
   {
     key: "nav.projects.tools",

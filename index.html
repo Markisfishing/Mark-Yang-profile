@@ -15,7 +15,7 @@
       try { document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch (e) {}
     </script>
     <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261102-title" />
-    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261121-threads" />
+    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261126-project-single" />
   </head>
   <body>
     <div class="site-shell">
@@ -63,15 +63,6 @@
           </figure>
         </section>
 
-        <!-- 區塊：作品速覽 · 用途：首頁上的兩項作品摘要，點選前往作品分頁 · 不需要可整段刪掉 -->
-        <section class="section" id="project-preview">
-          <div class="section-heading">
-            <h2 data-i18n="projects.title">Portfolio</h2>
-          </div>
-          <!-- 卡片由 src/components/ProjectCard.vue 產生，資料在 src/data/cards.js 的 home-projects -->
-          <div class="preview-grid" data-component="ProjectCardList" data-list="home-projects"></div>
-        </section>
-
         <!-- 區塊：聯絡方式 · 用途：Email 與 GitHub 連結，只放在首頁最下方 · 不需要可整段刪掉 -->
         <section class="section contact-section" id="contact">
           <div>
@@ -90,11 +81,19 @@
 
         <!-- 分頁：作品 · 用途：CodeMind、QSearch 與 Threads Analyzer 完整介紹 -->
         <div class="page" id="projects" data-page>
-        <!-- 區塊：作品列表 · 用途：CodeMind 與 QSearch 專案成果 · 不需要可整段刪掉 -->
-        <section class="section">
+        <!-- 區塊：全部作品 · 用途：每項作品一張摘要卡（截圖、標題、角色），點選只看那一項 · 不需要可整段刪掉 -->
+        <section class="section" id="project-overview">
           <div class="section-heading">
             <h2 data-i18n="projects.title">Portfolio</h2>
           </div>
+          <!-- 卡片由 src/components/ProjectCard.vue 產生，資料在 src/data/cards.js 的 projects -->
+          <div class="preview-grid" data-component="ProjectCardList" data-list="projects"></div>
+        </section>
+
+        <!-- 區塊：單一作品 · 用途：網址是 #codemind 這類作品 id 時，只顯示那一項的完整介紹；
+             app.js 依網址切換，平常隱藏。新增作品時在 .project-grid 裡加一個 article，id 要和 cards.js 的 href 對應 -->
+        <section class="section project-single" id="project-detail" hidden>
+          <a class="button button-ghost back-link" href="#projects" data-i18n="projects.back">← All work</a>
           <div class="project-grid">
             <article class="project-card" id="codemind">
               <div class="project-meta">
@@ -597,6 +596,6 @@
 
     <!-- 先由 Vue 畫出導覽列與作品卡，app.js 再接手中英切換、聊天與截圖；兩支都是延後執行，順序不可對調 -->
     <script type="module" src="/src/main.js"></script>
-    <script src="/app.js?cache-bust=20261123-nav-dropdown" defer></script>
+    <script src="/app.js?cache-bust=20261126-project-single" defer></script>
   </body>
 </html>

@@ -523,7 +523,7 @@ h3 {
   font-size: var(--text-base);
 }
 
-/* 區塊：作品速覽 · 用途：首頁上的兩張作品摘要卡，點選前往作品分頁 · 不需要可整段刪掉 */
+/* 區塊：全部作品 · 用途：作品集分頁的作品摘要卡（截圖、標題、角色），點選只看那一項 · 不需要可整段刪掉 */
 
 .preview-grid {
   display: grid;
@@ -595,12 +595,24 @@ h3 {
   transform: translateX(var(--nudge));
 }
 
-/* 區塊：作品列表 · 用途：CodeMind 與 QSearch 專案卡片 · 不需要可整段刪掉 */
+/* 區塊：單一作品 · 用途：只顯示一項作品的完整介紹，上方有返回全部作品 · 不需要可整段刪掉 */
+
+/* 單一作品時上面的全部作品區塊被隱藏，這裡就是頁面第一個看得到的區塊，比照 .page > .section:first-child */
+.project-single {
+  padding-top: var(--space-4);
+  border-top: 0;
+}
+
+.back-link {
+  margin-bottom: var(--space-3);
+  padding-left: 0;
+}
 
 .project-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-3);
+  max-width: var(--measure-xl);
 }
 
 .project-card,
@@ -1501,25 +1513,8 @@ h3 {
     min-height: calc(100vh - var(--topbar-height));
   }
 
-  /* 作品集兩欄：兩張卡片共用同一組橫列（subgrid），標籤、標題、介紹、截圖、角色各自對齊，
-     介紹字數不同時截圖也會在同一高度開始。CodeMind 有 8 個子元素，所以每張卡都佔 8 列 */
-  .project-grid {
-    row-gap: 0;
-  }
-
-  .project-card {
-    display: grid;
-    grid-template-rows: subgrid;
-    grid-row: span 8;
-    align-content: start;
-  }
-
   .portrait-wrap {
     max-width: var(--portrait-width);
-  }
-
-  .project-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .skill-grid {

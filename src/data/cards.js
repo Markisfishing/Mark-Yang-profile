@@ -3,8 +3,8 @@
 // 首頁載入後 app.js 會依目前語言換成中文或英文；新增卡片時兩種語言都要加進翻譯表
 // navLabel 是導覽列「作品集」下拉選單裡的短名稱；有 navKey 的項目要在 app.js 翻譯表加上中英兩種
 export const cardLists = {
-  // 首頁「作品速覽」：點了跳到作品集分頁的那一項
-  "home-projects": [
+  // 作品集分頁「全部作品」：點了只顯示那一項的完整介紹（href 對應 index.html 裡 article 的 id）
+  projects: [
     {
       href: "#codemind",
       navLabel: { en: "CodeMind", zh: "CodeMind" },

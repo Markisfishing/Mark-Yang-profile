@@ -32,6 +32,7 @@ const translations = {
     "about.p2": "I am expanding from AI and data projects into automation and full-stack development, with a focus on building useful tools and connecting the pieces into working systems.",
     "about.p3": "I am looking for internship opportunities where I can keep building and learning through real projects.",
     "projects.title": "Portfolio",
+    "projects.back": "← All work",
     "home.projects.cta": "See screenshots and details",
     "projects.contributionLabel": "My contribution",
     "projects.codemind.roleLabel": "My role",
@@ -178,6 +179,7 @@ const translations = {
     "about.p2": "目前正從 AI 與資料專案延伸到自動化與前後端開發，持續練習把不同技術整合成可以實際運作的工具。",
     "about.p3": "我正在尋找實習機會，希望在真實專案中持續實作與學習。",
     "projects.title": "作品集",
+    "projects.back": "← 返回全部作品",
     "home.projects.cta": "查看截圖與完整介紹",
     "projects.contributionLabel": "我的貢獻",
     "projects.codemind.roleLabel": "我的角色",
@@ -756,6 +758,25 @@ const topbar = document.querySelector(".topbar");
 const navIndicator = document.createElement("span");
 let currentPage = null;
 
+// 作品集分頁有兩種樣子：網址是 #projects 時顯示全部作品的卡片與互動小工具；
+// 網址是某項作品的 id（例如 #codemind）時只顯示那一項的完整介紹，上方有「返回全部作品」
+const projectOverview = document.getElementById("project-overview");
+const projectDetail = document.getElementById("project-detail");
+const projectTools = document.getElementById("tools");
+const projectArticles = projectDetail ? [...projectDetail.querySelectorAll(".project-grid > article[id]")] : [];
+let currentProject = null;
+
+function showProject(target) {
+  const article = projectArticles.includes(target) ? target : null;
+  const changed = article !== currentProject;
+  currentProject = article;
+  projectArticles.forEach((a) => { a.hidden = a !== article; });
+  projectDetail.hidden = !article;
+  projectOverview.hidden = !!article;
+  projectTools.hidden = !!article;
+  return changed;
+}
+
 navIndicator.className = "nav-indicator";
 navIndicator.setAttribute("aria-hidden", "true");
 navLinks.appendChild(navIndicator);
@@ -764,8 +785,9 @@ function showPageFromHash() {
   const id = decodeURIComponent(location.hash.slice(1));
   const target = id ? document.getElementById(id) : null;
   const page = (target ? target.closest("[data-page]") : pages[0]) || currentPage || pages[0];
-  // 第一次載入不淡入（首頁開頭有自己的進場），之後換頁才淡入
-  if (currentPage && page !== currentPage) replay(page, "is-entering");
+  const projectChanged = projectDetail ? showProject(target) : false;
+  // 第一次載入不淡入（首頁開頭有自己的進場），之後換頁、或作品集在全部與單一作品之間切換才淡入
+  if (currentPage && (page !== currentPage || projectChanged)) replay(page, "is-entering");
   currentPage = page;
 
   pages.forEach((p) => { p.hidden = p !== currentPage; });
@@ -775,7 +797,8 @@ function showPageFromHash() {
   });
   moveNavIndicator();
 
-  if (!target || target === currentPage) window.scrollTo({ top: 0, behavior: "instant" });
+  // 單一作品是整頁只剩那一項，回到頁面頂端就好
+  if (!target || target === currentPage || target === currentProject) window.scrollTo({ top: 0, behavior: "instant" });
   // 導覽列是黏在上方的，手機版會換行變高，所以用實際高度扣掉，目標才不會被蓋住
   else window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - topbar.offsetHeight, behavior: "instant" });
 }
