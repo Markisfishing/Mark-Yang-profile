@@ -9,8 +9,8 @@
     <script>
       try { document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch (e) {}
     </script>
-    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261127-spam2" />
-    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261127-spam2" />
+    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261127-spam3" />
+    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261127-spam3" />
   </head>
   <body>
     <div class="site-shell">
@@ -42,11 +42,8 @@
               <span class="guestbook-count" id="bodyCount"></span>
             </div>
             <textarea id="commentBody" name="body" rows="5" maxlength="200" data-i18n-placeholder="bodyPlaceholder" placeholder="建議、合作邀約，或打聲招呼" aria-describedby="bodyCount privacyNote bodyError"></textarea>
-            <!-- 留言框下方一行：左邊隱私提醒（送出前就看得到），右邊快捷鍵（依系統顯示 ⌘ 或 Ctrl，觸控裝置不顯示） -->
-            <div class="guestbook-help-row">
-              <p class="guestbook-privacy" id="privacyNote" data-i18n="privacy">留言會公開顯示，請勿留下電話、email 等個人資料。</p>
-              <p class="guestbook-shortcut" id="submitShortcut" aria-hidden="true">Ctrl + Enter 送出</p>
-            </div>
+            <!-- 留言框正下方的隱私提醒：送出前就看得到 -->
+            <p class="guestbook-privacy" id="privacyNote" data-i18n="privacy">留言會公開顯示，請勿留下電話、email 等個人資料。</p>
             <p class="tool-field-error" id="bodyError"></p>
           </div>
           <!-- 防洗版陷阱欄位：畫面與讀屏都看不到，真人不會填；有填就是機器人，後端直接擋掉 -->
@@ -54,7 +51,11 @@
             <label for="commentWebsite">Website</label>
             <input id="commentWebsite" name="website" type="text" tabindex="-1" autocomplete="off" />
           </div>
-          <button class="button button-primary guestbook-submit" type="submit" id="submitButton">送出留言</button>
+          <!-- 送出鈕：右邊附快捷鍵提示（依系統顯示 ⌘ 或 Ctrl，觸控裝置不顯示） -->
+          <button class="button button-primary guestbook-submit" type="submit" id="submitButton">
+            <span id="submitLabel">送出留言</span>
+            <kbd class="guestbook-shortcut" id="submitShortcut" aria-hidden="true">Ctrl + Enter</kbd>
+          </button>
           <p class="guestbook-status" id="formStatus" role="status" aria-live="polite"></p>
         </form>
 
@@ -91,7 +92,7 @@
           namePlaceholder: "例如：路過的工程師",
           bodyPlaceholder: "建議、合作邀約，或打聲招呼",
           privacy: "留言會公開顯示，請勿留下電話、email 等個人資料。",
-          shortcut: "{key} + Enter 送出",
+          shortcut: "{key} + Enter",
           submit: "送出留言",
           sending: "送出中…",
           count: "{n} / {max}",
@@ -125,7 +126,7 @@
           namePlaceholder: "e.g. A passing engineer",
           bodyPlaceholder: "Feedback, a collaboration idea, or just hi",
           privacy: "Messages are public. Please don't include phone numbers, emails, or other personal details.",
-          shortcut: "{key} + Enter to post",
+          shortcut: "{key} + Enter",
           submit: "Post message",
           sending: "Posting…",
           count: "{n} / {max}",
@@ -155,6 +156,7 @@
       const counts = { name: document.getElementById("nameCount"), body: document.getElementById("bodyCount") };
       const fieldErrors = { name: document.getElementById("nameError"), body: document.getElementById("bodyError") };
       const submitButton = document.getElementById("submitButton");
+      const submitLabel = document.getElementById("submitLabel");
       const shortcut = document.getElementById("submitShortcut");
       // Mac 用 ⌘、其他系統用 Ctrl
       const modKey = /Mac|iPhone|iPad/.test(navigator.userAgentData?.platform || navigator.platform || "") ? "⌘" : "Ctrl";
@@ -270,7 +272,7 @@
       function render() {
         // 表單
         submitButton.disabled = state.sending;
-        submitButton.textContent = t(state.sending ? "sending" : "submit");
+        submitLabel.textContent = t(state.sending ? "sending" : "submit");
         shortcut.textContent = t("shortcut", { key: modKey });
         form.setAttribute("aria-label", t("formLabel"));
         form.setAttribute("aria-busy", state.sending ? "true" : "false");
