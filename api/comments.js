@@ -4,6 +4,7 @@
 // 留言存在 Supabase（Postgres）的 comments 資料表，資料表結構在 supabase/migrations/。
 // 金鑰只在這支後端程式讀（SUPABASE_URL、SUPABASE_SECRET_KEY，放在 .env.local 與 Vercel 環境變數），
 // 網頁不直接連資料庫：資料表開了 RLS，網頁拿得到的公開金鑰讀不到也寫不進去
+const crypto = require("crypto");
 const { createClient } = require("@supabase/supabase-js");
 
 // ── 欄位規則 ─────────────────────────────────────────
@@ -16,6 +17,17 @@ const FIELDS = {
 const ALLOWED_METHODS = ["GET", "POST"];
 const MAX_BODY_BYTES = 4000;   // 兩個欄位加起來最多兩百多個字，超過這個大小一定是亂送的
 const LIST_LIMIT = 100;        // 一次最多列出最新的 100 則
+
+// ── 防洗版規則 ───────────────────────────────────────
+// 同一個來源（IP 雜湊）：兩則之間至少隔 30 秒、一小時最多 5 則；同樣的內容一小時內只能出現一次
+// 計數存在資料庫，Vercel 開幾個實例都算同一份
+const RATE_LIMITS = [
+  { windowMs: 30 * 1000, max: 1 },
+  { windowMs: 60 * 60 * 1000, max: 5 }
+];
+const DUPLICATE_WINDOW_MS = 60 * 60 * 1000;
+const MAX_LINKS = 1;           // 留言最多一個網址，塞一堆連結的幾乎都是廣告
+const HONEYPOT_FIELD = "website";  // 隱藏欄位：真人看不到不會填，機器人常把每一格都填滿
 
 // ── 資料存放：Supabase ───────────────────────────────
 // 第一次用到才建立連線物件，之後同一支程式重複使用；沒設定金鑰時回 503，不讓整支程式掛掉
@@ -43,14 +55,61 @@ async function listComments() {
   return data.map(toComment);
 }
 
-async function addComment(name, body) {
+async function addComment(name, body, ipHash) {
   const { data, error } = await getDb()
     .from("comments")
-    .insert({ name, body })
+    .insert({ name, body, ip_hash: ipHash })
     .select(COLUMNS)
     .single();
   if (error) throw dbError(error);
   return toComment(data);
+}
+
+// 檢查同一個來源是不是送太快、或重送一樣的內容；沒問題回 null，有問題回要拋出的錯誤
+async function checkSpam(ipHash, body) {
+  const now = Date.now();
+  const longest = Math.max(...RATE_LIMITS.map((rule) => rule.windowMs));
+  const since = new Date(now - Math.max(longest, DUPLICATE_WINDOW_MS)).toISOString();
+
+  const [recent, duplicate] = await Promise.all([
+    getDb().from("comments").select("created_at")
+      .eq("ip_hash", ipHash).gte("created_at", since)
+      .order("created_at", { ascending: false }).limit(Math.max(...RATE_LIMITS.map((rule) => rule.max))),
+    getDb().from("comments").select("id")
+      .eq("body", body).gte("created_at", new Date(now - DUPLICATE_WINDOW_MS).toISOString()).limit(1)
+  ]);
+  if (recent.error) throw dbError(recent.error);
+  if (duplicate.error) throw dbError(duplicate.error);
+
+  // 每條規則：視窗內的則數到上限，就要等到「視窗內最舊那則」滑出視窗才能再送
+  const times = recent.data.map((row) => Date.parse(row.created_at));
+  let waitMs = 0;
+  for (const { windowMs, max } of RATE_LIMITS) {
+    const inWindow = times.filter((time) => now - time < windowMs);
+    if (inWindow.length >= max) waitMs = Math.max(waitMs, inWindow[max - 1] + windowMs - now);
+  }
+  if (waitMs > 0) {
+    const retryAfter = Math.ceil(waitMs / 1000);
+    const wait = retryAfter >= 60 ? `${Math.ceil(retryAfter / 60)} 分鐘` : `${retryAfter} 秒`;
+    return spamError(429, "rateLimited", `留言送得太快了，請 ${wait}後再試`, { retryAfter });
+  }
+  if (duplicate.data.length) return spamError(409, "duplicate", "這則留言剛剛已經有人送過了");
+  return null;
+}
+
+// 送出者的來源：Vercel 會把真正的 IP 放在 x-forwarded-for 第一個；本機開發沒有就用連線位址
+// 只存 HMAC 雜湊，資料庫外洩也拿不到原始 IP
+function ipHashOf(req) {
+  const forwarded = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim();
+  const ip = forwarded || req.headers["x-real-ip"] || req.socket?.remoteAddress || "unknown";
+  const secret = process.env.IP_HASH_SECRET || process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+  return crypto.createHmac("sha256", secret).update(ip).digest("hex");
+}
+
+function spamError(statusCode, reason, message, extra = {}) {
+  const error = publicError(statusCode, message);
+  error.payload = { reason, ...extra };
+  return error;
 }
 
 // 資料庫的原始錯誤只印在伺服器的 log，回給使用者的是看得懂、不洩漏細節的中文
@@ -79,7 +138,19 @@ module.exports = async function handler(req, res) {
         return sendJson(res, status, { error: problems[0], problems, fieldErrors });
       }
 
-      const comment = await addComment(input.name.trim(), input.body.trim());
+      // 隱藏欄位有填：當成機器人，不存，也不說原因
+      if (input[HONEYPOT_FIELD]) {
+        status = 400;
+        return sendJson(res, status, { error: "送出失敗，請重新整理頁面再試" });
+      }
+
+      const name = input.name.trim();
+      const body = input.body.trim();
+      const ipHash = ipHashOf(req);
+      const spam = await checkSpam(ipHash, body);
+      if (spam) throw spam;
+
+      const comment = await addComment(name, body, ipHash);
       status = 201;
       return sendJson(res, status, { comment });
     }
@@ -94,9 +165,11 @@ module.exports = async function handler(req, res) {
   } catch (error) {
     // 送來的不是合法 JSON、或太大：是送的人的問題，回 4xx 和看得懂的原因；
     // 資料庫連不上回 502／503；其他才是伺服器自己出錯
+    // 送太快（429）、重複（409）也走這裡，payload 帶 reason 讓頁面換成對應語言
     status = error.statusCode || 500;
     if (!error.statusCode) console.error(error);
-    return sendJson(res, status, { error: error.publicMessage || "伺服器出錯了，請稍後再試" });
+    if (error.payload?.retryAfter) res.setHeader("Retry-After", String(error.payload.retryAfter));
+    return sendJson(res, status, { error: error.publicMessage || "伺服器出錯了，請稍後再試", ...error.payload });
   } finally {
     // 每個請求在終端機印一行：方法、網址、狀態碼。出問題時看這一行就知道請求有沒有送到後端
     console.log(`${req.method} ${req.url} → ${status}`);
@@ -104,7 +177,7 @@ module.exports = async function handler(req, res) {
 };
 
 // ── 驗證：每個欄位都要說得出哪裡錯 ─────────────────────
-// 回傳 [{ field, reason, max, message }]；reason 是 empty（空白）或 tooLong（超過上限）
+// 回傳 [{ field, reason, max, message }]；reason 是 empty（空白）、tooLong（超過上限）或 tooManyLinks（網址太多）
 function validate(input) {
   if (!input || typeof input !== "object" || Array.isArray(input)) {
     return [{ field: null, reason: "invalid", message: "送來的資料要是一個物件，包含暱稱（name）和留言內容（body）" }];
@@ -117,6 +190,13 @@ function validate(input) {
       errors.push({ field, reason: "empty", max, message: `${label}不能空白` });
     } else if (length > max) {
       errors.push({ field, reason: "tooLong", max, message: `${label}最多 ${max} 個字，現在是 ${length} 個字` });
+    }
+  }
+  // 連結太多的幾乎都是廣告：只在內容本身沒其他問題時才檢查
+  if (!errors.some((e) => e.field === "body") && typeof input.body === "string") {
+    const links = (input.body.match(/https?:\/\/|www\./gi) || []).length;
+    if (links > MAX_LINKS) {
+      errors.push({ field: "body", reason: "tooManyLinks", max: MAX_LINKS, message: `留言最多放 ${MAX_LINKS} 個網址` });
     }
   }
   return errors;
