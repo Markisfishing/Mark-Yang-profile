@@ -6,6 +6,7 @@
 import { createApp } from "vue";
 import SiteNav from "./components/SiteNav.vue";
 import ProjectCardList from "./components/ProjectCardList.vue";
+import { startNodeNetwork } from "./node-network.js";
 
 const components = { SiteNav, ProjectCardList };
 
@@ -18,3 +19,6 @@ document.querySelectorAll("[data-component]").forEach((el) => {
   }
   createApp(Component, props).mount(el);
 });
+
+// 整頁背景的節點網絡，首頁與工具頁共用
+startNodeNetwork();

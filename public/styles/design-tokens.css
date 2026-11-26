@@ -107,6 +107,7 @@
   --texture-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   --grain-size: 160px;               /* 雜訊圖塊邊長，重複鋪滿 */
   --grain-opacity: 0.03;             /* 淺色底上顆粒容易顯髒，壓得很淡 */
+  --network-opacity: 0.35;           /* 背景節點網絡整層的透明度，淺色底上線條較搶眼，壓低 */
 }
 
 /* 深色主題：由 index.html 的 data-theme="dark" 觸發，只覆寫顏色，字級與間距不變 */
@@ -133,6 +134,7 @@
   --color-error-text: #ffb4a8;
   --filter-portrait: brightness(0.82) contrast(1.05) drop-shadow(0 18px 28px rgba(0, 0, 0, 0.5)); /* 深色底下壓低人像亮度 */
   --grain-opacity: 0.06;          /* 深色底上的顆粒才是主角，比淺色明顯一倍 */
+  --network-opacity: 0.5;         /* 深色底上的節點網絡 */
 }
 
 /*
