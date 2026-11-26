@@ -6,7 +6,7 @@
 ## 技術規範
 - 直接修改 D:\project\intro，不建立新的專案資料夾
 - 延續現有 Git repository，不重新建立另一個
-- 頁面（index.html、tools/*.html）放專案根目錄給 Vite 當入口；素材、樣式與 app.js 留在 public/，不在根目錄另建 styles/
+- 頁面（index.html、guestbook.html、tools/*.html）放專案根目錄給 Vite 當入口；素材、樣式與 app.js 留在 public/，不在根目錄另建 styles/
 - 前端框架使用 Vue 3 + Vite（多頁入口）；不另外加入 React、Tailwind 或其他 UI／CSS 框架
 - 導覽列、作品卡等重複區塊抽成共用 Vue 元件，所有頁面共用同一份導覽列
 - 現有工具頁沿用 public/tools/llm-cost.html 與 public/tools/apod.html，不另做分帳、小費、天氣工具
@@ -20,7 +20,8 @@
 - 完成後部署到 Vercel
 
 ## 怎樣算做完了
-- 網站分四個分頁：首頁、作品集、關於我、AI 助理
+- 網站分五個分頁：首頁、作品集、關於我、AI 助理、留言板；前四個是 index.html 裡依 # 切換的分頁，留言板是獨立的 guestbook.html
+- 留言板讀 /api/comments 顯示留言、表單送 POST；留言先存在 api/comments.js 的記憶體陣列裡（還沒接資料庫，重開就會消失）
 - 首頁有兩個區塊：開頭（姓名與一句話介紹）、聯絡方式；作品摘要卡只放在作品集分頁
 - 關於我分頁最上方是個人簡介（三到四句），接著是我能貢獻什麼、技能、經歷
 - 作品集分頁有兩種檢視：#projects 顯示全部作品的摘要卡（截圖、標題、角色）與互動小工具；從卡片或導覽列下拉選單選某項作品（例如 #codemind）時只顯示那一項的完整介紹，上方有「返回全部作品」按鈕
@@ -37,7 +38,7 @@
 - 所有按鈕與連結都能正常使用
 - Git 修改已依功能分段 commit，訊息為繁體中文
 - Vercel 公開網址可以正常開啟
-- 首頁、LLM 成本估算、APOD 三頁都能獨立開啟，且共用同一份導覽列，連結不跳錯
+- 首頁、留言板、LLM 成本估算、APOD 四頁都能獨立開啟，且共用同一份導覽列，連結不跳錯
 - 元件化重構後兩個工具的計算、查詢與錯誤處理（含 APOD 斷網時的重試按鈕）行為不變
 - npm run build 成功，npm run preview 功能正常
 - 已建立 component-inventory.md 元件清單與元件化重構的 SKILL.md
