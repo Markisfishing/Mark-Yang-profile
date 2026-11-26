@@ -2104,6 +2104,11 @@ h3 {
   text-align: center;
 }
 
+/* 標題與說明都有 max-width，要連同區塊本身一起置中，不然寬螢幕上標題會偏左、跟說明對不齊 */
+.guestbook-page .tool-title {
+  margin-inline: auto;
+}
+
 .guestbook-page .tool-lead {
   max-width: var(--measure-sm);
   margin-inline: auto;
