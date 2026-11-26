@@ -129,7 +129,7 @@ module.exports = async function handler(req, res) {
     }
 
     if (req.method === "POST") {
-      const input = await readJson(req);
+      const input = cleanInput(await readJson(req));
       const fieldErrors = validate(input);
       if (fieldErrors.length) {
         status = 400;
@@ -144,8 +144,7 @@ module.exports = async function handler(req, res) {
         return sendJson(res, status, { error: "送出失敗，請重新整理頁面再試" });
       }
 
-      const name = input.name.trim();
-      const body = input.body.trim();
+      const { name, body } = input;
       const ipHash = ipHashOf(req);
       const spam = await checkSpam(ipHash, body);
       if (spam) throw spam;
@@ -175,6 +174,27 @@ module.exports = async function handler(req, res) {
     console.log(`${req.method} ${req.url} → ${status}`);
   }
 };
+
+// ── 清理：先把看不到、會撐版的字元處理掉，再驗證與存檔 ─────────
+// 統一換行、去掉控制字元與零寬字元（看不到卻會算進字數、也能拿來繞過重複檢查）
+// 留言最多連續空一行（不讓一則留言用一堆空行撐得很長），暱稱不能換行，連續空白縮成一個
+// 200D（零寬連字）不刪：emoji 家族、膚色組合靠它接起來
+const INVISIBLE = /[\u0000-\u0008\u000B-\u001F\u007F-\u009F\u200B-\u200C\u200E-\u200F\u2028-\u202E\u2060-\u2064\uFEFF]/g;
+function cleanText(text, { multiline }) {
+  let value = text.normalize("NFC").replace(/\r\n?/g, "\n").replace(INVISIBLE, "");
+  value = multiline
+    ? value.replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n")
+    : value.replace(/\s+/g, " ");
+  return value.trim();
+}
+
+function cleanInput(input) {
+  if (!input || typeof input !== "object" || Array.isArray(input)) return input;
+  const output = { ...input };
+  if (typeof input.name === "string") output.name = cleanText(input.name, { multiline: false });
+  if (typeof input.body === "string") output.body = cleanText(input.body, { multiline: true });
+  return output;
+}
 
 // ── 驗證：每個欄位都要說得出哪裡錯 ─────────────────────
 // 回傳 [{ field, reason, max, message }]；reason 是 empty（空白）、tooLong（超過上限）或 tooManyLinks（網址太多）
