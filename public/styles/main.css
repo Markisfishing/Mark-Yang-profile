@@ -336,9 +336,9 @@ input {
 
 .hero {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-5);
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.4fr); /* 任何寬度人像都在姓名右側，不掉到文字下面 */
+  gap: var(--space-3);
+  align-items: start; /* 單欄寬度文字很長，人像貼齊頂端才會在姓名旁 */
   min-height: auto;
   padding: var(--space-6) 0;
 }
@@ -402,6 +402,28 @@ h3 {
   margin-top: var(--space-5);
 }
 
+/* 次要連結（聯絡、履歷、GitHub）：小字底線連結，不跟上面兩顆按鈕搶焦點 */
+.hero-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.hero-links a {
+  color: var(--color-text-muted);
+  text-decoration: underline;
+  text-underline-offset: var(--underline-offset);
+  transition: color var(--motion-fast) ease;
+}
+
+.hero-links a:hover,
+.hero-links a:focus-visible {
+  color: var(--color-accent);
+}
+
 /* 重點數字：不用卡片外框，每項上方一條細線分隔；數字是主角，標籤縮小 */
 .hero-proof {
   display: grid;
@@ -460,7 +482,7 @@ h3 {
   position: relative;
   width: 100%;
   max-width: var(--portrait-width-narrow);
-  margin: 0 auto; /* 單欄時置中，不再靠左貼著文字、右邊留一大片空白 */
+  margin: 0;
 }
 
 .portrait-wrap::before {
@@ -469,6 +491,7 @@ h3 {
 
 /* 旋轉徽章：人像去背後四角是空的，徽章放進頭部旁邊的空角，不再往外破出；手機與平板在右上角，1024px 以上在左上角（靠近文字那側） */
 .hero-badge {
+  display: none;
   position: absolute;
   top: var(--space-3);
   right: 0;
@@ -792,8 +815,7 @@ h3 {
 .skill-block p,
 .timeline p,
 .agent-intro p,
-.contribution-card p,
-.contact-description {
+.contribution-card p {
   color: var(--color-text-muted);
 }
 
@@ -1115,11 +1137,10 @@ h3 {
   box-shadow: var(--shadow-card);
 }
 
+/* 推薦問題正上方的一行提示 */
 .agent-note {
-  max-width: var(--measure-xs);
-  margin-top: var(--space-4);
-  padding-left: var(--space-3);
-  border-left: var(--border-width-strong) solid var(--color-accent);
+  margin: var(--space-3) 0 var(--space-2);
+  color: var(--color-text-muted);
   font-size: var(--text-sm);
 }
 
@@ -1292,12 +1313,6 @@ h3 {
   flex-direction: column;
 }
 
-.contact-description {
-  max-width: var(--measure-sm);
-  margin-top: var(--space-4);
-  font-size: var(--text-base);
-  white-space: normal;
-}
 
 .contact-links {
   flex-direction: column;
@@ -1585,6 +1600,10 @@ h3 {
    變數不能用在 @media，所以斷點直接寫數字。
    斷點：768px 以上（平板直放、桌面）還原寬螢幕的版面 */
 @media (min-width: 768px) {
+  .hero-badge {
+    display: block; /* 手機人像太小，徽章會蓋住臉，768px 以上才顯示 */
+  }
+
   .site-shell {
     width: min(var(--max-width), calc(100% - var(--page-margin)));
   }
@@ -1674,6 +1693,7 @@ h3 {
   .hero {
     grid-template-columns: minmax(0, 1fr) var(--portrait-width);
     gap: var(--space-6);
+    align-items: center;
   }
 
   .two-column {
@@ -1714,10 +1734,6 @@ h3 {
 
   .footer {
     flex-direction: row;
-  }
-
-  .contact-description {
-    white-space: nowrap;
   }
 }
 
