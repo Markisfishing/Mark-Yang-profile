@@ -14,18 +14,18 @@
   </head>
   <body>
     <div class="site-shell">
-      <!-- 區塊：導覽列 · 用途：跟首頁同一份導覽列（src/components/SiteNav.vue），連結回首頁的各分頁 · 不需要可整段刪掉 -->
-      <div data-component="SiteNav" data-link-base="/" data-current="projects" data-lang="zh"></div>
+      <!-- 區塊：導覽列 · 用途：跟首頁同一份導覽列（src/components/SiteNav.vue），連結回首頁的各分頁，含中英與深淺色切換 · 不需要可整段刪掉 -->
+      <div data-component="SiteNav" data-link-base="/" data-current="projects" data-lang="site" data-toggles></div>
 
     <main class="tool-page">
       <!-- 區塊：返回列 · 用途：回作品集首頁 · 不需要可整段刪掉 -->
-      <a class="tool-back" href="/">← 回作品集</a>
+      <a class="tool-back" href="/" data-i18n="back">← 回作品集</a>
 
       <!-- 區塊：標題 · 用途：說明這個工具在算什麼 · 不可刪（使用者會不知道這頁是什麼） -->
       <header class="tool-header">
         <p class="eyebrow">Interactive Tool</p>
-        <h1 class="tool-title">LLM API 成本估算器</h1>
-        <p class="tool-lead">
+        <h1 class="tool-title" data-i18n="title">LLM API 成本估算器</h1>
+        <p class="tool-lead" data-i18n="lead">
           上線一個 AI 功能之前，先算一下每個月要付多少。單價請填你要用的模型在官方價目表上的價格（美元／每百萬 token）。
         </p>
       </header>
@@ -34,34 +34,34 @@
       <form class="tool-card tool-form" id="costForm" novalidate>
         <div class="tool-fields">
           <div class="tool-field">
-            <label for="inputTokens">每次呼叫的輸入 token 數</label>
-            <input id="inputTokens" name="inputTokens" inputmode="numeric" autocomplete="off" placeholder="例如 1500" aria-describedby="inputTokens-error" />
+            <label for="inputTokens" data-i18n="field.inputTokens">每次呼叫的輸入 token 數</label>
+            <input id="inputTokens" name="inputTokens" inputmode="numeric" autocomplete="off" placeholder="例如 1500" data-i18n-placeholder="placeholder.inputTokens" aria-describedby="inputTokens-error" />
             <p class="tool-field-error" id="inputTokens-error" aria-live="polite"></p>
           </div>
           <div class="tool-field">
-            <label for="outputTokens">每次呼叫的輸出 token 數</label>
-            <input id="outputTokens" name="outputTokens" inputmode="numeric" autocomplete="off" placeholder="例如 500" aria-describedby="outputTokens-error" />
+            <label for="outputTokens" data-i18n="field.outputTokens">每次呼叫的輸出 token 數</label>
+            <input id="outputTokens" name="outputTokens" inputmode="numeric" autocomplete="off" placeholder="例如 500" data-i18n-placeholder="placeholder.outputTokens" aria-describedby="outputTokens-error" />
             <p class="tool-field-error" id="outputTokens-error" aria-live="polite"></p>
           </div>
           <div class="tool-field">
-            <label for="callsPerDay">每天呼叫次數</label>
-            <input id="callsPerDay" name="callsPerDay" inputmode="numeric" autocomplete="off" placeholder="例如 1000" aria-describedby="callsPerDay-error" />
+            <label for="callsPerDay" data-i18n="field.callsPerDay">每天呼叫次數</label>
+            <input id="callsPerDay" name="callsPerDay" inputmode="numeric" autocomplete="off" placeholder="例如 1000" data-i18n-placeholder="placeholder.callsPerDay" aria-describedby="callsPerDay-error" />
             <p class="tool-field-error" id="callsPerDay-error" aria-live="polite"></p>
           </div>
           <div class="tool-field">
-            <label for="inputPrice">輸入單價（US$／百萬 token）</label>
-            <input id="inputPrice" name="inputPrice" inputmode="decimal" autocomplete="off" placeholder="例如 3" aria-describedby="inputPrice-error" />
+            <label for="inputPrice" data-i18n="field.inputPrice">輸入單價（US$／百萬 token）</label>
+            <input id="inputPrice" name="inputPrice" inputmode="decimal" autocomplete="off" placeholder="例如 3" data-i18n-placeholder="placeholder.inputPrice" aria-describedby="inputPrice-error" />
             <p class="tool-field-error" id="inputPrice-error" aria-live="polite"></p>
           </div>
           <div class="tool-field">
-            <label for="outputPrice">輸出單價（US$／百萬 token）</label>
-            <input id="outputPrice" name="outputPrice" inputmode="decimal" autocomplete="off" placeholder="例如 15" aria-describedby="outputPrice-error" />
+            <label for="outputPrice" data-i18n="field.outputPrice">輸出單價（US$／百萬 token）</label>
+            <input id="outputPrice" name="outputPrice" inputmode="decimal" autocomplete="off" placeholder="例如 15" data-i18n-placeholder="placeholder.outputPrice" aria-describedby="outputPrice-error" />
             <p class="tool-field-error" id="outputPrice-error" aria-live="polite"></p>
           </div>
         </div>
         <div class="tool-actions">
-          <button class="button button-primary" type="submit">算一下</button>
-          <button class="button button-ghost" type="reset">清空</button>
+          <button class="button button-primary" type="submit" data-i18n="submit">算一下</button>
+          <button class="button button-ghost" type="reset" data-i18n="reset">清空</button>
         </div>
       </form>
 
@@ -72,63 +72,167 @@
 
       <!-- 區塊：計算說明 · 用途：交代公式與假設，讓人知道數字怎麼來 · 不需要可整段刪掉 -->
       <section class="tool-note">
-        <h2>怎麼算的</h2>
-        <p>
+        <h2 data-i18n="note.title">怎麼算的</h2>
+        <p data-i18n="note.body">
           每月費用 ＝（輸入 token × 輸入單價 ＋ 輸出 token × 輸出單價）÷ 1,000,000 × 每天呼叫次數 × 30 天。結果無條件進位到美分。沒有算進快取折扣、批次折扣與稅金。
         </p>
       </section>
     </main>
     </div>
 
-    <!-- 區塊：計算邏輯 · 用途：事件 → 判斷 → 更新畫面 · 不可刪（按鈕會沒反應） -->
-    <script>
+    <!-- 區塊：共用元件 · 用途：畫出導覽列 · 不可刪（頁面上方會沒有導覽列）。要放在計算邏輯前面，切換鈕才已經畫好 -->
+    <script type="module" src="/src/main.js"></script>
+
+    <!-- 區塊：計算邏輯 · 用途：事件 → 判斷 → 更新畫面，並跟著中英切換重畫 · 不可刪（按鈕會沒反應） -->
+    <script type="module">
+      import { setupToolPage } from "/src/tool-page.js";
+
       const DAYS_PER_MONTH = 30;
 
-      // 每一欄的名稱與規則：integer 代表只能填整數，min 代表最小值
+      // 翻譯表：data-i18n 的 key 與程式裡用到的訊息；{n} 這類會在 t() 換成參數
+      const TEXT = {
+        zh: {
+          "meta.title": "LLM API 成本估算器 | Mark Yang",
+          "meta.description": "LLM API 成本估算器：輸入 token 用量、呼叫次數與單價，算出每月大約要花多少錢。",
+          back: "← 回作品集",
+          title: "LLM API 成本估算器",
+          lead: "上線一個 AI 功能之前，先算一下每個月要付多少。單價請填你要用的模型在官方價目表上的價格（美元／每百萬 token）。",
+          "field.inputTokens": "每次呼叫的輸入 token 數",
+          "field.outputTokens": "每次呼叫的輸出 token 數",
+          "field.callsPerDay": "每天呼叫次數",
+          "field.inputPrice": "輸入單價（US$／百萬 token）",
+          "field.outputPrice": "輸出單價（US$／百萬 token）",
+          "placeholder.inputTokens": "例如 1500",
+          "placeholder.outputTokens": "例如 500",
+          "placeholder.callsPerDay": "例如 1000",
+          "placeholder.inputPrice": "例如 3",
+          "placeholder.outputPrice": "例如 15",
+          submit: "算一下",
+          reset: "清空",
+          "note.title": "怎麼算的",
+          "note.body": "每月費用 ＝（輸入 token × 輸入單價 ＋ 輸出 token × 輸出單價）÷ 1,000,000 × 每天呼叫次數 × 30 天。結果無條件進位到美分。沒有算進快取折扣、批次折扣與稅金。",
+          // 錯誤訊息裡用的欄名（單價不帶單位，句子比較短）
+          "name.inputTokens": "每次呼叫的輸入 token 數",
+          "name.outputTokens": "每次呼叫的輸出 token 數",
+          "name.callsPerDay": "每天呼叫次數",
+          "name.inputPrice": "輸入單價",
+          "name.outputPrice": "輸出單價",
+          "error.required": "請填「{label}」",
+          "error.number": "「{label}」要填數字，你填的是「{raw}」",
+          "error.negative": "「{label}」不能是負數，你填的是 {text}",
+          "error.integer": "「{label}」要填整數，不能有小數（你填的是 {text}）",
+          "error.min": "「{label}」至少要是 {min}",
+          "error.summary": "有 {n} 欄還沒填對：",
+          empty: "填好上面五欄，按「算一下」，這裡會顯示每個月大約要花多少。",
+          "result.month": "每個月大約",
+          "result.perCall": "每次呼叫",
+          "result.perDay": "每天",
+          "result.outputShare": "輸出佔費用"
+        },
+        en: {
+          "meta.title": "LLM API Cost Estimator | Mark Yang",
+          "meta.description": "LLM API cost estimator: enter token usage, calls per day, and prices to estimate the monthly bill.",
+          back: "← Back to portfolio",
+          title: "LLM API Cost Estimator",
+          lead: "Before shipping an AI feature, estimate what it will cost each month. Enter the prices from your model's official pricing page (US$ per million tokens).",
+          "field.inputTokens": "Input tokens per call",
+          "field.outputTokens": "Output tokens per call",
+          "field.callsPerDay": "Calls per day",
+          "field.inputPrice": "Input price (US$ / 1M tokens)",
+          "field.outputPrice": "Output price (US$ / 1M tokens)",
+          "placeholder.inputTokens": "e.g. 1500",
+          "placeholder.outputTokens": "e.g. 500",
+          "placeholder.callsPerDay": "e.g. 1000",
+          "placeholder.inputPrice": "e.g. 3",
+          "placeholder.outputPrice": "e.g. 15",
+          submit: "Calculate",
+          reset: "Clear",
+          "note.title": "How it's calculated",
+          "note.body": "Monthly cost = (input tokens × input price + output tokens × output price) ÷ 1,000,000 × calls per day × 30 days. Rounded up to the cent. Caching discounts, batch discounts, and taxes are not included.",
+          "name.inputTokens": "Input tokens per call",
+          "name.outputTokens": "Output tokens per call",
+          "name.callsPerDay": "Calls per day",
+          "name.inputPrice": "Input price",
+          "name.outputPrice": "Output price",
+          "error.required": "Please fill in “{label}”",
+          "error.number": "“{label}” must be a number. You entered “{raw}”",
+          "error.negative": "“{label}” can't be negative. You entered {text}",
+          "error.integer": "“{label}” must be a whole number (you entered {text})",
+          "error.min": "“{label}” must be at least {min}",
+          "error.summary": "{n} field(s) need fixing:",
+          empty: "Fill in the five fields and press “Calculate” to see the estimated monthly cost here.",
+          "result.month": "Estimated per month",
+          "result.perCall": "Per call",
+          "result.perDay": "Per day",
+          "result.outputShare": "Output share of cost"
+        }
+      };
+
+      // 每一欄的規則：integer 代表只能填整數，min 代表最小值；欄名從翻譯表的 name.* 取
       const FIELDS = {
-        inputTokens: { label: "每次呼叫的輸入 token 數", integer: true, min: 1 },
-        outputTokens: { label: "每次呼叫的輸出 token 數", integer: true, min: 0 },
-        callsPerDay: { label: "每天呼叫次數", integer: true, min: 1 },
-        inputPrice: { label: "輸入單價", integer: false, min: 0 },
-        outputPrice: { label: "輸出單價", integer: false, min: 0 }
+        inputTokens: { integer: true, min: 1 },
+        outputTokens: { integer: true, min: 0 },
+        callsPerDay: { integer: true, min: 1 },
+        inputPrice: { integer: false, min: 0 },
+        outputPrice: { integer: false, min: 0 }
       };
 
       const form = document.getElementById("costForm");
       const result = document.getElementById("result");
 
-      // 檢查一欄：回傳 { value } 或 { error }
+      // 結果區目前的狀態與每欄的錯誤；切換語言時拿它們重畫，不用重算
+      let view = { state: "empty" };
+      const fieldErrors = {};
+
+      const { t } = setupToolPage(TEXT, () => {
+        Object.keys(FIELDS).forEach((name) => setFieldError(name, fieldErrors[name]));
+        render(false);
+      });
+      render(false);
+
+      // 檢查一欄：回傳 { value } 或 { error: { code, params } }，訊息到顯示時才依目前語言組出來
       function check(name, raw) {
         const rule = FIELDS[name];
         const text = raw.trim().replace(/,/g, "");
-        if (text === "") {
-          return { error: `請填「${rule.label}」` };
-        }
-        if (!/^-?\d*\.?\d+$/.test(text)) {
-          return { error: `「${rule.label}」要填數字，你填的是「${raw.trim()}」` };
-        }
+        const fail = (code, params = {}) => ({ error: { code, params: { name, ...params } } });
+        if (text === "") return fail("required");
+        if (!/^-?\d*\.?\d+$/.test(text)) return fail("number", { raw: raw.trim() });
         const value = Number(text);
-        if (value < 0) {
-          return { error: `「${rule.label}」不能是負數，你填的是 ${text}` };
-        }
-        if (rule.integer && !Number.isInteger(value)) {
-          return { error: `「${rule.label}」要填整數，不能有小數（你填的是 ${text}）` };
-        }
-        if (value < rule.min) {
-          return { error: `「${rule.label}」至少要是 ${rule.min}` };
-        }
+        if (value < 0) return fail("negative", { text });
+        if (rule.integer && !Number.isInteger(value)) return fail("integer", { text });
+        if (value < rule.min) return fail("min", { min: rule.min });
         return { value };
       }
 
-      function setFieldError(name, message) {
-        const input = document.getElementById(name);
-        document.getElementById(`${name}-error`).textContent = message || "";
-        input.toggleAttribute("aria-invalid", Boolean(message));
+      function errorText(error) {
+        return t(`error.${error.code}`, { ...error.params, label: t(`name.${error.params.name}`) });
       }
 
-      // 更新結果區：狀態換掉、內容換掉，並重播淡入動畫
-      function show(state, html) {
-        result.dataset.state = state;
-        result.innerHTML = html;
+      function setFieldError(name, error) {
+        fieldErrors[name] = error || null;
+        document.getElementById(`${name}-error`).textContent = error ? errorText(error) : "";
+        document.getElementById(name).toggleAttribute("aria-invalid", Boolean(error));
+      }
+
+      // 依 view 畫結果區；animate 為 false 時只換字（切換語言），不重播淡入
+      function render(animate = true) {
+        result.dataset.state = view.state;
+        if (view.state === "empty") {
+          result.innerHTML = `<p class="tool-result-message">${escapeHtml(t("empty"))}</p>`;
+        } else if (view.state === "error") {
+          const items = view.errors.map((e) => `<li>${escapeHtml(errorText(e))}</li>`).join("");
+          result.innerHTML = `<p class="tool-result-message">${escapeHtml(t("error.summary", { n: view.errors.length }))}</p><ul class="tool-error-list">${items}</ul>`;
+        } else {
+          const { perMonth, perCall, perDay, outputShare } = view;
+          result.innerHTML = `<p class="tool-result-label">${t("result.month")}</p>
+           <p class="tool-result-value">US$ ${usd(perMonth)}</p>
+           <dl class="tool-breakdown">
+             <div><dt>${t("result.perCall")}</dt><dd>US$ ${perCall.toFixed(6)}</dd></div>
+             <div><dt>${t("result.perDay")}</dt><dd>US$ ${usd(ceilCents(perDay))}</dd></div>
+             <div><dt>${t("result.outputShare")}</dt><dd>${outputShare}%</dd></div>
+           </dl>`;
+        }
+        if (!animate) return;
         result.classList.remove("is-entering");
         void result.offsetWidth;
         result.classList.add("is-entering");
@@ -151,14 +255,14 @@
         for (const name of Object.keys(FIELDS)) {
           const outcome = check(name, form.elements[name].value);
           setFieldError(name, outcome.error);
-          if (outcome.error) errors.push({ name, message: outcome.error });
+          if (outcome.error) errors.push(outcome.error);
           else values[name] = outcome.value;
         }
 
         if (errors.length > 0) {
-          const items = errors.map((e) => `<li>${escapeHtml(e.message)}</li>`).join("");
-          show("error", `<p class="tool-result-message">有 ${errors.length} 欄還沒填對：</p><ul class="tool-error-list">${items}</ul>`);
-          document.getElementById(errors[0].name).focus();
+          view = { state: "error", errors };
+          render();
+          document.getElementById(errors[0].params.name).focus();
           return;
         }
 
@@ -168,26 +272,19 @@
         const perMonth = ceilCents(perDay * DAYS_PER_MONTH);
         const outputShare = perCall === 0 ? 0 : Math.round(((values.outputTokens * values.outputPrice) / 1_000_000 / perCall) * 100);
 
-        show(
-          "success",
-          `<p class="tool-result-label">每個月大約</p>
-           <p class="tool-result-value">US$ ${usd(perMonth)}</p>
-           <dl class="tool-breakdown">
-             <div><dt>每次呼叫</dt><dd>US$ ${perCall.toFixed(6)}</dd></div>
-             <div><dt>每天</dt><dd>US$ ${usd(ceilCents(perDay))}</dd></div>
-             <div><dt>輸出佔費用</dt><dd>${outputShare}%</dd></div>
-           </dl>`
-        );
+        view = { state: "success", perMonth, perCall, perDay, outputShare };
+        render();
       });
 
       // 使用者改了某一欄，那一欄的紅字就先拿掉，不要一直掛著
       form.addEventListener("input", (event) => {
-        if (event.target.name in FIELDS) setFieldError(event.target.name, "");
+        if (event.target.name in FIELDS) setFieldError(event.target.name, null);
       });
 
       form.addEventListener("reset", () => {
-        Object.keys(FIELDS).forEach((name) => setFieldError(name, ""));
-        show("empty", `<p class="tool-result-message">填好上面五欄，按「算一下」，這裡會顯示每個月大約要花多少。</p>`);
+        Object.keys(FIELDS).forEach((name) => setFieldError(name, null));
+        view = { state: "empty" };
+        render();
       });
 
       // 錯誤訊息會回述使用者打的字，先轉義避免被當成 HTML
@@ -195,8 +292,5 @@
         return text.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
       }
     </script>
-
-    <!-- 區塊：共用元件 · 用途：畫出導覽列 · 不可刪（頁面上方會沒有導覽列） -->
-    <script type="module" src="/src/main.js"></script>
   </body>
 </html>
