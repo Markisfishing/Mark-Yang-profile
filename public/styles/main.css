@@ -538,7 +538,7 @@ h3 {
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius);
   background: var(--color-surface);
-  transition: transform 160ms ease, border-color 160ms ease;
+  transition: transform var(--motion-fast) ease, border-color var(--motion-fast) ease;
 }
 
 .preview-card:hover {
