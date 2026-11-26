@@ -9,8 +9,8 @@
     <script>
       try { document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch (e) {}
     </script>
-    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261127-guestbook" />
-    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261127-guestbook" />
+    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261127-guestbook2" />
+    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261127-guestbook2" />
   </head>
   <body>
     <div class="site-shell">
@@ -25,32 +25,37 @@
         <p class="tool-lead" data-i18n="lead">留一句話給我，或看看其他訪客說了什麼。不用登入，填暱稱就可以。</p>
       </header>
 
-      <!-- 區塊：留言表單 · 用途：填暱稱與留言後送出（POST /api/comments），送出中鎖住按鈕 · 不可刪（沒辦法留言） -->
-      <form class="tool-card tool-form" id="commentForm" novalidate>
-        <div class="tool-fields">
-          <div class="tool-field">
-            <label for="commentName" data-i18n="name">暱稱</label>
-            <input id="commentName" name="name" type="text" maxlength="20" autocomplete="nickname" aria-describedby="nameCount nameError" />
-            <p class="guestbook-count" id="nameCount" aria-live="polite"></p>
+      <!-- 區塊：主要版面 · 用途：手機上下排（先填再看）；桌面左邊填寫、右邊讀留言，填寫區黏在畫面上捲到哪都看得到 · 不可刪（表單與列表會沒有排版） -->
+      <div class="guestbook-layout">
+        <!-- 區塊：留言表單 · 用途：填暱稱與留言後送出（POST /api/comments），送出中鎖住按鈕 · 不可刪（沒辦法留言） -->
+        <form class="tool-card guestbook-form" id="commentForm" novalidate aria-labelledby="formTitle">
+          <h2 class="guestbook-heading" id="formTitle" data-i18n="formTitle">留下一句話</h2>
+          <div class="guestbook-field">
+            <div class="guestbook-label-row">
+              <label for="commentName" data-i18n="name">暱稱</label>
+              <span class="guestbook-count" id="nameCount"></span>
+            </div>
+            <input id="commentName" name="name" type="text" maxlength="20" autocomplete="nickname" enterkeyhint="next" data-i18n-placeholder="namePlaceholder" placeholder="例如：路過的工程師" aria-describedby="nameCount nameError" />
             <p class="tool-field-error" id="nameError"></p>
           </div>
-          <div class="tool-field">
-            <label for="commentBody" data-i18n="body">留言</label>
-            <textarea id="commentBody" name="body" rows="4" maxlength="200" aria-describedby="bodyCount bodyError"></textarea>
-            <p class="guestbook-count" id="bodyCount" aria-live="polite"></p>
+          <div class="guestbook-field">
+            <div class="guestbook-label-row">
+              <label for="commentBody" data-i18n="body">留言</label>
+              <span class="guestbook-count" id="bodyCount"></span>
+            </div>
+            <textarea id="commentBody" name="body" rows="5" maxlength="200" data-i18n-placeholder="bodyPlaceholder" placeholder="想對我說什麼？建議、合作邀約、或只是打聲招呼都可以" aria-describedby="bodyCount bodyError"></textarea>
             <p class="tool-field-error" id="bodyError"></p>
           </div>
-        </div>
-        <div class="tool-actions">
-          <button class="button button-primary" type="submit" id="submitButton" data-i18n="submit">送出留言</button>
-        </div>
-        <p class="guestbook-status" id="formStatus" role="status" aria-live="polite"></p>
-      </form>
+          <button class="button button-primary guestbook-submit" type="submit" id="submitButton" data-i18n="submit">送出留言</button>
+          <p class="guestbook-hint" data-i18n="hint">在留言框按 Ctrl + Enter 也可以送出</p>
+          <p class="guestbook-status" id="formStatus" role="status" aria-live="polite"></p>
+        </form>
 
-      <!-- 區塊：留言列表 · 用途：讀 GET /api/comments，顯示載入中、沒有留言、讀取失敗（附重試）與留言清單 · 不可刪（看不到留言） -->
-      <section class="tool-card tool-result guestbook-list" id="commentList" data-state="loading" aria-live="polite" aria-busy="true">
-        <p class="tool-result-message">載入中…</p>
-      </section>
+        <!-- 區塊：留言列表 · 用途：讀 GET /api/comments，顯示載入中、沒有留言、讀取失敗（附重試）與留言清單 · 不可刪（看不到留言） -->
+        <section class="tool-card tool-result guestbook-list" id="commentList" data-state="loading" aria-live="polite" aria-busy="true">
+          <p class="tool-result-message">載入中…</p>
+        </section>
+      </div>
 
       <!-- 區塊：說明 · 用途：交代留言會公開、存了哪些資料 · 不需要可整段刪掉 -->
       <section class="tool-note">
@@ -78,11 +83,15 @@
           "meta.description": "Mark Yang 作品集的留言板：留一句話給我，或看看其他訪客說了什麼。",
           title: "留言板",
           lead: "留一句話給我，或看看其他訪客說了什麼。不用登入，填暱稱就可以。",
+          formTitle: "留下一句話",
           name: "暱稱",
           body: "留言",
+          namePlaceholder: "例如：路過的工程師",
+          bodyPlaceholder: "想對我說什麼？建議、合作邀約、或只是打聲招呼都可以",
+          hint: "在留言框按 Ctrl + Enter 也可以送出",
           submit: "送出留言",
           sending: "送出中…",
-          count: "{n} / {max} 字",
+          count: "{n} / {max}",
           sent: "留言送出了，謝謝！",
           loading: "載入中…",
           empty: "還沒有人留言，來當第一個吧。",
@@ -103,11 +112,15 @@
           "meta.description": "Mark Yang's portfolio guestbook: leave me a note, or see what other visitors said.",
           title: "Guestbook",
           lead: "Leave me a note, or see what other visitors said. No sign-in needed, just a nickname.",
+          formTitle: "Leave a note",
           name: "Nickname",
           body: "Message",
+          namePlaceholder: "e.g. A passing engineer",
+          bodyPlaceholder: "Feedback, a collaboration idea, or just saying hi",
+          hint: "Press Ctrl + Enter in the message box to post",
           submit: "Post message",
           sending: "Posting…",
-          count: "{n} / {max} characters",
+          count: "{n} / {max}",
           sent: "Your message was posted. Thank you!",
           loading: "Loading…",
           empty: "No messages yet. Be the first!",
@@ -211,6 +224,9 @@
         } finally {
           state.sending = false;
           render();
+          // 有欄位不合格時，游標直接跳到第一個要改的欄位
+          const first = state.invalid.find((e) => inputs[e.field]);
+          if (first) inputs[first.field].focus();
         }
       }
 
@@ -227,7 +243,9 @@
         submitButton.textContent = t(state.sending ? "sending" : "submit");
         form.setAttribute("aria-busy", state.sending ? "true" : "false");
         for (const field of Object.keys(inputs)) {
-          counts[field].textContent = t("count", { n: length(inputs[field].value), max: LIMITS[field] });
+          const n = length(inputs[field].value);
+          counts[field].textContent = t("count", { n, max: LIMITS[field] });
+          counts[field].classList.toggle("is-near-limit", n >= LIMITS[field] * 0.9);
           const error = state.invalid.find((e) => e.field === field);
           fieldErrors[field].textContent = error ? fieldMessage(error) : "";
           if (error) inputs[field].setAttribute("aria-invalid", "true");
@@ -277,6 +295,13 @@
       function commentItem(comment) {
         const li = document.createElement("li");
         li.className = "guestbook-item";
+        // 暱稱第一個字當頭像，一眼分得出是不同人留的
+        const avatar = document.createElement("span");
+        avatar.className = "guestbook-avatar";
+        avatar.setAttribute("aria-hidden", "true");
+        avatar.textContent = [...comment.name.trim()][0] || "?";
+        const content = document.createElement("div");
+        content.className = "guestbook-content";
         const meta = document.createElement("p");
         meta.className = "guestbook-meta";
         const name = document.createElement("strong");
@@ -288,7 +313,8 @@
         const body = document.createElement("p");
         body.className = "guestbook-body";
         body.textContent = comment.body;
-        li.append(meta, body);
+        content.append(meta, body);
+        li.append(avatar, content);
         return li;
       }
 
@@ -301,6 +327,18 @@
         });
       }
       form.addEventListener("submit", submitComment);
+      // 暱稱按 Enter 不直接送出，而是跳到留言框；留言框按 Ctrl（Mac 是 ⌘）+ Enter 送出
+      inputs.name.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" || event.isComposing) return;
+        event.preventDefault();
+        inputs.body.focus();
+      });
+      inputs.body.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && (event.ctrlKey || event.metaKey) && !event.isComposing) {
+          event.preventDefault();
+          form.requestSubmit();
+        }
+      });
 
       loadComments();
     </script>

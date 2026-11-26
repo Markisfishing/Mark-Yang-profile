@@ -1801,8 +1801,7 @@ h3 {
   font-weight: 700;
 }
 
-.tool-field input,
-.tool-field textarea {
+.tool-field input {
   width: 100%;
   padding: var(--space-2) var(--space-3);
   background: var(--color-bg);
@@ -1811,15 +1810,13 @@ h3 {
   border-radius: var(--radius);
 }
 
-.tool-field input:focus,
-.tool-field textarea:focus {
+.tool-field input:focus {
   outline: none;
   border-color: var(--color-accent);
   box-shadow: 0 0 0 var(--border-width-accent) var(--color-focus-ring);
 }
 
-.tool-field input[aria-invalid],
-.tool-field textarea[aria-invalid] {
+.tool-field input[aria-invalid] {
   border-color: var(--color-error-border);
   background: var(--color-error-bg);
 }
@@ -2060,11 +2057,12 @@ h3 {
   }
 }
 
-/* 區塊：留言板（guestbook.html） · 用途：表單字數、送出結果、留言列表 · 刪掉的話留言板會沒有樣式 */
+/* 區塊：留言板（guestbook.html） · 用途：置中的版面、填寫區、留言列表 · 刪掉的話留言板會沒有樣式 */
 
-/* 留言板是第五個分頁，不是工具，沒有左邊的「回作品集」欄，所以桌面也不分欄，只限制欄寬 */
+/* 整頁置中；留言板是第五個分頁，不是工具，沒有左邊的「回作品集」欄 */
 .guestbook-page {
-  max-width: var(--measure-lg);
+  max-width: var(--measure-xl);
+  margin-inline: auto;
 }
 
 @media (min-width: 1024px) {
@@ -2073,27 +2071,147 @@ h3 {
   }
 }
 
-.tool-field textarea {
+.guestbook-page .tool-header,
+.guestbook-page .tool-note {
+  text-align: center;
+}
+
+.guestbook-page .tool-lead {
+  max-width: var(--measure-sm);
+  margin-inline: auto;
+}
+
+/* 手機與平板：先填寫、再讀留言，上下排 */
+.guestbook-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+  margin-bottom: var(--space-4);
+}
+
+.guestbook-layout > .tool-card {
+  margin-bottom: 0;
+}
+
+/* 桌面：左邊填寫、右邊讀留言；填寫區黏在導覽列下方，往下讀留言時隨時可以回覆 */
+@media (min-width: 1024px) {
+  .guestbook-layout {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: var(--space-5);
+  }
+
+  .guestbook-form {
+    position: sticky;
+    top: calc(var(--topbar-height) + var(--space-4));
+  }
+}
+
+.guestbook-heading {
+  margin: 0 0 var(--space-3);
+  color: var(--color-heading);
+  font-size: var(--text-lg);
+}
+
+/* 填寫區：一個欄位一組，標籤和字數同一行，錯誤訊息在欄位正下方 */
+.guestbook-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.guestbook-form .guestbook-heading {
+  margin-bottom: 0;
+}
+
+.guestbook-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.guestbook-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.guestbook-label-row label {
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.guestbook-field input,
+.guestbook-field textarea {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg);
+  color: var(--color-text);
   font: inherit;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.guestbook-field textarea {
+  min-height: calc(var(--space-6) * 2);
   line-height: 1.6;
   resize: vertical;
 }
 
-/* 暱稱短、留言長，平板以上也維持一欄，留言框才夠寬 */
-.guestbook-page .tool-fields {
-  grid-template-columns: 1fr;
+.guestbook-field input::placeholder,
+.guestbook-field textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+.guestbook-field input:focus,
+.guestbook-field textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 var(--border-width-accent) var(--color-focus-ring);
+}
+
+.guestbook-field [aria-invalid] {
+  border-color: var(--color-error-border);
+  background: var(--color-error-bg);
 }
 
 .guestbook-count {
-  margin: 0;
   color: var(--color-text-muted);
   font-size: var(--text-xs);
-  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 剩不到一成時字數變主色，提醒快到上限 */
+.guestbook-count.is-near-limit {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+/* 送出鈕撐滿整欄，手機上好按 */
+.guestbook-submit {
+  width: 100%;
+  justify-content: center;
+}
+
+.guestbook-hint {
+  margin: calc(var(--space-2) * -1) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  text-align: center;
+}
+
+/* 手機、平板通常沒有實體鍵盤，不顯示快捷鍵提示 */
+@media (hover: none) {
+  .guestbook-hint {
+    display: none;
+  }
 }
 
 .guestbook-status {
-  margin: var(--space-3) 0 0;
+  margin: 0;
   font-size: var(--text-sm);
+  text-align: center;
 }
 
 .guestbook-status:empty {
@@ -2112,28 +2230,46 @@ h3 {
   margin-top: var(--space-3);
 }
 
-.guestbook-heading {
-  margin: 0 0 var(--space-3);
-  font-size: var(--text-lg);
-}
-
+/* 留言列表：頭像＋（暱稱、時間、內容），一則一列，用分隔線隔開 */
 .guestbook-items {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .guestbook-item {
-  padding-top: var(--space-3);
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
   border-top: var(--border-width) solid var(--color-border);
 }
 
 .guestbook-item:first-child {
   padding-top: 0;
   border-top: 0;
+}
+
+.guestbook-item:last-child {
+  padding-bottom: 0;
+}
+
+.guestbook-avatar {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: var(--size-icon-button);
+  height: var(--size-icon-button);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-hover);
+  font-weight: 800;
+}
+
+.guestbook-content {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .guestbook-meta {
