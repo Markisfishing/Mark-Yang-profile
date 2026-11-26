@@ -21,7 +21,7 @@
 
 ## 怎樣算做完了
 - 網站分五個分頁：首頁、作品集、關於我、AI 助理、留言板；前四個是 index.html 裡依 # 切換的分頁，留言板是獨立的 guestbook.html
-- 留言板讀 /api/comments 顯示留言、表單送 POST；留言存在 Supabase 的 comments 資料表（結構在 supabase/migrations/），只有後端 api/comments.js 用伺服器端金鑰存取，資料表開 RLS 擋住公開金鑰
+- 留言板讀 /api/comments 顯示留言、表單送 POST；留言存在 Supabase 的 comments 資料表（結構在 supabase/migrations/），只有後端 api/comments.js 用伺服器端金鑰存取，資料表開 RLS 擋住公開金鑰；下架用 status 欄位（公開列表只顯示 visible）、封鎖來源用 blocked_sources 表，新留言可透過 DISCORD_WEBHOOK_URL 通知
 - 首頁有兩個區塊：開頭（姓名與一句話介紹）、聯絡方式；作品摘要卡只放在作品集分頁
 - 關於我分頁最上方是個人簡介（三到四句），接著是我能貢獻什麼、技能、經歷
 - 作品集分頁有兩種檢視：#projects 顯示全部作品的摘要卡（截圖、標題、角色）與互動小工具；從卡片或導覽列下拉選單選某項作品（例如 #codemind）時只顯示那一項的完整介紹，上方有「返回全部作品」按鈕

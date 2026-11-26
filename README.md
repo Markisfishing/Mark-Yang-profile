@@ -105,6 +105,26 @@ npm run preview
 
 `npm run build` 會打包到 `dist/`，`npm run preview` 用打包好的檔案開在 <http://localhost:4173>。也可以在打包後用 `npm start`，以 `server.js` 在 <http://localhost:3000> 提供 `dist/`。
 
+## 留言板管理
+
+留言存在 Supabase 的 `comments` 資料表（結構在 `supabase/migrations/`），目前直接在 Supabase 後台的 Table Editor 管理：
+
+| 要做的事 | 怎麼做 |
+|---|---|
+| 下架一則留言 | `comments` 表把那則的 `status` 改成 `hidden`，`hidden_at` 會自動記下時間 |
+| 恢復公開 | `status` 改回 `visible` |
+| 封鎖某個來源 | 把那則留言的 `ip_hash` 加到 `blocked_sources` 表（`reason` 可寫原因），之後那個來源送留言會被擋下 |
+| 解除封鎖 | 刪掉 `blocked_sources` 裡那一列 |
+| 永久刪除 | 在 `comments` 表刪掉那一列（救不回來，建議先用下架） |
+
+### 新留言通知（Discord）
+
+1. Discord 頻道 → 編輯頻道 → 整合 → Webhook → 新增，複製 Webhook 網址
+2. 加到 Vercel 環境變數 `DISCORD_WEBHOOK_URL`（Production），本機要測試就加到 `.env.local`
+3. 重新部署後，每則新留言都會發到那個頻道，附上留言 id、`ip_hash`（封鎖用）與 Supabase 後台連結
+
+沒設定 `DISCORD_WEBHOOK_URL` 時不會通知，留言功能照常運作。
+
 ## 我的貢獻
 
 - 負責作品集網站的內容規劃、介面實作與雙語文案整理
