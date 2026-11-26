@@ -82,6 +82,20 @@ input {
   flex-wrap: wrap;
 }
 
+/* 導覽列的半透明底會蓋住頁面的顆粒，看起來像一塊較深、較平的方框；
+   在導覽列底色上再鋪一層同樣的顆粒，質感就跟頁面接起來。導覽列是 sticky＋z-index，
+   自成一層，z-index: -1 會畫在導覽列底色之上、文字之下 */
+.topbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--texture-grain);
+  background-size: var(--grain-size);
+  opacity: var(--grain-opacity);
+}
+
 .brand,
 .actions,
 .nav-links,
