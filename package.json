@@ -12,6 +12,7 @@
     "node": "24.x"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.119.2",
     "vue": "^3.5.45"
   },
   "devDependencies": {

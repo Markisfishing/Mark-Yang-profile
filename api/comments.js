@@ -1,36 +1,72 @@
-// 留言板 API（Vercel Function）：GET 拿全部留言、POST 新增一則
+// 留言板 API（Vercel Function）：GET 拿最新的留言、POST 新增一則
 // 網址就是檔案位置：api/comments.js → /api/comments
 //
-// 留言先存在下面的陣列裡，還沒接資料庫：這支程式被關掉（重新部署、閒置被回收、本機重開）
-// 留言就會不見，只剩一開始的兩則假留言。之後換成資料庫時，只要改「資料存放」那一段
+// 留言存在 Supabase（Postgres）的 comments 資料表，資料表結構在 supabase/migrations/。
+// 金鑰只在這支後端程式讀（SUPABASE_URL、SUPABASE_SECRET_KEY，放在 .env.local 與 Vercel 環境變數），
+// 網頁不直接連資料庫：資料表開了 RLS，網頁拿得到的公開金鑰讀不到也寫不進去
+const { createClient } = require("@supabase/supabase-js");
 
 // ── 欄位規則 ─────────────────────────────────────────
-// 一則留言只有四格：id 和 createdAt 由伺服器產生，name 和 body 由使用者送
-// 長度用「字」算（[...text].length），中文、emoji 都算一個字
+// 一則留言只有四格：id 和 createdAt 由資料庫產生，name 和 body 由使用者送
+// 長度用「字」算（[...text].length），中文、emoji 都算一個字；資料表的 check 也是同樣的上限
 const FIELDS = {
   name: { label: "暱稱", max: 20 },
   body: { label: "留言內容", max: 200 }
 };
 const ALLOWED_METHODS = ["GET", "POST"];
 const MAX_BODY_BYTES = 4000;   // 兩個欄位加起來最多兩百多個字，超過這個大小一定是亂送的
-const MAX_COMMENTS = 100;      // 陣列最多留 100 則，避免記憶體被灌爆
+const LIST_LIMIT = 100;        // 一次最多列出最新的 100 則
 
-// ── 資料存放 ─────────────────────────────────────────
-// 一開始先放兩則假留言，打開留言板時才分得出「沒讀到」和「本來就是空的」
-const comments = [
-  { id: 1, name: "測試訪客", body: "這是一開始就在的示範留言。", createdAt: "2026-11-26T00:00:00.000Z" },
-  { id: 2, name: "測試訪客", body: "伺服器重開之後，只會剩下我們兩則。", createdAt: "2026-11-26T00:01:00.000Z" }
-];
-let nextId = 3;
+// ── 資料存放：Supabase ───────────────────────────────
+// 第一次用到才建立連線物件，之後同一支程式重複使用；沒設定金鑰時回 503，不讓整支程式掛掉
+let supabase = null;
+function getDb() {
+  if (supabase) return supabase;
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) throw publicError(503, "留言板暫時無法使用（資料庫尚未設定）");
+  supabase = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+  return supabase;
+}
+
+// 資料庫的欄位叫 created_at，回給前端時換成 createdAt，前端不用管資料庫怎麼命名
+const COLUMNS = "id, name, body, created_at";
+const toComment = (row) => ({ id: row.id, name: row.name, body: row.body, createdAt: row.created_at });
+
+async function listComments() {
+  const { data, error } = await getDb()
+    .from("comments")
+    .select(COLUMNS)
+    .order("created_at", { ascending: false })
+    .limit(LIST_LIMIT);
+  if (error) throw dbError(error);
+  return data.map(toComment);
+}
+
+async function addComment(name, body) {
+  const { data, error } = await getDb()
+    .from("comments")
+    .insert({ name, body })
+    .select(COLUMNS)
+    .single();
+  if (error) throw dbError(error);
+  return toComment(data);
+}
+
+// 資料庫的原始錯誤只印在伺服器的 log，回給使用者的是看得懂、不洩漏細節的中文
+function dbError(error) {
+  console.error("Supabase 錯誤：", error.message);
+  return publicError(502, "資料庫暫時連不上，請稍後再試");
+}
 
 // ── 入口：依方法分給不同的處理 ─────────────────────────
 module.exports = async function handler(req, res) {
   let status = 500;
   try {
     if (req.method === "GET") {
+      const comments = await listComments();
       status = 200;
-      // 新的在前面
-      return sendJson(res, status, { comments: [...comments].reverse() });
+      return sendJson(res, status, { comments });
     }
 
     if (req.method === "POST") {
@@ -43,15 +79,7 @@ module.exports = async function handler(req, res) {
         return sendJson(res, status, { error: problems[0], problems, fieldErrors });
       }
 
-      const comment = {
-        id: nextId++,
-        name: input.name.trim(),
-        body: input.body.trim(),
-        createdAt: new Date().toISOString()
-      };
-      comments.push(comment);
-      if (comments.length > MAX_COMMENTS) comments.splice(0, comments.length - MAX_COMMENTS);
-
+      const comment = await addComment(input.name.trim(), input.body.trim());
       status = 201;
       return sendJson(res, status, { comment });
     }
@@ -64,8 +92,10 @@ module.exports = async function handler(req, res) {
       allowed: ALLOWED_METHODS
     });
   } catch (error) {
-    // 送來的不是合法 JSON、或太大：是送的人的問題，回 4xx 和看得懂的原因；其他才是伺服器自己出錯
+    // 送來的不是合法 JSON、或太大：是送的人的問題，回 4xx 和看得懂的原因；
+    // 資料庫連不上回 502／503；其他才是伺服器自己出錯
     status = error.statusCode || 500;
+    if (!error.statusCode) console.error(error);
     return sendJson(res, status, { error: error.publicMessage || "伺服器出錯了，請稍後再試" });
   } finally {
     // 每個請求在終端機印一行：方法、網址、狀態碼。出問題時看這一行就知道請求有沒有送到後端
