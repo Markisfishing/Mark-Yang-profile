@@ -1648,12 +1648,24 @@ h3 {
     display: flex;
   }
 
+  /* 品牌、分頁、切換鈕三欄，左右兩欄等寬，分頁固定在正中間；
+     工具頁沒有切換鈕（右欄空著），分頁也不會被擠到右邊 */
   .topbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
-    flex-wrap: nowrap;
+  }
+
+  .topbar .brand {
+    justify-self: start;
+  }
+
+  .topbar .actions {
+    justify-self: end;
   }
 
   .nav-links {
+    grid-column: 2;
     order: 0;
     width: auto;
     overflow-x: visible;
