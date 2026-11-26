@@ -847,6 +847,45 @@ if ("IntersectionObserver" in window) {
   });
 }
 
+// 數字往上跳：重點數字（首頁開頭的 AUC、QSearch 的三個指標）出現在畫面時從 0 數到實際值。
+// 捲出畫面再捲回來不重播；所在的分頁或作品被隱藏、之後再顯示才重播。減少動態效果時直接顯示數字
+const COUNT_DURATION = 900; // 毫秒，比 CSS 進場（最長 600ms）稍晚收尾，數字在卡片站穩後才停
+const countTargets = new Map();
+document.querySelectorAll(".hero-proof strong, .metric-row strong").forEach((el) => {
+  const match = el.textContent.trim().match(/^(\d+(?:\.\d+)?)(%?)$/);
+  if (match) countTargets.set(el, { number: match[1], suffix: match[2] });
+});
+
+function countUp(el, { number, suffix }) {
+  const target = parseFloat(number);
+  const decimals = (number.split(".")[1] || "").length;
+  const start = performance.now();
+  function frame(now) {
+    const t = Math.min((now - start) / COUNT_DURATION, 1);
+    const eased = 1 - Math.pow(1 - t, 3); // 快出慢停，接近終點時放慢
+    el.textContent = (target * eased).toFixed(decimals) + suffix;
+    if (t < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+if ("IntersectionObserver" in window && !reduceMotion.matches && countTargets.size) {
+  const armed = new Set(countTargets.keys());
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const el = entry.target;
+      if (entry.isIntersecting) {
+        if (!armed.delete(el)) return;
+        countUp(el, countTargets.get(el));
+      } else if (entry.boundingClientRect.width === 0) {
+        // 寬度 0 代表所在的分頁或作品被隱藏了，下次顯示時再跳一次
+        armed.add(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  countTargets.forEach((_, el) => counterObserver.observe(el));
+}
+
 window.addEventListener("hashchange", showPageFromHash);
 window.addEventListener("resize", moveNavIndicator);
 showPageFromHash();

@@ -631,6 +631,12 @@ h3 {
   margin-inline: auto;
 }
 
+/* 重點數字往上跳時用等寬數字，跳動中寬度不會一直變、旁邊的字也不會跟著晃 */
+.hero-proof strong,
+.metric-row strong {
+  font-variant-numeric: tabular-nums;
+}
+
 /* 進入單一作品：返回按鈕與作品內容由上而下依序淡入上移（間隔 60ms）。
    作品平常是 hidden（display: none），每次顯示都會重播，從一項作品換到另一項也會播 */
 .project-single .back-link,
