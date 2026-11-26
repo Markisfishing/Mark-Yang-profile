@@ -7,7 +7,7 @@
 HTML 放一個掛載點，`src/main.js` 會把它換成對應的元件，掛載點上其他的 `data-*` 會變成 props：
 
 ```html
-<div data-component="SiteNav" data-link-base="/" data-current="projects" data-lang="zh"></div>
+<div data-component="SiteNav" data-link-base="/" data-current="projects" data-lang="site" data-toggles></div>
 ```
 
 要掛載的元件必須先在 `src/main.js` 的 `components` 裡登記。
@@ -26,8 +26,8 @@ HTML 放一個掛載點，`src/main.js` 會把它換成對應的元件，掛載�
 
 - `linkBase`：首頁是 `""`（在同一頁切換分頁），其他頁是 `"/"`（回到首頁再切換）。
 - `current`：目前所在分頁，會加上 `aria-current="page"`。首頁不用傳，由 `public/app.js` 依網址的 # 切換。
-- `lang`：`en` 或 `zh`。這是 app.js 翻譯之前先顯示的語言，工具頁沒有載入 app.js，所以直接給 `zh`。
-- `toggles`：要不要顯示語言與深淺色切換鈕。只有首頁載入了 app.js、切換鈕按了才有作用，所以只有首頁打開。
+- `lang`：首頁不傳（預設 `en`），由 app.js 翻譯成目前語言。工具頁給 `site`，導覽列跟著 `src/site-lang.js` 的目前語言，按切換鈕時一起重畫。
+- `toggles`：要不要顯示語言與深淺色切換鈕。首頁由 app.js 綁事件，工具頁由 `src/tool-page.js` 的 `setupToolPage()` 綁事件；新工具頁要打開它，並在自己的 module script 呼叫 `setupToolPage(翻譯表, 重畫函式)`，且要放在 `src/main.js` 的 script 之後。
 - 按鈕 id `langToggle`、`themeToggle` 與 class `.nav-links` 是 app.js 綁事件用的，不可改名。
 
 ### ProjectCardList／ProjectCard：作品卡

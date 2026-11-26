@@ -2,13 +2,15 @@
      props：
        linkBase  連結前綴。首頁是 ""（同一頁換分頁），其他頁是 "/"（回首頁再換分頁）
        current   目前所在分頁的 id（home / projects / skills / agent）；首頁不用給，由 app.js 依網址切換
-       lang      還沒被 app.js 翻譯前先顯示的語言，首頁 en、工具頁 zh
-       toggles   要不要顯示語言與深淺色切換鈕；只有載入 app.js 的首頁才有切換邏輯
+       lang      顯示的語言。首頁是 en（還沒被 app.js 翻譯前的預設，之後由 app.js 換字）；
+                 工具頁給 "site"，跟著 src/site-lang.js 的目前語言，切換時導覽列一起重畫
+       toggles   要不要顯示語言與深淺色切換鈕；首頁由 app.js、工具頁由 src/tool-page.js 綁事件
      「作品集」是下拉選單：桌面（1024px 以上且有滑鼠）滑過就展開、點文字直接到作品集；
      觸控或較窄的螢幕點「作品集」才展開，窄螢幕改在導覽列下方整排顯示 -->
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { cardLists } from "../data/cards.js";
+import { siteLang } from "../site-lang.js";
 
 const props = defineProps({
   linkBase: { type: String, default: "" },
@@ -42,7 +44,7 @@ const allWork = { key: "nav.projects.all", label: { en: "All work", zh: "全部�
 
 const href = (id) => `${props.linkBase}#${id}`;
 const linkHref = (target) => (target.startsWith("#") ? `${props.linkBase}${target}` : target);
-const text = (label) => label[props.lang] || label.en;
+const text = (label) => label[props.lang === "site" ? siteLang.value : props.lang] || label.en;
 const isExternal = (target) => !target.startsWith("#");
 
 const open = ref(false);       // 用點的展開（觸控、窄螢幕）
@@ -148,7 +150,7 @@ onBeforeUnmount(() => {
         >{{ text(item.label) }}</a>
       </template>
     </nav>
-    <!-- 按鈕的 id 給 app.js 綁事件用，不可改名 -->
+    <!-- 按鈕的 id 給 app.js（首頁）與 src/tool-page.js（工具頁）綁事件用，不可改名 -->
     <div v-if="toggles" class="actions">
       <button class="lang-toggle" type="button" id="langToggle" aria-label="Toggle language">中文</button>
       <button class="lang-toggle theme-toggle" type="button" id="themeToggle" aria-label="Toggle color theme"></button>
