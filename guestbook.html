@@ -9,8 +9,8 @@
     <script>
       try { document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch (e) {}
     </script>
-    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261127-guestbook2" />
-    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261127-guestbook2" />
+    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261127-guestbook3" />
+    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261127-guestbook3" />
   </head>
   <body>
     <div class="site-shell">
@@ -20,16 +20,14 @@
     <main class="tool-page guestbook-page">
       <!-- 區塊：標題 · 用途：說明這一頁可以做什麼 · 不可刪（訪客會不知道這頁是什麼） -->
       <header class="tool-header">
-        <p class="eyebrow">Guestbook</p>
         <h1 class="tool-title" data-i18n="title">留言板</h1>
-        <p class="tool-lead" data-i18n="lead">留一句話給我，或看看其他訪客說了什麼。不用登入，填暱稱就可以。</p>
+        <p class="tool-lead" data-i18n="lead">想說什麼都可以，不用登入。</p>
       </header>
 
       <!-- 區塊：主要版面 · 用途：手機上下排（先填再看）；桌面左邊填寫、右邊讀留言，填寫區黏在畫面上捲到哪都看得到 · 不可刪（表單與列表會沒有排版） -->
       <div class="guestbook-layout">
         <!-- 區塊：留言表單 · 用途：填暱稱與留言後送出（POST /api/comments），送出中鎖住按鈕 · 不可刪（沒辦法留言） -->
-        <form class="tool-card guestbook-form" id="commentForm" novalidate aria-labelledby="formTitle">
-          <h2 class="guestbook-heading" id="formTitle" data-i18n="formTitle">留下一句話</h2>
+        <form class="tool-card guestbook-form" id="commentForm" novalidate aria-label="寫留言">
           <div class="guestbook-field">
             <div class="guestbook-label-row">
               <label for="commentName" data-i18n="name">暱稱</label>
@@ -43,11 +41,15 @@
               <label for="commentBody" data-i18n="body">留言</label>
               <span class="guestbook-count" id="bodyCount"></span>
             </div>
-            <textarea id="commentBody" name="body" rows="5" maxlength="200" data-i18n-placeholder="bodyPlaceholder" placeholder="想對我說什麼？建議、合作邀約、或只是打聲招呼都可以" aria-describedby="bodyCount bodyError"></textarea>
+            <textarea id="commentBody" name="body" rows="5" maxlength="200" data-i18n-placeholder="bodyPlaceholder" placeholder="建議、合作邀約，或打聲招呼" aria-describedby="bodyCount privacyNote bodyError"></textarea>
+            <p class="guestbook-privacy" id="privacyNote" data-i18n="privacy">留言會公開顯示，請勿留下電話、email 等個人資料。</p>
             <p class="tool-field-error" id="bodyError"></p>
           </div>
-          <button class="button button-primary guestbook-submit" type="submit" id="submitButton" data-i18n="submit">送出留言</button>
-          <p class="guestbook-hint" data-i18n="hint">在留言框按 Ctrl + Enter 也可以送出</p>
+          <!-- 送出鈕右側的按鍵提示依系統顯示 ⌘ 或 Ctrl，只在有實體鍵盤的裝置出現 -->
+          <button class="button button-primary guestbook-submit" type="submit" id="submitButton">
+            <span id="submitLabel">送出留言</span>
+            <kbd class="guestbook-kbd" id="submitKbd" aria-hidden="true">Ctrl ↵</kbd>
+          </button>
           <p class="guestbook-status" id="formStatus" role="status" aria-live="polite"></p>
         </form>
 
@@ -57,11 +59,6 @@
         </section>
       </div>
 
-      <!-- 區塊：說明 · 用途：交代留言會公開、存了哪些資料 · 不需要可整段刪掉 -->
-      <section class="tool-note">
-        <h2 data-i18n="note.title">關於這個留言板</h2>
-        <p data-i18n="note.body">留言會公開顯示給所有訪客，存在網站的資料庫裡，只會記下暱稱、留言內容和時間。請不要留下電話、email 等個人資料。</p>
-      </section>
     </main>
     </div>
 
@@ -80,22 +77,23 @@
       const TEXT = {
         zh: {
           "meta.title": "留言板 | Mark Yang",
-          "meta.description": "Mark Yang 作品集的留言板：留一句話給我，或看看其他訪客說了什麼。",
+          "meta.description": "Mark Yang 作品集的留言板：想說什麼都可以，不用登入。",
           title: "留言板",
-          lead: "留一句話給我，或看看其他訪客說了什麼。不用登入，填暱稱就可以。",
-          formTitle: "留下一句話",
+          lead: "想說什麼都可以，不用登入。",
+          formLabel: "寫留言",
           name: "暱稱",
           body: "留言",
           namePlaceholder: "例如：路過的工程師",
-          bodyPlaceholder: "想對我說什麼？建議、合作邀約、或只是打聲招呼都可以",
-          hint: "在留言框按 Ctrl + Enter 也可以送出",
+          bodyPlaceholder: "建議、合作邀約，或打聲招呼",
+          privacy: "留言會公開顯示，請勿留下電話、email 等個人資料。",
           submit: "送出留言",
           sending: "送出中…",
           count: "{n} / {max}",
           sent: "留言送出了，謝謝！",
           loading: "載入中…",
           empty: "還沒有人留言，來當第一個吧。",
-          heading: "共 {n} 則留言",
+          heading: "留言（{n}）",
+          justNow: "剛剛",
           retry: "重試",
           "error.load": "讀不到留言（{reason}），請稍後再試。",
           "error.send": "送不出去（{reason}），留言還在表單裡，可以再按一次送出。",
@@ -103,28 +101,27 @@
           "error.network": "連不上伺服器",
           "error.server": "伺服器出錯了（{status}）",
           "field.empty": "{label}不能空白",
-          "field.tooLong": "{label}最多 {max} 個字",
-          "note.title": "關於這個留言板",
-          "note.body": "留言會公開顯示給所有訪客，存在網站的資料庫裡，只會記下暱稱、留言內容和時間。請不要留下電話、email 等個人資料。"
+          "field.tooLong": "{label}最多 {max} 個字"
         },
         en: {
           "meta.title": "Guestbook | Mark Yang",
-          "meta.description": "Mark Yang's portfolio guestbook: leave me a note, or see what other visitors said.",
+          "meta.description": "Mark Yang's portfolio guestbook: say anything you like, no sign-in needed.",
           title: "Guestbook",
-          lead: "Leave me a note, or see what other visitors said. No sign-in needed, just a nickname.",
-          formTitle: "Leave a note",
+          lead: "Say anything you like. No sign-in needed.",
+          formLabel: "Write a message",
           name: "Nickname",
           body: "Message",
           namePlaceholder: "e.g. A passing engineer",
-          bodyPlaceholder: "Feedback, a collaboration idea, or just saying hi",
-          hint: "Press Ctrl + Enter in the message box to post",
+          bodyPlaceholder: "Feedback, a collaboration idea, or just hi",
+          privacy: "Messages are public. Please don't include phone numbers, emails, or other personal details.",
           submit: "Post message",
           sending: "Posting…",
           count: "{n} / {max}",
           sent: "Your message was posted. Thank you!",
           loading: "Loading…",
           empty: "No messages yet. Be the first!",
-          heading: "{n} messages",
+          heading: "Messages ({n})",
+          justNow: "just now",
           retry: "Retry",
           "error.load": "Couldn't load messages ({reason}). Please try again later.",
           "error.send": "Couldn't post ({reason}). Your message is still in the form, so you can try again.",
@@ -132,9 +129,7 @@
           "error.network": "couldn't reach the server",
           "error.server": "server error {status}",
           "field.empty": "{label} can't be blank",
-          "field.tooLong": "{label} can be at most {max} characters",
-          "note.title": "About this guestbook",
-          "note.body": "Messages are shown publicly to every visitor and stored in the site's database with only the nickname, message, and time. Please don't leave phone numbers, emails, or other personal details."
+          "field.tooLong": "{label} can be at most {max} characters"
         }
       };
 
@@ -143,6 +138,10 @@
       const counts = { name: document.getElementById("nameCount"), body: document.getElementById("bodyCount") };
       const fieldErrors = { name: document.getElementById("nameError"), body: document.getElementById("bodyError") };
       const submitButton = document.getElementById("submitButton");
+      const submitLabel = document.getElementById("submitLabel");
+      // Mac 用 ⌘、其他系統用 Ctrl
+      const isMac = /Mac|iPhone|iPad/.test(navigator.userAgentData?.platform || navigator.platform || "");
+      document.getElementById("submitKbd").textContent = `${isMac ? "⌘" : "Ctrl"} ↵`;
       const formStatus = document.getElementById("formStatus");
       const list = document.getElementById("commentList");
 
@@ -240,7 +239,8 @@
       function render() {
         // 表單
         submitButton.disabled = state.sending;
-        submitButton.textContent = t(state.sending ? "sending" : "submit");
+        submitLabel.textContent = t(state.sending ? "sending" : "submit");
+        form.setAttribute("aria-label", t("formLabel"));
         form.setAttribute("aria-busy", state.sending ? "true" : "false");
         for (const field of Object.keys(inputs)) {
           const n = length(inputs[field].value);
@@ -292,24 +292,59 @@
         return p;
       }
 
+      // 頭像底色：依暱稱算出固定的一組顏色（同一個暱稱永遠同色），四組都取自 design-tokens 既有的顏色
+      const AVATAR_TONES = 4;
+      function avatarTone(name) {
+        let hash = 0;
+        for (const char of name) hash = (hash * 31 + char.codePointAt(0)) >>> 0;
+        return hash % AVATAR_TONES;
+      }
+
+      // 時間：一分鐘內「剛剛」、一週內用相對時間（3 分鐘前、2 天前），更早顯示短日期（11/26，跨年才加年份）
+      // 完整時間放在 title，滑鼠停在上面看得到
+      const MINUTE = 60 * 1000;
+      const RELATIVE_STEPS = [["day", 24 * 60 * MINUTE], ["hour", 60 * MINUTE], ["minute", MINUTE]];
+      function relativeTime(iso) {
+        const date = new Date(iso);
+        const diff = Date.now() - date.getTime();
+        const locale = lang() === "zh" ? "zh-TW" : "en-US";
+        if (diff < MINUTE) return t("justNow");
+        if (diff < 7 * 24 * 60 * MINUTE) {
+          const [unit, size] = RELATIVE_STEPS.find(([, ms]) => diff >= ms);
+          return new Intl.RelativeTimeFormat(locale, { numeric: "always" }).format(-Math.floor(diff / size), unit);
+        }
+        const sameYear = date.getFullYear() === new Date().getFullYear();
+        return date.toLocaleDateString(locale, sameYear ? { month: "numeric", day: "numeric" } : { year: "numeric", month: "numeric", day: "numeric" });
+      }
+      function fullTime(iso) {
+        return new Date(iso).toLocaleString(lang() === "zh" ? "zh-TW" : "en-US", { dateStyle: "long", timeStyle: "short" });
+      }
+      function updateTime(node) {
+        node.textContent = relativeTime(node.dateTime);
+        node.title = fullTime(node.dateTime);
+      }
+
       function commentItem(comment) {
         const li = document.createElement("li");
         li.className = "guestbook-item";
-        // 暱稱第一個字當頭像，一眼分得出是不同人留的
+        // 頭像：暱稱第一個字＋依暱稱固定的底色；暱稱只有一個字時頭像改放人形圖示，不會跟暱稱重複
+        const name = comment.name.trim();
         const avatar = document.createElement("span");
         avatar.className = "guestbook-avatar";
+        avatar.dataset.tone = avatarTone(name);
         avatar.setAttribute("aria-hidden", "true");
-        avatar.textContent = [...comment.name.trim()][0] || "?";
+        if ([...name].length > 1) avatar.textContent = [...name][0];
+        else avatar.innerHTML = '<svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" /></svg>';
         const content = document.createElement("div");
         content.className = "guestbook-content";
         const meta = document.createElement("p");
         meta.className = "guestbook-meta";
-        const name = document.createElement("strong");
-        name.textContent = comment.name;
+        const nameNode = document.createElement("strong");
+        nameNode.textContent = comment.name;
         const time = document.createElement("time");
         time.dateTime = comment.createdAt;
-        time.textContent = new Date(comment.createdAt).toLocaleString(lang() === "zh" ? "zh-TW" : "en-US", { dateStyle: "medium", timeStyle: "short" });
-        meta.append(name, time);
+        updateTime(time);
+        meta.append(nameNode, time);
         const body = document.createElement("p");
         body.className = "guestbook-body";
         body.textContent = comment.body;
@@ -317,6 +352,9 @@
         li.append(avatar, content);
         return li;
       }
+
+      // 每分鐘只更新時間文字（不重畫整個列表，螢幕閱讀器才不會每分鐘重念一次）
+      setInterval(() => list.querySelectorAll("time").forEach(updateTime), MINUTE);
 
       // 打字時更新字數，並清掉那一格的錯誤提示
       for (const field of Object.keys(inputs)) {
