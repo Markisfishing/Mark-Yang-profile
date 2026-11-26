@@ -14,7 +14,7 @@ export const cardLists = {
       titleKey: "projects.codemind.title",
       body: "Lead developer | Teacher Web, backend teaching workflows, and weakness-diagnosis integration",
       bodyKey: "projects.codemind.contribution",
-      cta: "See screenshots and details",
+      cta: "See full details",
       ctaKey: "home.projects.cta"
     },
     {
@@ -26,7 +26,7 @@ export const cardLists = {
       titleKey: "projects.qsearch.title",
       body: "Team leadership, weighted-index design, data cleaning, model comparison, and project direction",
       bodyKey: "projects.qsearch.contribution",
-      cta: "See screenshots and details",
+      cta: "See full details",
       ctaKey: "home.projects.cta"
     },
     {
@@ -38,7 +38,7 @@ export const cardLists = {
       titleKey: "projects.threads.title",
       body: "Solo project | full-stack development, analytics pipeline, LLM output checking, and testing, built with Claude Code",
       bodyKey: "projects.threads.contribution",
-      cta: "See screenshots and details",
+      cta: "See full details",
       ctaKey: "home.projects.cta"
     }
   ],
