@@ -460,8 +460,7 @@ h3 {
   position: relative;
   width: 100%;
   max-width: var(--portrait-width-narrow);
-  margin: 0;
-  transform: translateY(var(--portrait-offset));
+  margin: 0 auto; /* 單欄時置中，不再靠左貼著文字、右邊留一大片空白 */
 }
 
 .portrait-wrap::before {
@@ -1692,6 +1691,8 @@ h3 {
 
   .portrait-wrap {
     max-width: var(--portrait-width);
+    margin: 0;
+    transform: translateY(var(--portrait-offset)); /* 位移只在雙欄時需要 */
   }
 
   .hero-badge {
@@ -2071,8 +2072,8 @@ h3 {
   }
 }
 
-.guestbook-page .tool-header,
-.guestbook-page .tool-note {
+/* 只有頁首置中，下面的表單與列表全部靠左，視線不用來回跳 */
+.guestbook-page .tool-header {
   text-align: center;
 }
 
@@ -2184,43 +2185,41 @@ h3 {
   font-weight: 700;
 }
 
-/* 隱私提醒緊貼在留言框下方，送出前就看得到 */
-.guestbook-privacy {
+/* 留言框下方一行：左邊隱私提醒、右邊快捷鍵，窄的時候快捷鍵換到下一行仍靠右 */
+.guestbook-help-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-3);
+}
+
+.guestbook-privacy,
+.guestbook-shortcut {
   margin: 0;
   color: var(--color-text-muted);
   font-size: var(--text-xs);
 }
 
-/* 送出鈕撐滿整欄，手機上好按；右側的按鍵提示（⌘ ↵／Ctrl ↵）跟文字同一行 */
-.guestbook-submit {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  width: 100%;
+.guestbook-shortcut {
+  margin-left: auto;
+  white-space: nowrap;
 }
 
-.guestbook-kbd {
-  padding: 0 var(--space-1);
-  border: var(--border-width) solid currentColor;
-  border-radius: var(--radius);
-  font-family: inherit;
-  font-size: var(--text-xs);
-  font-weight: 400;
-  opacity: 0.75;
-}
-
-/* 手機、平板通常沒有實體鍵盤，不顯示按鍵提示 */
+/* 手機、平板通常沒有實體鍵盤，不顯示快捷鍵 */
 @media (hover: none) {
-  .guestbook-kbd {
+  .guestbook-shortcut {
     display: none;
   }
+}
+
+/* 送出鈕撐滿整欄，手機上好按 */
+.guestbook-submit {
+  width: 100%;
 }
 
 .guestbook-status {
   margin: 0;
   font-size: var(--text-sm);
-  text-align: center;
 }
 
 .guestbook-status:empty {
@@ -2324,6 +2323,11 @@ h3 {
   color: var(--color-text-muted);
   font-size: var(--text-xs);
   cursor: help;
+}
+
+/* 暱稱 · 3 分鐘前 */
+.guestbook-meta time::before {
+  content: "· ";
 }
 
 /* 留言保留訪客打的換行，長網址或一長串英文也會折行，不會撐出橫向捲軸 */
