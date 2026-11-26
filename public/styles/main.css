@@ -2,8 +2,11 @@
   box-sizing: border-box;
 }
 
+/* 預留捲軸的位置：工具算出結果、APOD 載入圖片、切換分頁時頁面從「不用捲」變成「要捲」，
+   捲軸冒出來會把整頁（含導覽列）往左擠 8px，看起來像跑版 */
 html {
   scroll-behavior: smooth;
+  scrollbar-gutter: stable;
 }
 
 body {
