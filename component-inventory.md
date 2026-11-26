@@ -33,7 +33,7 @@ HTML 放一個掛載點，`src/main.js` 會把它換成對應的元件，掛載�
 
 ### ProjectCardList／ProjectCard：作品卡
 
-- 卡片資料放在 `src/data/cards.js`，目前有兩組：`projects`（CodeMind、QSearch）和 `tools`（LLM 成本估算、APOD）。
+- 卡片資料放在 `src/data/cards.js`，目前有兩組：`projects`（CodeMind、SNA 社群貼文爆紅預測、Threads Analyzer）和 `tools`（LLM 成本估算、APOD）。
 - 新增一張卡，只要在清單裡加一筆資料；有 `image` 就顯示封面，有 `tags` 就顯示標籤。
 - `*Key` 對應 `public/app.js` 翻譯表的 key，所以新增卡片時中英兩種語言都要加進翻譯表。
 
