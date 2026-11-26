@@ -470,7 +470,7 @@ h3 {
 
 .hero-badge-text {
   fill: var(--color-accent);
-  font-size: var(--text-base); /* 徽章變小後字跟著縮，用大一級的字維持可讀 */
+  font-size: var(--text-lg); /* 徽章越小字跟著縮，用大字撐住可讀性；字形會依圓周長度自動壓縮 */
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
