@@ -108,6 +108,8 @@
   --grain-size: 160px;               /* 雜訊圖塊邊長，重複鋪滿 */
   --grain-opacity: 0.03;             /* 淺色底上顆粒容易顯髒，壓得很淡 */
   --network-opacity: 0.35;           /* 背景節點網絡整層的透明度，淺色底上線條較搶眼，壓低 */
+  --size-badge: clamp(88px, 9vw, 120px); /* 人像角落旋轉徽章的直徑，手機 88px、桌面最大 120px */
+  --motion-spin: 24s;                /* 徽章轉一圈的時間，慢到像在呼吸，不會搶走目光 */
 }
 
 /* 深色主題：由 index.html 的 data-theme="dark" 觸發，只覆寫顏色，字級與間距不變 */
