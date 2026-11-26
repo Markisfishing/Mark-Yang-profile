@@ -4,8 +4,14 @@
 // 留言存在 Supabase（Postgres）的 comments 資料表，資料表結構在 supabase/migrations/。
 // 金鑰只在這支後端程式讀（SUPABASE_URL、SUPABASE_SECRET_KEY，放在 .env.local 與 Vercel 環境變數），
 // 網頁不直接連資料庫：資料表開了 RLS，網頁拿得到的公開金鑰讀不到也寫不進去
+//
+// 管理留言（在 Supabase 後台 Table Editor 操作）：
+//   下架：comments 表把 status 改成 hidden（改回 visible 就恢復），公開列表只顯示 visible
+//   封鎖：把那則留言的 ip_hash 加到 blocked_sources 表，那個來源之後送不出留言
+//   通知：設定 DISCORD_WEBHOOK_URL 後，每則新留言都會發到 Discord（見 api/_notify.js）
 const crypto = require("crypto");
 const { createClient } = require("@supabase/supabase-js");
+const { notifyNewComment } = require("./_notify.js");
 
 // ── 欄位規則 ─────────────────────────────────────────
 // 一則留言只有四格：id 和 createdAt 由資料庫產生，name 和 body 由使用者送
@@ -49,6 +55,7 @@ async function listComments() {
   const { data, error } = await getDb()
     .from("comments")
     .select(COLUMNS)
+    .eq("status", "visible")
     .order("created_at", { ascending: false })
     .limit(LIST_LIMIT);
   if (error) throw dbError(error);
@@ -63,6 +70,13 @@ async function addComment(name, body, ipHash) {
     .single();
   if (error) throw dbError(error);
   return toComment(data);
+}
+
+// 這個來源有沒有在封鎖名單上（blocked_sources 表）
+async function isBlocked(ipHash) {
+  const { data, error } = await getDb().from("blocked_sources").select("ip_hash").eq("ip_hash", ipHash).limit(1);
+  if (error) throw dbError(error);
+  return data.length > 0;
 }
 
 // 檢查同一個來源是不是送太快、或重送一樣的內容；沒問題回 null，有問題回要拋出的錯誤
@@ -146,10 +160,14 @@ module.exports = async function handler(req, res) {
 
       const { name, body } = input;
       const ipHash = ipHashOf(req);
+      // 被封鎖的來源：只說「無法留言」，不說被封鎖，免得對方換個方式再來
+      if (await isBlocked(ipHash)) throw spamError(403, "blocked", "目前無法留言");
       const spam = await checkSpam(ipHash, body);
       if (spam) throw spam;
 
       const comment = await addComment(name, body, ipHash);
+      // 等通知送出再回應（最多 3 秒）：Vercel 回應送出後程式可能就被暫停，通知會發不出去
+      await notifyNewComment(comment, ipHash);
       status = 201;
       return sendJson(res, status, { comment });
     }

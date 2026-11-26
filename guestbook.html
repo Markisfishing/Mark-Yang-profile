@@ -9,8 +9,8 @@
     <script>
       try { document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch (e) {}
     </script>
-    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261127-gb1" />
-    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261127-gb1" />
+    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261127-gb2" />
+    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261127-gb2" />
   </head>
   <body>
     <div class="site-shell">
@@ -109,6 +109,7 @@
           "error.server": "伺服器出錯了（{status}）",
           "error.rateLimited": "留言送得太快了，請 {wait}後再試。",
           "error.duplicate": "這則留言剛剛已經有人送過了。",
+          "error.blocked": "目前無法留言。",
           cooldown: "{n} 秒後可再送",
           mine: "你的留言",
           "wait.seconds": "{n} 秒",
@@ -145,6 +146,7 @@
           "error.server": "server error {status}",
           "error.rateLimited": "You're posting too fast. Please try again in {wait}.",
           "error.duplicate": "This exact message was just posted.",
+          "error.blocked": "You can't post messages right now.",
           cooldown: "Wait {n}s",
           mine: "Yours",
           "wait.seconds": "{n} seconds",
@@ -247,8 +249,8 @@
             // 後端說哪一格不對：標在那一格底下；中文介面直接用伺服器的原因，英文介面依代碼換成英文
             state.invalid = Array.isArray(data.fieldErrors) ? data.fieldErrors : [];
             if (!state.invalid.some((e) => e.field)) state.formError = { kind: "message", text: data.error };
-          } else if (response.status === 429 || response.status === 409) {
-            // 送太快、重複送：留言留在表單裡，顯示要等多久或為什麼；送太快時按鈕倒數，數完才能再按
+          } else if (response.status === 429 || response.status === 409 || response.status === 403) {
+            // 送太快、重複送、來源被封鎖：留言留在表單裡，顯示要等多久或為什麼；送太快時按鈕倒數，數完才能再按
             state.formError = { kind: data.reason || "rateLimited", retryAfter: data.retryAfter, text: data.error };
             if (response.status === 429) startCooldown(Number(data.retryAfter) || 30);
           } else if (!response.ok) {
@@ -310,6 +312,7 @@
       function formErrorText(error) {
         if (error.kind === "message") return error.text;
         if (error.kind === "duplicate") return t("error.duplicate");
+        if (error.kind === "blocked") return t("error.blocked");
         if (error.kind === "rateLimited") {
           const s = cooldownLeft() || Number(error.retryAfter) || 30;
           const wait = s >= 60 ? t("wait.minutes", { n: Math.ceil(s / 60) }) : t("wait.seconds", { n: s });

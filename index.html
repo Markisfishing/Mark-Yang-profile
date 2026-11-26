@@ -15,8 +15,8 @@
     <script>
       try { document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch (e) {}
     </script>
-    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261127-gb1" />
-    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261127-gb1" />
+    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261127-gb2" />
+    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261127-gb2" />
   </head>
   <body>
     <div class="site-shell">
@@ -607,6 +607,6 @@
 
     <!-- 先由 Vue 畫出導覽列與作品卡，app.js 再接手中英切換、聊天與截圖；兩支都是延後執行，順序不可對調 -->
     <script type="module" src="/src/main.js"></script>
-    <script src="/app.js?cache-bust=20261127-gb1" defer></script>
+    <script src="/app.js?cache-bust=20261127-gb2" defer></script>
   </body>
 </html>
