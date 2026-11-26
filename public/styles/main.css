@@ -394,9 +394,25 @@ h3 {
   margin-top: var(--space-5);
 }
 
-.hero-proof div {
+/* 每項都是連到該作品的連結：滑過時上方細線變主色、標題變主色，告訴訪客可以點 */
+.hero-proof a {
+  display: block;
   padding-top: var(--space-3);
   border-top: var(--border-width) solid var(--color-border);
+  transition: border-color var(--motion-fast) ease;
+}
+
+.hero-proof a:hover,
+.hero-proof a:focus-visible {
+  border-top-color: var(--color-accent);
+}
+
+.hero-proof strong {
+  transition: color var(--motion-fast) ease;
+}
+
+.hero-proof a:hover strong {
+  color: var(--color-accent-hover);
 }
 
 .hero-proof strong,
