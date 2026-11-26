@@ -709,19 +709,33 @@ h3 {
   border-top: 0;
 }
 
-/* 返回按鈕固定在區塊左上角，不跟著下方置中的作品內容縮排 */
+/* 手機、平板：返回按鈕在上、作品內容撐滿下方 */
 .back-link {
   display: inline-flex;
   margin-bottom: var(--space-3);
 }
 
-/* 作品內容限制欄寬並水平置中 */
 .project-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-3);
-  max-width: var(--measure-xl);
-  margin-inline: auto;
+}
+
+/* 桌面：左邊一條窄欄放返回按鈕，往下捲時黏在導覽列下方；作品內容從頂端開始、撐滿右邊 */
+@media (min-width: 1024px) {
+  .project-single {
+    display: grid;
+    grid-template-columns: var(--column-back) minmax(0, 1fr);
+    column-gap: var(--space-5);
+    align-items: start;
+  }
+
+  .project-single .back-link {
+    position: sticky;
+    top: calc(var(--topbar-height) + var(--space-4));
+    justify-self: start;
+    margin-bottom: 0;
+  }
 }
 
 /* 重點數字往上跳時用等寬數字，跳動中寬度不會一直變、旁邊的字也不會跟著晃 */
@@ -1694,9 +1708,31 @@ h3 {
 /* 區塊：互動工具頁 · 用途：tools/ 底下各個小工具共用的版面（手機優先，768 以上欄位排兩欄） · 刪掉的話 tools/ 的頁面會沒有樣式 */
 
 .tool-page {
-  max-width: var(--measure);
-  margin-inline: auto;
   padding: var(--space-5) 0 var(--space-6);
+}
+
+/* 桌面：跟單一作品同一套版面，左邊窄欄放「回作品集」並黏在導覽列下方，其餘內容撐滿右邊。
+   返回連結要跨過右邊全部四個區塊（標題、表單、結果、說明）才黏得住，新增區塊時 span 要跟著加 */
+@media (min-width: 1024px) {
+  .tool-page {
+    display: grid;
+    grid-template-columns: var(--column-back) minmax(0, 1fr);
+    column-gap: var(--space-5);
+    align-items: start;
+  }
+
+  .tool-page > * {
+    grid-column: 2;
+  }
+
+  .tool-page > .tool-back {
+    position: sticky;
+    top: calc(var(--topbar-height) + var(--space-4));
+    grid-column: 1;
+    grid-row: 1 / span 4;
+    justify-self: start;
+    margin-bottom: 0;
+  }
 }
 
 .tool-back {

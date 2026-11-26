@@ -78,6 +78,7 @@
   --measure-xl: 880px;
   --column-min-sm: 240px;            /* 雙欄版面左欄最小寬度（關於我、經歷） */
   --column-min-md: 260px;            /* AI 助理左欄最小寬度 */
+  --column-back: 180px;              /* 單一作品與工具頁左側返回欄寬（桌面才分欄） */
   --chat-min-height: 320px;          /* 聊天記錄區最小與最大高度 */
   --chat-max-height: 480px;
   --bubble-max-width: 620px;         /* 聊天泡泡最大寬度 */
