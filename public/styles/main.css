@@ -176,6 +176,19 @@ input {
   display: none;
 }
 
+/* 展開時往下滑入並淡入：選單平常是 display: none，每次顯示都會重播一次動畫，收起時直接消失 */
+.nav-menu,
+.nav-panel {
+  animation: menu-in var(--motion-base) var(--motion-ease);
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--motion-rise) * -1));
+  }
+}
+
 .nav-menu-link {
   display: block;
   padding: var(--space-2) var(--space-3);
