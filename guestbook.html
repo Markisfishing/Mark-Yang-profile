@@ -9,8 +9,8 @@
     <script>
       try { document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch (e) {}
     </script>
-    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261127-copy2" />
-    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261127-copy2" />
+    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261127-spam1" />
+    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261127-spam1" />
   </head>
   <body>
     <div class="site-shell">
@@ -48,6 +48,11 @@
               <p class="guestbook-shortcut" id="submitShortcut" aria-hidden="true">Ctrl + Enter 送出</p>
             </div>
             <p class="tool-field-error" id="bodyError"></p>
+          </div>
+          <!-- 防洗版陷阱欄位：畫面與讀屏都看不到，真人不會填；有填就是機器人，後端直接擋掉 -->
+          <div class="guestbook-trap" aria-hidden="true">
+            <label for="commentWebsite">Website</label>
+            <input id="commentWebsite" name="website" type="text" tabindex="-1" autocomplete="off" />
           </div>
           <button class="button button-primary guestbook-submit" type="submit" id="submitButton">送出留言</button>
           <p class="guestbook-status" id="formStatus" role="status" aria-live="polite"></p>
@@ -101,8 +106,13 @@
           "error.timeout": "伺服器超過 8 秒沒有回應",
           "error.network": "連不上伺服器",
           "error.server": "伺服器出錯了（{status}）",
+          "error.rateLimited": "留言送得太快了，請 {wait}後再試。",
+          "error.duplicate": "這則留言剛剛已經有人送過了。",
+          "wait.seconds": "{n} 秒",
+          "wait.minutes": "{n} 分鐘",
           "field.empty": "{label}不能空白",
-          "field.tooLong": "{label}最多 {max} 個字"
+          "field.tooLong": "{label}最多 {max} 個字",
+          "field.tooManyLinks": "留言最多放 {max} 個網址"
         },
         en: {
           "meta.title": "Guestbook | Mark Yang",
@@ -130,8 +140,13 @@
           "error.timeout": "the server didn't respond within 8 seconds",
           "error.network": "couldn't reach the server",
           "error.server": "server error {status}",
+          "error.rateLimited": "You're posting too fast. Please try again in {wait}.",
+          "error.duplicate": "This exact message was just posted.",
+          "wait.seconds": "{n} seconds",
+          "wait.minutes": "{n} minutes",
           "field.empty": "{label} can't be blank",
-          "field.tooLong": "{label} can be at most {max} characters"
+          "field.tooLong": "{label} can be at most {max} characters",
+          "field.tooManyLinks": "Messages can include at most {max} link"
         }
       };
 
@@ -144,6 +159,7 @@
       // Mac 用 ⌘、其他系統用 Ctrl
       const modKey = /Mac|iPhone|iPad/.test(navigator.userAgentData?.platform || navigator.platform || "") ? "⌘" : "Ctrl";
       const formStatus = document.getElementById("formStatus");
+      const trap = document.getElementById("commentWebsite");
       const list = document.getElementById("commentList");
 
       // 畫面狀態：重畫（例如切換語言）時照這份資料重新產生，不用再打一次 API
@@ -204,12 +220,15 @@
           const { response, data } = await request({
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name: inputs.name.value, body: inputs.body.value })
+            body: JSON.stringify({ name: inputs.name.value, body: inputs.body.value, website: trap.value })
           });
           if (response.status === 400) {
             // 後端說哪一格不對：標在那一格底下；中文介面直接用伺服器的原因，英文介面依代碼換成英文
             state.invalid = Array.isArray(data.fieldErrors) ? data.fieldErrors : [];
             if (!state.invalid.some((e) => e.field)) state.formError = { kind: "message", text: data.error };
+          } else if (response.status === 429 || response.status === 409) {
+            // 送太快、重複送：留言留在表單裡，顯示要等多久或為什麼
+            state.formError = { kind: data.reason || "rateLimited", retryAfter: data.retryAfter, text: data.error };
           } else if (!response.ok) {
             throw { kind: "server", status: response.status };
           } else {
@@ -228,6 +247,17 @@
           const first = state.invalid.find((e) => inputs[e.field]);
           if (first) inputs[first.field].focus();
         }
+      }
+
+      function formErrorText(error) {
+        if (error.kind === "message") return error.text;
+        if (error.kind === "duplicate") return t("error.duplicate");
+        if (error.kind === "rateLimited") {
+          const s = Number(error.retryAfter) || 30;
+          const wait = s >= 60 ? t("wait.minutes", { n: Math.ceil(s / 60) }) : t("wait.seconds", { n: s });
+          return t("error.rateLimited", { wait });
+        }
+        return t("error.send", { reason: reasonText(error) });
       }
 
       function fieldMessage(error) {
@@ -255,7 +285,7 @@
         }
         formStatus.dataset.state = state.formError ? "error" : state.sent ? "ok" : "";
         if (state.formError) {
-          formStatus.textContent = state.formError.kind === "message" ? state.formError.text : t("error.send", { reason: reasonText(state.formError) });
+          formStatus.textContent = formErrorText(state.formError);
         } else {
           formStatus.textContent = state.sent ? t("sent") : "";
         }

@@ -2213,11 +2213,17 @@ h3 {
 }
 
 /* 留言框下方一行：左邊隱私提醒、右邊快捷鍵，窄的時候快捷鍵換到下一行仍靠右 */
+/* 隱私提醒可以折成兩行，快捷鍵固定一行貼在右上，不會被擠到下一行變成孤零零的一塊 */
 .guestbook-help-row {
   display: flex;
-  flex-wrap: wrap;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: var(--space-1) var(--space-3);
+  gap: var(--space-3);
+}
+
+.guestbook-privacy {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .guestbook-privacy,
@@ -2228,8 +2234,17 @@ h3 {
 }
 
 .guestbook-shortcut {
-  margin-left: auto;
+  flex: 0 0 auto;
   white-space: nowrap;
+}
+
+/* 防洗版陷阱欄位：移出畫面但不用 display:none（有些機器人會跳過 display:none 的欄位） */
+.guestbook-trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 
 /* 手機、平板通常沒有實體鍵盤，不顯示快捷鍵 */
