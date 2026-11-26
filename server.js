@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const chatHandler = require("./api/chat");
 const apodHandler = require("./api/apod");
+const commentsHandler = require("./api/comments");
 
 const root = __dirname;
 // 改用 Vite 之後，頁面要先 npm run build 打包到 dist/，這支伺服器再提供打包好的檔案
@@ -30,6 +31,10 @@ const server = http.createServer(async (req, res) => {
 
   if ((req.url || "").split("?")[0] === "/api/apod") {
     return apodHandler(req, res);
+  }
+
+  if ((req.url || "").split("?")[0] === "/api/comments") {
+    return commentsHandler(req, res);
   }
 
   const urlPath = decodeURIComponent((req.url || "/").split("?")[0]);
