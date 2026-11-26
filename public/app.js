@@ -20,7 +20,7 @@ const translations = {
     "hero.askAgent": "Ask AI Profile Agent",
     "hero.download": "Resume",
     "hero.contact": "Contact Me",
-    "hero.proof.qsearch": "QSearch test AUC · Top-1,000 hit rate 54.9%",
+    "hero.proof.qsearch": "QSearch Top-1,000 candidate hit rate · LightGBM test AUC 0.7227",
     "hero.proof.codemindTitle": "4 subsystems",
     "hero.proof.codemind": "CodeMind: Teacher Web, Backend API, VS Code extension, and diagnosis service",
     "hero.proof.threadsTitle": "Live online",
@@ -168,7 +168,7 @@ const translations = {
     "hero.askAgent": "詢問 AI Profile Agent",
     "hero.download": "履歷",
     "hero.contact": "聯絡我",
-    "hero.proof.qsearch": "QSearch 測試 AUC｜前 1,000 篇命中率 54.9%",
+    "hero.proof.qsearch": "QSearch 前 1,000 篇候選命中率｜LightGBM 測試 AUC 0.7227",
     "hero.proof.codemindTitle": "4 個子系統",
     "hero.proof.codemind": "CodeMind 整合 Teacher Web、Backend API、VS Code 擴充與診斷服務",
     "hero.proof.threadsTitle": "已上線",
@@ -849,7 +849,7 @@ if ("IntersectionObserver" in window) {
   });
 }
 
-// 數字往上跳：重點數字（首頁開頭的 AUC、QSearch 的三個指標）出現在畫面時從 0 數到實際值。
+// 數字往上跳：重點數字（首頁開頭的命中率、QSearch 的三個指標）出現在畫面時從 0 數到實際值。
 // 捲出畫面再捲回來不重播；所在的分頁或作品被隱藏、之後再顯示才重播。減少動態效果時直接顯示數字
 const COUNT_DURATION = 900; // 毫秒，比 CSS 進場（最長 600ms）稍晚收尾，數字在卡片站穩後才停
 const countTargets = new Map();
