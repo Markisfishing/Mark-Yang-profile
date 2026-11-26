@@ -645,6 +645,17 @@ h3 {
   margin-bottom: var(--space-5);
 }
 
+.section-heading-lead {
+  margin-bottom: var(--space-4);
+}
+
+/* 導引句：頁籤已標明是作品集，這裡只說明怎麼用，字級用小標題而非頁面大標 */
+.section-heading-lead h2 {
+  color: var(--color-text-muted);
+  font-size: var(--text-lg);
+  font-weight: 500;
+}
+
 .section-intro {
   max-width: var(--measure);
   margin: var(--space-3) 0 0;
