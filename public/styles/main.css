@@ -1745,6 +1745,32 @@ h3 {
 }
 
 /* 結果出現時淡入並往上移，讓人看得出「剛剛換了」；rise 也給首頁開頭與捲動進場共用 */
+/* 工具頁第一次開啟：返回連結、標題、輸入區、結果、說明依序淡入上移（間隔 60ms）。
+   結果卡另外用 fade-in：它換結果時會用 is-entering 重播 rise，動畫名稱相同時瀏覽器不會重播 */
+.tool-page > * {
+  animation: rise var(--motion-duration) var(--motion-ease) backwards;
+}
+
+.tool-page > :nth-child(2) {
+  animation-delay: var(--motion-stagger);
+}
+
+.tool-page > :nth-child(3) {
+  animation-delay: calc(var(--motion-stagger) * 2);
+}
+
+.tool-page > :nth-child(4) {
+  animation-delay: calc(var(--motion-stagger) * 3);
+}
+
+.tool-page > :nth-child(n + 5) {
+  animation-delay: calc(var(--motion-stagger) * 4);
+}
+
+.tool-page > .tool-result:not(.is-entering) {
+  animation-name: fade-in;
+}
+
 .tool-result.is-entering {
   animation: rise var(--motion-duration) ease-out;
 }
