@@ -14,6 +14,18 @@ body {
   line-height: 1.6;
 }
 
+/* 背景顆粒：固定在畫面上、放在所有內容後面，卡片有自己的底色會蓋住，只有頁面底色看得到；不擋滑鼠 */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--texture-grain);
+  background-size: var(--grain-size);
+  opacity: var(--grain-opacity);
+}
+
 a {
   color: inherit;
   text-decoration: none;
