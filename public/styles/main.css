@@ -1801,7 +1801,8 @@ h3 {
   font-weight: 700;
 }
 
-.tool-field input {
+.tool-field input,
+.tool-field textarea {
   width: 100%;
   padding: var(--space-2) var(--space-3);
   background: var(--color-bg);
@@ -1810,13 +1811,15 @@ h3 {
   border-radius: var(--radius);
 }
 
-.tool-field input:focus {
+.tool-field input:focus,
+.tool-field textarea:focus {
   outline: none;
   border-color: var(--color-accent);
   box-shadow: 0 0 0 var(--border-width-accent) var(--color-focus-ring);
 }
 
-.tool-field input[aria-invalid] {
+.tool-field input[aria-invalid],
+.tool-field textarea[aria-invalid] {
   border-color: var(--color-error-border);
   background: var(--color-error-bg);
 }
@@ -2055,6 +2058,108 @@ h3 {
     flex-direction: column;
     gap: 0;
   }
+}
+
+/* 區塊：留言板（guestbook.html） · 用途：表單字數、送出結果、留言列表 · 刪掉的話留言板會沒有樣式 */
+
+/* 留言板是第五個分頁，不是工具，沒有左邊的「回作品集」欄，所以桌面也不分欄，只限制欄寬 */
+.guestbook-page {
+  max-width: var(--measure-lg);
+}
+
+@media (min-width: 1024px) {
+  .guestbook-page {
+    display: block;
+  }
+}
+
+.tool-field textarea {
+  font: inherit;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+/* 暱稱短、留言長，平板以上也維持一欄，留言框才夠寬 */
+.guestbook-page .tool-fields {
+  grid-template-columns: 1fr;
+}
+
+.guestbook-count {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  text-align: right;
+}
+
+.guestbook-status {
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-sm);
+}
+
+.guestbook-status:empty {
+  display: none;
+}
+
+.guestbook-status[data-state="ok"] {
+  color: var(--color-accent);
+}
+
+.guestbook-status[data-state="error"] {
+  color: var(--color-error-text);
+}
+
+.guestbook-list .button {
+  margin-top: var(--space-3);
+}
+
+.guestbook-heading {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-lg);
+}
+
+.guestbook-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guestbook-item {
+  padding-top: var(--space-3);
+  border-top: var(--border-width) solid var(--color-border);
+}
+
+.guestbook-item:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.guestbook-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-2);
+  margin: 0 0 var(--space-1);
+}
+
+.guestbook-meta strong {
+  color: var(--color-heading);
+  overflow-wrap: anywhere;
+}
+
+.guestbook-meta time {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+/* 留言保留訪客打的換行，長網址或一長串英文也會折行，不會撐出橫向捲軸 */
+.guestbook-body {
+  margin: 0;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 /* 打開系統「減少動態效果」的人：動畫與轉場全部縮成瞬間完成，功能不受影響。

@@ -35,10 +35,12 @@ module.exports = async function handler(req, res) {
 
     if (req.method === "POST") {
       const input = await readJson(req);
-      const problems = validate(input);
-      if (problems.length) {
+      const fieldErrors = validate(input);
+      if (fieldErrors.length) {
         status = 400;
-        return sendJson(res, status, { error: problems[0], problems });
+        // problems 是給人看的中文原因；fieldErrors 讓頁面標出是哪一格，英文介面也能自己換成英文
+        const problems = fieldErrors.map((e) => e.message);
+        return sendJson(res, status, { error: problems[0], problems, fieldErrors });
       }
 
       const comment = {
@@ -72,20 +74,22 @@ module.exports = async function handler(req, res) {
 };
 
 // ── 驗證：每個欄位都要說得出哪裡錯 ─────────────────────
+// 回傳 [{ field, reason, max, message }]；reason 是 empty（空白）或 tooLong（超過上限）
 function validate(input) {
-  const problems = [];
   if (!input || typeof input !== "object" || Array.isArray(input)) {
-    return ["送來的資料要是一個物件，包含暱稱（name）和留言內容（body）"];
+    return [{ field: null, reason: "invalid", message: "送來的資料要是一個物件，包含暱稱（name）和留言內容（body）" }];
   }
-  for (const [key, { label, max }] of Object.entries(FIELDS)) {
-    const value = input[key];
-    if (typeof value !== "string" || !value.trim()) {
-      problems.push(`${label}不能空白`);
-    } else if ([...value.trim()].length > max) {
-      problems.push(`${label}最多 ${max} 個字，現在是 ${[...value.trim()].length} 個字`);
+  const errors = [];
+  for (const [field, { label, max }] of Object.entries(FIELDS)) {
+    const value = input[field];
+    const length = typeof value === "string" ? [...value.trim()].length : 0;
+    if (!length) {
+      errors.push({ field, reason: "empty", max, message: `${label}不能空白` });
+    } else if (length > max) {
+      errors.push({ field, reason: "tooLong", max, message: `${label}最多 ${max} 個字，現在是 ${length} 個字` });
     }
   }
-  return problems;
+  return errors;
 }
 
 // ── 讀取請求內容 ─────────────────────────────────────

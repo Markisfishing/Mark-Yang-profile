@@ -6,12 +6,13 @@ import vue from "@vitejs/plugin-vue";
 const require = createRequire(import.meta.url);
 const root = fileURLToPath(new URL(".", import.meta.url));
 
-// 本機的 npm run dev／npm run preview 也要能用 AI 聊天與 APOD：
+// 本機的 npm run dev／npm run preview 也要能用 AI 聊天、APOD 與留言板：
 // 直接把 api/ 底下 Vercel 用的同一支 handler 掛到 Vite 伺服器上，不用另外開 server.js
 function localApi() {
   const routes = {
     "/api/chat": require("./api/chat.js"),
-    "/api/apod": require("./api/apod.js")
+    "/api/apod": require("./api/apod.js"),
+    "/api/comments": require("./api/comments.js")
   };
   const mount = (server) => {
     server.middlewares.use((req, res, next) => {
@@ -34,9 +35,10 @@ export default defineConfig(({ mode }) => {
     plugins: [vue(), localApi()],
     build: {
       rolldownOptions: {
-        // 多頁入口：首頁與兩個工具頁各自是一個 HTML，共用 src/components 裡的元件
+        // 多頁入口：首頁、留言板與兩個工具頁各自是一個 HTML，共用 src/components 裡的元件
         input: {
           main: fileURLToPath(new URL("index.html", import.meta.url)),
+          guestbook: fileURLToPath(new URL("guestbook.html", import.meta.url)),
           llmCost: fileURLToPath(new URL("tools/llm-cost.html", import.meta.url)),
           apod: fileURLToPath(new URL("tools/apod.html", import.meta.url))
         }

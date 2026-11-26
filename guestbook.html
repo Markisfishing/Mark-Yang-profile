@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Mark Yang 作品集的留言板：留一句話給我，或看看其他訪客說了什麼。" />
+    <title>留言板 | Mark Yang</title>
+    <!-- 區塊：深淺色主題 · 用途：沿用首頁記住的深淺色設定 · 不需要可整段刪掉（會固定淺色） -->
+    <script>
+      try { document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch (e) {}
+    </script>
+    <link rel="stylesheet" href="/styles/design-tokens.css?cache-bust=20261127-guestbook" />
+    <link rel="stylesheet" href="/styles/main.css?cache-bust=20261127-guestbook" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <!-- 區塊：導覽列 · 用途：跟首頁同一份導覽列（src/components/SiteNav.vue），「留言板」是第五個分頁 · 不可刪（訪客回不了其他分頁） -->
+      <div data-component="SiteNav" data-link-base="/" data-current="guestbook" data-lang="site" data-toggles></div>
+
+    <main class="tool-page guestbook-page">
+      <!-- 區塊：標題 · 用途：說明這一頁可以做什麼 · 不可刪（訪客會不知道這頁是什麼） -->
+      <header class="tool-header">
+        <p class="eyebrow">Guestbook</p>
+        <h1 class="tool-title" data-i18n="title">留言板</h1>
+        <p class="tool-lead" data-i18n="lead">留一句話給我，或看看其他訪客說了什麼。不用登入，填暱稱就可以。</p>
+      </header>
+
+      <!-- 區塊：留言表單 · 用途：填暱稱與留言後送出（POST /api/comments），送出中鎖住按鈕 · 不可刪（沒辦法留言） -->
+      <form class="tool-card tool-form" id="commentForm" novalidate>
+        <div class="tool-fields">
+          <div class="tool-field">
+            <label for="commentName" data-i18n="name">暱稱</label>
+            <input id="commentName" name="name" type="text" maxlength="20" autocomplete="nickname" aria-describedby="nameCount nameError" />
+            <p class="guestbook-count" id="nameCount" aria-live="polite"></p>
+            <p class="tool-field-error" id="nameError"></p>
+          </div>
+          <div class="tool-field">
+            <label for="commentBody" data-i18n="body">留言</label>
+            <textarea id="commentBody" name="body" rows="4" maxlength="200" aria-describedby="bodyCount bodyError"></textarea>
+            <p class="guestbook-count" id="bodyCount" aria-live="polite"></p>
+            <p class="tool-field-error" id="bodyError"></p>
+          </div>
+        </div>
+        <div class="tool-actions">
+          <button class="button button-primary" type="submit" id="submitButton" data-i18n="submit">送出留言</button>
+        </div>
+        <p class="guestbook-status" id="formStatus" role="status" aria-live="polite"></p>
+      </form>
+
+      <!-- 區塊：留言列表 · 用途：讀 GET /api/comments，顯示載入中、沒有留言、讀取失敗（附重試）與留言清單 · 不可刪（看不到留言） -->
+      <section class="tool-card tool-result guestbook-list" id="commentList" data-state="loading" aria-live="polite" aria-busy="true">
+        <p class="tool-result-message">載入中…</p>
+      </section>
+
+      <!-- 區塊：說明 · 用途：交代留言存在哪、什麼時候會消失 · 不需要可整段刪掉 -->
+      <section class="tool-note">
+        <h2 data-i18n="note.title">關於這個留言板</h2>
+        <p data-i18n="note.body">留言存在網站伺服器的記憶體裡，還沒有接資料庫，所以伺服器重新啟動後只會剩下兩則示範留言。請不要留下電話、email 等個人資料。</p>
+      </section>
+    </main>
+    </div>
+
+    <!-- 區塊：共用元件 · 用途：畫出導覽列 · 不可刪（頁面上方會沒有導覽列）。要放在留言邏輯前面，切換鈕才已經畫好 -->
+    <script type="module" src="/src/main.js"></script>
+
+    <!-- 區塊：留言邏輯 · 用途：讀留言、送留言、顯示錯誤，並跟著中英切換重畫 · 不可刪（表單和列表會沒反應） -->
+    <script type="module">
+      import { setupToolPage } from "/src/tool-page.js";
+
+      const API_URL = "/api/comments";
+      const TIMEOUT_MS = 8000;  // 每次請求最多等 8 秒
+      const LIMITS = { name: 20, body: 200 };  // 跟 api/comments.js 的上限一致；真正的檢查在後端
+
+      // 翻譯表：data-i18n 的 key 與程式裡用到的訊息；{n} 這類會在 t() 換成參數
+      const TEXT = {
+        zh: {
+          "meta.title": "留言板 | Mark Yang",
+          "meta.description": "Mark Yang 作品集的留言板：留一句話給我，或看看其他訪客說了什麼。",
+          title: "留言板",
+          lead: "留一句話給我，或看看其他訪客說了什麼。不用登入，填暱稱就可以。",
+          name: "暱稱",
+          body: "留言",
+          submit: "送出留言",
+          sending: "送出中…",
+          count: "{n} / {max} 字",
+          sent: "留言送出了，謝謝！",
+          loading: "載入中…",
+          empty: "還沒有人留言，來當第一個吧。",
+          heading: "共 {n} 則留言",
+          retry: "重試",
+          "error.load": "讀不到留言（{reason}），請稍後再試。",
+          "error.send": "送不出去（{reason}），留言還在表單裡，可以再按一次送出。",
+          "error.timeout": "伺服器超過 8 秒沒有回應",
+          "error.network": "連不上伺服器",
+          "error.server": "伺服器出錯了（{status}）",
+          "field.empty": "{label}不能空白",
+          "field.tooLong": "{label}最多 {max} 個字",
+          "note.title": "關於這個留言板",
+          "note.body": "留言存在網站伺服器的記憶體裡，還沒有接資料庫，所以伺服器重新啟動後只會剩下兩則示範留言。請不要留下電話、email 等個人資料。"
+        },
+        en: {
+          "meta.title": "Guestbook | Mark Yang",
+          "meta.description": "Mark Yang's portfolio guestbook: leave me a note, or see what other visitors said.",
+          title: "Guestbook",
+          lead: "Leave me a note, or see what other visitors said. No sign-in needed, just a nickname.",
+          name: "Nickname",
+          body: "Message",
+          submit: "Post message",
+          sending: "Posting…",
+          count: "{n} / {max} characters",
+          sent: "Your message was posted. Thank you!",
+          loading: "Loading…",
+          empty: "No messages yet. Be the first!",
+          heading: "{n} messages",
+          retry: "Retry",
+          "error.load": "Couldn't load messages ({reason}). Please try again later.",
+          "error.send": "Couldn't post ({reason}). Your message is still in the form, so you can try again.",
+          "error.timeout": "the server didn't respond within 8 seconds",
+          "error.network": "couldn't reach the server",
+          "error.server": "server error {status}",
+          "field.empty": "{label} can't be blank",
+          "field.tooLong": "{label} can be at most {max} characters",
+          "note.title": "About this guestbook",
+          "note.body": "Messages are kept in the server's memory and there's no database yet, so after the server restarts only the two sample messages remain. Please don't leave phone numbers, emails, or other personal details."
+        }
+      };
+
+      const form = document.getElementById("commentForm");
+      const inputs = { name: document.getElementById("commentName"), body: document.getElementById("commentBody") };
+      const counts = { name: document.getElementById("nameCount"), body: document.getElementById("bodyCount") };
+      const fieldErrors = { name: document.getElementById("nameError"), body: document.getElementById("bodyError") };
+      const submitButton = document.getElementById("submitButton");
+      const formStatus = document.getElementById("formStatus");
+      const list = document.getElementById("commentList");
+
+      // 畫面狀態：重畫（例如切換語言）時照這份資料重新產生，不用再打一次 API
+      const state = { list: "loading", comments: [], listError: null, sending: false, formError: null, sent: false, invalid: [] };
+
+      const { t, lang } = setupToolPage(TEXT, render);
+
+      // 字數用「字」算，跟後端一樣（中文、emoji 都算一個字）
+      const length = (text) => [...text.trim()].length;
+
+      // 請求加上逾時；逾時、斷線、伺服器錯誤都轉成一個 { kind, status } 給畫面用
+      async function request(options = {}) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+        try {
+          const response = await fetch(API_URL, { ...options, signal: controller.signal });
+          const data = await response.json().catch(() => ({}));
+          return { response, data };
+        } catch (error) {
+          throw { kind: error.name === "AbortError" ? "timeout" : "network" };
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+
+      function reasonText(error) {
+        if (error.kind === "timeout") return t("error.timeout");
+        if (error.kind === "network") return t("error.network");
+        return t("error.server", { status: error.status });
+      }
+
+      // 讀留言
+      async function loadComments() {
+        state.list = "loading";
+        render();
+        try {
+          const { response, data } = await request();
+          if (!response.ok) throw { kind: "server", status: response.status };
+          state.comments = Array.isArray(data.comments) ? data.comments : [];
+          state.list = "ready";
+        } catch (error) {
+          state.list = "error";
+          state.listError = error;
+        }
+        render();
+      }
+
+      // 送留言：送出中鎖住按鈕，不管成功失敗最後都解鎖
+      async function submitComment(event) {
+        event.preventDefault();
+        if (state.sending) return;
+        state.sending = true;
+        state.formError = null;
+        state.sent = false;
+        state.invalid = [];
+        render();
+        try {
+          const { response, data } = await request({
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: inputs.name.value, body: inputs.body.value })
+          });
+          if (response.status === 400) {
+            // 後端說哪一格不對：標在那一格底下；中文介面直接用伺服器的原因，英文介面依代碼換成英文
+            state.invalid = Array.isArray(data.fieldErrors) ? data.fieldErrors : [];
+            if (!state.invalid.some((e) => e.field)) state.formError = { kind: "message", text: data.error };
+          } else if (!response.ok) {
+            throw { kind: "server", status: response.status };
+          } else {
+            // 送出成功：把伺服器回的那一筆（含 id 與時間）放到最上面，表單清空
+            state.comments = [data.comment, ...state.comments];
+            if (state.list !== "ready") state.list = "ready";
+            state.sent = true;
+            form.reset();
+          }
+        } catch (error) {
+          state.formError = error;
+        } finally {
+          state.sending = false;
+          render();
+        }
+      }
+
+      function fieldMessage(error) {
+        if (lang() === "zh" && error.message) return error.message;
+        const label = t(error.field);
+        return t(`field.${error.reason}`, { label, max: error.max });
+      }
+
+      // 依 state 重畫表單提示與留言列表；別人打的字一律用 textContent 放進畫面，不當成 HTML
+      function render() {
+        // 表單
+        submitButton.disabled = state.sending;
+        submitButton.textContent = t(state.sending ? "sending" : "submit");
+        form.setAttribute("aria-busy", state.sending ? "true" : "false");
+        for (const field of Object.keys(inputs)) {
+          counts[field].textContent = t("count", { n: length(inputs[field].value), max: LIMITS[field] });
+          const error = state.invalid.find((e) => e.field === field);
+          fieldErrors[field].textContent = error ? fieldMessage(error) : "";
+          if (error) inputs[field].setAttribute("aria-invalid", "true");
+          else inputs[field].removeAttribute("aria-invalid");
+        }
+        formStatus.dataset.state = state.formError ? "error" : state.sent ? "ok" : "";
+        if (state.formError) {
+          formStatus.textContent = state.formError.kind === "message" ? state.formError.text : t("error.send", { reason: reasonText(state.formError) });
+        } else {
+          formStatus.textContent = state.sent ? t("sent") : "";
+        }
+
+        // 列表
+        list.dataset.state = state.list === "ready" && !state.comments.length ? "empty" : state.list;
+        list.setAttribute("aria-busy", state.list === "loading" ? "true" : "false");
+        list.replaceChildren();
+        if (state.list === "loading") {
+          list.append(message(t("loading")));
+        } else if (state.list === "error") {
+          list.append(message(t("error.load", { reason: reasonText(state.listError) })));
+          const retry = document.createElement("button");
+          retry.className = "button button-ghost";
+          retry.type = "button";
+          retry.textContent = t("retry");
+          retry.addEventListener("click", loadComments);
+          list.append(retry);
+        } else if (!state.comments.length) {
+          list.append(message(t("empty")));
+        } else {
+          const heading = document.createElement("h2");
+          heading.className = "guestbook-heading";
+          heading.textContent = t("heading", { n: state.comments.length });
+          const ul = document.createElement("ul");
+          ul.className = "guestbook-items";
+          state.comments.forEach((comment) => ul.append(commentItem(comment)));
+          list.append(heading, ul);
+        }
+      }
+
+      function message(text) {
+        const p = document.createElement("p");
+        p.className = "tool-result-message";
+        p.textContent = text;
+        return p;
+      }
+
+      function commentItem(comment) {
+        const li = document.createElement("li");
+        li.className = "guestbook-item";
+        const meta = document.createElement("p");
+        meta.className = "guestbook-meta";
+        const name = document.createElement("strong");
+        name.textContent = comment.name;
+        const time = document.createElement("time");
+        time.dateTime = comment.createdAt;
+        time.textContent = new Date(comment.createdAt).toLocaleString(lang() === "zh" ? "zh-TW" : "en-US", { dateStyle: "medium", timeStyle: "short" });
+        meta.append(name, time);
+        const body = document.createElement("p");
+        body.className = "guestbook-body";
+        body.textContent = comment.body;
+        li.append(meta, body);
+        return li;
+      }
+
+      // 打字時更新字數，並清掉那一格的錯誤提示
+      for (const field of Object.keys(inputs)) {
+        inputs[field].addEventListener("input", () => {
+          state.invalid = state.invalid.filter((e) => e.field !== field);
+          state.sent = false;
+          render();
+        });
+      }
+      form.addEventListener("submit", submitComment);
+
+      loadComments();
+    </script>
+  </body>
+</html>
