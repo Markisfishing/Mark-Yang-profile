@@ -230,11 +230,16 @@
         return data.title === "NASA Science" && /nasa-logo/.test(data.url || "");
       }
 
+      // 圖片下載完（或失敗）才加 is-loaded，CSS 讓它淡入
+      function markLoaded(event) {
+        event.target.classList.add("is-loaded");
+      }
+
       function buildMedia(data) {
         if (data.media_type === "image") {
           const full = data.hdurl || data.url;
           return el("a", { className: "apod-media apod-zoom", href: full, target: "_blank", rel: "noopener", title: "在新分頁開啟高解析度原圖" },
-            el("img", { src: data.url, alt: data.title, loading: "lazy", decoding: "async" }));
+            el("img", { src: data.url, alt: data.title, loading: "lazy", decoding: "async", onload: markLoaded, onerror: markLoaded }));
         }
         if (data.media_type === "video") {
           // 直接是影片檔就用 <video>；YouTube／Vimeo 這類嵌入網址用 <iframe>

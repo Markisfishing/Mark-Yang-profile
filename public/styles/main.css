@@ -1819,6 +1819,16 @@ h3 {
   animation: typing-bounce calc(var(--motion-duration) * 4) var(--motion-ease) infinite;
 }
 
+/* 圖片下載完才淡入，不會一格一格由上往下畫出來；載入失敗也照常顯示（瀏覽器的破圖示） */
+.apod-media img {
+  opacity: 0;
+  transition: opacity var(--motion-duration) var(--motion-ease);
+}
+
+.apod-media img.is-loaded {
+  opacity: 1;
+}
+
 .apod-media {
   display: block;
   margin: 0 0 var(--space-3);
