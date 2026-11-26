@@ -631,6 +631,8 @@ h3 {
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
+  /* scale 是獨立屬性，和下面滑過時的 transform 疊在一起不會互相蓋掉；視差位移由 app.js 寫在 translate */
+  scale: var(--parallax-scale);
   transition: transform var(--motion-duration) var(--motion-ease);
 }
 

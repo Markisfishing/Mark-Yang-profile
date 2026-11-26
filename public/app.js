@@ -886,6 +886,45 @@ if ("IntersectionObserver" in window && !reduceMotion.matches && countTargets.si
   countTargets.forEach((_, el) => counterObserver.observe(el));
 }
 
+// 截圖視差：作品摘要卡的封面圖捲動時比卡片慢一點，產生前後層次。
+// 封面先用 CSS 的 --parallax-scale 放大 8% 留出移動空間，再依卡片在畫面中的位置上下位移；
+// 只算畫面內看得到的封面、每格最多算一次；減少動態效果時不啟用
+const PARALLAX_RANGE = 0.03; // 最多位移封面高度的 3%，放大 8% 留下的上下各 4% 空間足夠，不會露出邊
+const parallaxImages = [...document.querySelectorAll(".preview-cover img")];
+
+if (parallaxImages.length && "IntersectionObserver" in window && !reduceMotion.matches) {
+  const onScreen = new Set();
+  let ticking = false;
+
+  function updateParallax() {
+    ticking = false;
+    const viewport = window.innerHeight;
+    onScreen.forEach((img) => {
+      const box = img.parentElement.getBoundingClientRect();
+      // -1：卡片剛從畫面下緣出現；0：在正中間；1：快從上緣離開
+      const progress = (viewport / 2 - (box.top + box.height / 2)) / (viewport / 2 + box.height / 2);
+      img.style.translate = `0 ${(progress * box.height * PARALLAX_RANGE).toFixed(1)}px`;
+    });
+  }
+
+  function requestParallax() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(updateParallax);
+  }
+
+  const parallaxObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) onScreen.add(entry.target);
+      else onScreen.delete(entry.target);
+    });
+    requestParallax();
+  });
+  parallaxImages.forEach((img) => parallaxObserver.observe(img));
+  window.addEventListener("scroll", requestParallax, { passive: true });
+  window.addEventListener("resize", requestParallax);
+}
+
 window.addEventListener("hashchange", showPageFromHash);
 window.addEventListener("resize", moveNavIndicator);
 showPageFromHash();
