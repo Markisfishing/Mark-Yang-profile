@@ -16,7 +16,7 @@ HTML 放一個掛載點，`src/main.js` 會把它換成對應的元件，掛載�
 
 | 元件 | 檔案 | 用在哪裡 | props | 什麼時候該用它 |
 |---|---|---|---|---|
-| SiteNav | `src/components/SiteNav.vue` | 首頁、`tools/llm-cost.html`、`tools/apod.html` | `linkBase`、`current`、`lang`、`toggles` | 每加一個新頁面（例如下週的新工具）就放一個，讓訪客隨時能回到首頁四個分頁。不要在新頁面自己再寫一份導覽列 |
+| SiteNav | `src/components/SiteNav.vue` | 首頁、`guestbook.html`、`tools/llm-cost.html`、`tools/apod.html` | `linkBase`、`current`、`lang`、`toggles` | 每加一個新頁面（例如下週的新工具）就放一個，讓訪客隨時能回到首頁四個分頁。不要在新頁面自己再寫一份導覽列 |
 | ProjectCardList | `src/components/ProjectCardList.vue` | 首頁「作品速覽」、作品集分頁「互動小工具」 | `list` | 想在某個區塊排出一整組作品或工具卡時用。新增一組卡片，就在 `cards.js` 開一個新清單，再放一個掛載點 |
 | ProjectCard | `src/components/ProjectCard.vue` | 由 ProjectCardList 產生，不直接掛載 | `href`、`image`、`imageAltKey`、`tags`、`title`/`titleKey`、`body`/`bodyKey`、`cta`/`ctaKey` | 只需要「標題＋一句說明＋點進去」的作品摘要時用，例如每週新工具。如果需要截圖輪播、成果數字或詳細貢獻，就不適合，要寫成作品集分頁裡的完整作品卡 |
 
@@ -26,6 +26,7 @@ HTML 放一個掛載點，`src/main.js` 會把它換成對應的元件，掛載�
 
 - `linkBase`：首頁是 `""`（在同一頁切換分頁），其他頁是 `"/"`（回到首頁再切換）。
 - `current`：目前所在分頁，會加上 `aria-current="page"`。首頁不用傳，由 `public/app.js` 依網址的 # 切換。
+- 分頁清單在 `items`：前四個是首頁裡的 # 分頁；「留言板」帶 `page: "/guestbook.html"`，是獨立頁面，連結直接給完整路徑。
 - `lang`：首頁不傳（預設 `en`），由 app.js 翻譯成目前語言。工具頁給 `site`，導覽列跟著 `src/site-lang.js` 的目前語言，按切換鈕時一起重畫。
 - `toggles`：要不要顯示語言與深淺色切換鈕。首頁由 app.js 綁事件，工具頁由 `src/tool-page.js` 的 `setupToolPage()` 綁事件；新工具頁要打開它，並在自己的 module script 呼叫 `setupToolPage(翻譯表, 重畫函式)`，且要放在 `src/main.js` 的 script 之後。
 - 按鈕 id `langToggle`、`themeToggle` 與 class `.nav-links` 是 app.js 綁事件用的，不可改名。

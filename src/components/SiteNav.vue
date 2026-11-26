@@ -1,7 +1,7 @@
 <!-- 元件：SiteNav · 用途：全站共用的導覽列，首頁與 tools/ 底下每一頁都用這一份
      props：
        linkBase  連結前綴。首頁是 ""（同一頁換分頁），其他頁是 "/"（回首頁再換分頁）
-       current   目前所在分頁的 id（home / projects / skills / agent）；首頁不用給，由 app.js 依網址切換
+       current   目前所在分頁的 id（home / projects / skills / agent / guestbook）；首頁不用給，由 app.js 依網址切換
        lang      顯示的語言。首頁是 en（還沒被 app.js 翻譯前的預設，之後由 app.js 換字）；
                  工具頁給 "site"，跟著 src/site-lang.js 的目前語言，切換時導覽列一起重畫
        toggles   要不要顯示語言與深淺色切換鈕；首頁由 app.js、工具頁由 src/tool-page.js 綁事件
@@ -24,7 +24,9 @@ const items = [
   { id: "home", key: "nav.home", label: { en: "Home", zh: "首頁" } },
   { id: "projects", key: "nav.projects", label: { en: "Portfolio", zh: "作品集" }, menu: true },
   { id: "skills", key: "nav.skills", label: { en: "About", zh: "關於我" } },
-  { id: "agent", key: "nav.agent", label: { en: "AI Agent", zh: "AI 助理" } }
+  { id: "agent", key: "nav.agent", label: { en: "AI Agent", zh: "AI 助理" } },
+  // 留言板是獨立的 guestbook.html，不是首頁裡的 # 分頁，所以直接給完整路徑
+  { id: "guestbook", key: "nav.guestbook", label: { en: "Guestbook", zh: "留言板" }, page: "/guestbook.html" }
 ];
 
 // 下拉選單內容直接從作品卡資料產生，每週新增作品時選單會自動多一項
@@ -43,6 +45,7 @@ const menuGroups = [
 const allWork = { key: "nav.projects.all", label: { en: "All work", zh: "全部作品" } };
 
 const href = (id) => `${props.linkBase}#${id}`;
+const itemHref = (item) => item.page || href(item.id);
 const linkHref = (target) => (target.startsWith("#") ? `${props.linkBase}${target}` : target);
 const text = (label) => label[props.lang === "site" ? siteLang.value : props.lang] || label.en;
 const isExternal = (target) => !target.startsWith("#");
@@ -144,7 +147,7 @@ onBeforeUnmount(() => {
         <a
           v-else
           class="nav-tab"
-          :href="href(item.id)"
+          :href="itemHref(item)"
           :data-i18n="item.key"
           :aria-current="item.id === current ? 'page' : undefined"
         >{{ text(item.label) }}</a>
